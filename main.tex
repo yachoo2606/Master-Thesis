@@ -5,14 +5,14 @@
 %% Poznan University of Technology, 2020        %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 % Szkielet dla pracy Magisterskiej pisanej w języku polskim.
 
 \documentclass[polish,a4paper,oneside]{ppfcmthesis}
-
+\pagenumbering{arabic}
 
 \usepackage[utf8]{inputenc}
 \usepackage[OT4]{fontenc}
+
 
 %--------------------------------------
 % Strona tytułowa
@@ -24,7 +24,7 @@
     Jan Biały \album{144334}}
 \authortitle{inż.}
 
-\title{Protokół doboru zasobów to zapotrzebowania klienta w Metaverse}
+\title{Zarządzanie przydziałem zasobów w środowisku Metaverse}
 
 % Your supervisor comes here.
 \ppsupervisor{prof.~dr hab.~inż.~Anna Kobusińska} 
@@ -32,11 +32,12 @@
 % Year of final submission (not graduation!)
 \ppyear{2024}                                 
 
-
 \begin{document}
 
+\pagestyle{ppfcmthesis}%
+
 % Front matter starts here
-\frontmatter\pagestyle{empty}%
+\pagestyle{empty}%
 \maketitle\cleardoublepage%
 
 %--------------------------------------
@@ -51,20 +52,23 @@
 % Spis treści
 %--------------------------------------
 
-\pagenumbering{Roman}\pagestyle{ppfcmthesis}%
-\tableofcontents* 
-\cleardoublepage % Zaczynamy od nieparzystej strony
+
+\tableofcontents*
+\cleardoublepage % Ensure TOC ends and we start fresh
 
 %--------------------------------------
 % Rozdziały
 %--------------------------------------
 
+% Reset the page numbering to Arabic numerals for the main content
+\pagestyle{ppfcmthesis}
+
 %Najwygodniej jeśli każdy rozdział znajduje się w oddzielnym pliku
-\mainmatter%
 \input{chapters/01-wstep.tex}
 \input{chapters/02-teoria.tex}
-\input{chapters/03-praca-wlasna.tex}
-\input{chapters/04-zakonczenie.tex}
+\input{chapters/03-Implementacja}
+\input{chapters/04-Monitoring}
+\input{chapters/05-Podsumowanie.tex}
 
 %--------------------------------------
 % Literatura
@@ -77,10 +81,8 @@
 %--------------------------------------
 
 \cleardoublepage\appendix%
-\newpage
-\input{chapters/zalacznik.tex}
 
-%--------------------------------------
+%-------------------------------------
 % Informacja o prawach autorskich
 %--------------------------------------
 
