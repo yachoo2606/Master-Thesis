@@ -12,6 +12,7 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[OT4]{fontenc}
+\usepackage{fancyhdr}
 
 
 %--------------------------------------
@@ -52,7 +53,7 @@
 % Spis treści
 %--------------------------------------
 
-
+\setcounter{tocdepth}{2}
 \tableofcontents*
 \cleardoublepage % Ensure TOC ends and we start fresh
 
@@ -63,18 +64,26 @@
 % Reset the page numbering to Arabic numerals for the main content
 \pagestyle{ppfcmthesis}
 
-%Najwygodniej jeśli każdy rozdział znajduje się w oddzielnym pliku
-\input{chapters/01-wstep.tex}
-\input{chapters/02-teoria.tex}
-\input{chapters/03-Implementacja}
-\input{chapters/04-Monitoring}
-\input{chapters/05-Podsumowanie.tex}
+\input{chapters/01-streszczenie_abstrakt}
+\input{chapters/02-wstep}
+\input{chapters/03-teoria}
+\input{chapters/04-Implementacja}
+\input{chapters/05-Monitoring}
+\input{chapters/06-KierunkiRozwoju}
+\input{chapters/07-Podsumowanie}
 
 %--------------------------------------
 % Literatura
 %--------------------------------------
 
 \bibliographystyle{plain}{\raggedright\sloppy\small\bibliography{bibliografia}}
+
+%--------------------------------------
+% Spis ilustracji
+%--------------------------------------
+\newpage
+\listoffigures
+
 
 %--------------------------------------
 % Dodatki
