@@ -9,17 +9,17 @@
     \label{fig:enter-label}
 \end{figure}
 
-
 Java jest to szeroko stosowany obiektowy język programowania i platforma oprogramowania, która działa na miliardach urządzeń. Zasady oraz składnia języka zostały oparte na językach \acronym{C} i \acronym{C++}. Java powstała aby udoskonalić i naprawić wiele błędnych konceptów wprowadzonych przez te języki. Jedną z głównych zalet tworzenia oprogramowania w Javie jest jej przenoszalność. Po napisaniu kodu programu na jednym urządzeniu można go łatwo przenieść na inne urządzenie o innej architekturze. Język ten został wynaleziony w 1995 roku przez Jamesa Goslinga z Sun Microsystems (później przejętego przez Oracle), główną ideą jego wynalezienia była możliwość, \definicja{"napisania raz, uruchomienia w dowolnym miejscu"}  (\english{write once, run anywhere}). Nowe i ulepszone narzędzia do tworzenia oprogramowania pojawiają się na rynku w nizwykłym tempie, wypierając dotychczasowe produkty, które kiedyś uważano za niezbędne. W świetle tej ciągłej rotacji, długowieczność Javy jest imponująca, prawie trzy dekady po jej stworzeniu, Java jest nadal najpopularniejszym językiem do tworzenia oprogramowania użytkowego\cite{javaIBM}\cite{javaDEV}.
 
-Wszystkie języki programowania służą do komunikacji z maszynami. Sprzęt maszynowy reaguje tylko na komunikację elektroniczną. Języki programowania wyskogieko poziomu, takie jak Java, działają jako pomost między językiem ludzkim a językiem sprzętu. Aby korzystać z języka Java programista musi mieć świadomość o dwóch poziomach abstrakcji pisanych programów. 
+Wszystkie języki programowania służą do komunikacji z maszynami. Sprzęt maszynowy reaguje tylko na komunikację elektroniczną. Języki programowania wysokiego poziomu, takie jak Java, działają jako pomost między językiem ludzkim a językiem sprzętu. Aby korzystać z języka Java programista musi mieć świadomość o dwóch poziomach abstrakcji pisanych programów: 
+
 \begin{itemize}
-    \item Język Java i interfejsy API \footnote{Interfejs programowania aplikacji (\english{application programming interface, \acronym{API}})}
-    \item Wirtualna maszyna Java \footnote{\english{\termdef{Java Virtual Machine} \acronym{JVM}}}
+    \item Język Java i \definicja{interfejsy \acronym{API} }(\english{application programming interface})
+    \item Wirtualna maszyna Java \acronym{JVM} (\english{\termdef{Java Virtual Machine}})
 \end{itemize}
 
 Java definiuje składnię i semantykę języka. Obejmuje to podstawowe słownictwo i reguły używane do pisania algorytmów. 
-Interfejsy API są ważnymi komponentami oprogramowania dołączonymi do platformy Java. Są to wstępnie napisane programy, które można podłączyć i odtworzyć istniejące funkcjonalności we własnym kodzie. Na przykład można użyć interfejsów API Java, aby uzyskać datę i godzinę, wykonać operacje matematyczne lub manipulować tekstem. Każdy kod aplikacji Java napisany przez programistę zazwyczaj łączy nowy i wcześniej istniejący kod z interfejsów API Java i bibliotek\cite{javaAmazon}\cite{javaDEV}.
+Interfejsy API są ważnymi komponentami oprogramowania dołączonymi do platformy Java. Są to wstępnie napisane programy, które można podłączyć i odtworzyć istniejące funkcjonalności we własnym kodzie. Na przykład można użyć interfejsów API Java, aby uzyskać datę i godzinę, wykonać operacje matematyczne lub manipulować tekstem. Każdy kod aplikacji Java napisany przez programistę zazwyczaj łączy nowy i wcześniej istniejący kod z interfejsów API Java, bibliotek i frameworków\cite{frameworkDef}\cite{javaAmazon}\cite{javaDEV}.
 
 Wirtualna maszyna Javy działa jako dodatkowa warstwa abstrakcji między platformą Java a sprzętem maszyny. Kod źródłowy Java może działać tylko na tych maszynach na których zainstalowano JVM. Kiedy po raz pierwszy opracowano języki programowania, dzieliły się one na dwie szerokie kategorie, w zależności od tego, w jaki sposób komunikowały się ze sprzętem: 
 
@@ -32,19 +32,32 @@ Język Java był pierwszym językiem, który połączył obie powyższe metody, 
 
 \subsection{Spring boot}
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.5\textwidth]{images/springBootLogo.png}
-    \caption{Logo Spring Boot framework} \footnote{Szkielet do budowy aplikacji, który dostarcza niezbędnych bibliotek i komponentów oraz definiuje strukturę i działanie danej aplikacji\cite{frameworkDef}}
+    \caption{Logo Spring Boot framework\cite{springLogo}}
     \label{fig:enter-label}
 \end{figure}
 
 
+
 \subsection{Netflix Eureka}
+
+test
+
 \subsection{Docker}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/Docker_logo.png}
+    \caption{Logo marki Docker \cite{DockerMedia}}
+    \label{fig:enter-label}
+\end{figure}
+
 \subsubsection{Docker Compose}
 \subsection{Środowisko programistyczne}
 \subsection{Insomnia}
+\subsection{Logstash Logback Encoder}
 
 
 
