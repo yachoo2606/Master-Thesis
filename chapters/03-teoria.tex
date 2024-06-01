@@ -280,18 +280,18 @@ Kibana między innymi zapewnia następujące funkcjonalności:
 
 \subsection{Logstash Logback Encoder}
 
-Logstash Logback Encoder to biblioteka zaprojektowana w celu ułatwienia rejestrowania dzienników aplikacji w formacie JSON przy użyciu biblioteki Logback. Koder ten umożliwia ustrukturyzowanie przechowywanie zdarzeń w formacie JSON, ułatwiając analizowanie dzienników przy wykorzystaniu takich narzędzi jak Logstash i Elasticsearch. 
+Logstash Logback Encoder to biblioteka zaprojektowana w celu ułatwienia rejestrowania dzienników aplikacji w formacie JSON przy użyciu biblioteki Logback. Koder ten umożliwia ustrukturyzowanie przechowywanie zdarzeń w formacie JSON, ułatwiając analizowanie dzienników przy wykorzystaniu takich narzędzi jak Logstash i Elasticsearch\cite{logstashLogbackEncoderOverview}. 
 
 Kluczowe cechy:
 
 \begin{itemize}
-    \item \textbf{Kodowanie JSON}: Podstawową funkcją tego kodera jest kodowanie zdarzeń Logback do formatu JSON.
-    \item \textbf{Konfigurowalny wygląd}: Biblioteka pozwala na dostosowanie układów logów, umożliwiając użytkownikom zdefiniowanie własnej struktury zdarzeń.
-    \item \textbf{Zaawansowane dodatki}: Dodatkowe appendery, takie jak LogstashTcpSocketAppender i AsyncDisruptorAppender, które ułatwiają wysyłanie logów przez sieć lub ich asynchroniczną obsługę.
-    \item \textbf{Wsparcie dla filtrów Logback}: Biblioteka obsługuje filtry Logback, umożliwiając warunkowe logowanie w oparciu o niestandardowe kryteria.
-    \item \textbf{Maskowanie i zmiana}: Wrażliwe informacje w dziennikach mogą być maskowane lub zmieniane w celu zapewnienia zgodności z przepisami dotyczącymi prywatności danych.
+    \item \textbf{Kodowanie JSON}: Podstawową funkcją tego kodera jest kodowanie zdarzeń Logback do formatu JSON\cite{logstashLogbackEncoderOverview}.
+    \item \textbf{Konfigurowalny wygląd}: Biblioteka pozwala na dostosowanie układów logów, umożliwiając użytkownikom zdefiniowanie własnej struktury zdarzeń\cite{logstashLogbackEncoderOverview}.
+    \item \textbf{Zaawansowane dodatki}: Dodatkowe appendery, takie jak LogstashTcpSocketAppender i AsyncDisruptorAppender, które ułatwiają wysyłanie logów przez sieć lub ich asynchroniczną obsługę\cite{logstashLogbackEncoderOverview}.
+    \item \textbf{Wsparcie dla filtrów Logback}: Biblioteka obsługuje filtry Logback, umożliwiając warunkowe logowanie w oparciu o niestandardowe kryteria\cite{logstashLogbackEncoderOverview}.
+    \item \textbf{Maskowanie i zmiana}: Wrażliwe informacje w dziennikach mogą być maskowane lub zmieniane w celu zapewnienia zgodności z przepisami dotyczącymi prywatności danych\cite{logstashLogbackEncoderOverview}.
 \end{itemize}
 
-Biblioteka jest szczególnie wykrozystywana w systemach rozproszonych do centralizacji dzienników aplikacyjnych z wielu źródeł i usprawniania ich analizy za pomocą narzędzi takich jak stos \akronim{ELK} (Elasticsearch, Logstash, Kibana).
+Biblioteka jest szczególnie wykrozystywana w systemach rozproszonych do centralizacji dzienników aplikacyjnych z wielu źródeł i usprawniania ich analizy za pomocą narzędzi takich jak stos \akronim{ELK} (Elasticsearch, Logstash, Kibana)\cite{logstashLogbackEncoderOverview}.
 
-Aby zintegrować Logstash Logback Encoder z projektem Java, należy uwzględnić go jako zależność w konfiguracji kompilacji w pliku konifugracyjnym, dodatkowo nalezy skonfigurować plik \textit{logback.txt}, tak aby biblioteka korzystała z prawidłowych appenderów.
+Aby zintegrować Logstash Logback Encoder z projektem Java, należy uwzględnić go jako zależność w konfiguracji kompilacji w pliku konifugracyjnym, dodatkowo nalezy skonfigurować plik \textit{logback.txt}, tak aby biblioteka korzystała z prawidłowych appenderów\cite{logstashLogbackEncoderOverview}.
