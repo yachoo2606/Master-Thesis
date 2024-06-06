@@ -18,6 +18,63 @@
 \restoregeometry
 \newpage
 
+\begin{figure}[h!]
+    \centering
+    \begin{msc}[
+        title position=center,
+        msc keyword=,
+        draw frame=none,
+        instance distance=2.5cm,
+        left environment distance=0.5cm,
+        right environment distance=0.5cm,
+        label distance=0.3cm,
+        title distance=0.5cm
+        ]{Protocol Worker Resource Reservation}
+            \declinst{user}{}{User}
+            \declinst{protocolWorker}{}{Protocol Worker}
+            \declinst{serviceDiscovery}{}{Service Discovery}
+            \declinst{producer}{}{Producer}
+            
+            \footnotesize
+            \nextlevel
+            \mess{Request Resource Reservation}{user}{protocolWorker}
+            \nextlevel
+            \nextlevel
+            \mess{Query All Registered Producers}{protocolWorker}{serviceDiscovery}
+            \nextlevel
+            \nextlevel
+            \nextlevel
+            \mess{List of Producers}{serviceDiscovery}{protocolWorker}
+            \nextlevel
+            \nextlevel
+            \nextlevel
+            \inlinestart{loop1}{loop For each Producer}{protocolWorker}{producer}
+            \nextlevel
+            \nextlevel
+            \nextlevel
+            \nextlevel
+            \mess{Check Resource Availability}{protocolWorker}{producer}
+            \nextlevel
+            \nextlevel
+            \nextlevel
+            \mess{Resource Availability}{producer}{protocolWorker}
+            \nextlevel
+            \nextlevel
+            \inlineend{loop1}
+            \nextlevel
+            \nextlevel
+            \mess{\parbox{3cm}{Processing producers for products}}{protocolWorker}{protocolWorker}
+            \nextlevel
+            \nextlevel
+            \nextlevel
+            \nextlevel
+            \nextlevel
+            \mess{Return Resource Availability}{protocolWorker}{user}
+        \end{msc}
+    \caption{ Schemat wymiany wiadomości podczas przetwarzania żądania użytkownika}
+    \label{fig:enter-label}
+\end{figure}
+
 \subsection{Producent}
 \subsection{Rejestr usług}
 \subsection{Węzeł protokołu}

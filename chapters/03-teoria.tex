@@ -43,7 +43,7 @@ Język Java był pierwszym językiem, który połączył obie powyższe metody, 
     \label{fig:enter-label}
 \end{figure}
 
-Maven słowo w języku jidysz oznacza gromadzenie wiedzy. Apache Maven to narzędzie do zarządzania projektami oprogramowania. Opiera się on na koncepcji \definicja{modelu obiektu projektu} (\acronym{POM} \english{Project Object Model}), Maven może zarządzać kompilacją, raportowaniem i dokumentacją projektu z centralnej informacji. Narzędzie to wykorzystywane jest do budowania i zarządzania dowolnym projektem opartym na Javie. Głównym źródłem informacji o projekcie jest plik \akronim{XML} (\english{Extensible Markup Language}) nazywany \acronym{POM}, w którym definiowana jest struktura projektu, sposób jego budowania oraz zależności jakie są wymagane do prawidłowego funkcjonowania programu. Maven podcza budowania aplikacji pobiera niezbędne biblioteki oraz inne zależności z globalnego repozytorium Maven Central.
+Maven słowo w języku jidysz oznacza gromadzenie wiedzy. Apache Maven to narzędzie do zarządzania projektami oprogramowania. Opiera się on na koncepcji \definicja{modelu obiektu projektu} (\acronym{POM} \english{Project Object Model}), Maven może zarządzać kompilacją, raportowaniem i dokumentacją projektu z centralnej informacji. Narzędzie to wykorzystywane jest do budowania i zarządzania dowolnym projektem opartym na Javie. Głównym źródłem informacji o projekcie jest plik \akronim{XML} (\english{Extensible Markup Language}) nazywany \acronym{POM}, w którym definiowana jest struktura projektu, sposób jego budowania oraz zależności jakie są wymagane do prawidłowego funkcjonowania programu. Maven podcza budowania aplikacji pobiera niezbędne biblioteki oraz inne zależności z globalnego repozytorium Maven Central\cite{mavenSite}.
 
 \subsection{Spring boot}
 
@@ -145,7 +145,7 @@ Posiada również polecenia do zarządzania całym cyklem życia aplikacji:
     \item Uruchamianie jednorazowego polecenia w określonym kontenerze
 \end{itemize}
 
-\subsection{ Elasticsearch }
+\subsection{Elasticsearch}
 
 \begin{figure}[!htbp]
     \centering
@@ -179,7 +179,7 @@ Definiowanie własnych mapowań umożliwia:
 
 Często przydatne jest indeksowanie tego samego pola na różne sposoby w różnych celach. Na przykład, użytkownik może chcieć indeksować pole łańcuchowe zarówno jako pole tekstowe do wyszukiwania pełnotekstowego, oraz jako pole słów kluczowych do sortowania lub agregowania danych. Można też użyć więcej niż jednego analizatora języka do przetworzenia zawartości pola łańcuchowego zawierającego dane wejściowe użytkownika\cite{elasticSearchManualDataIn}.
 
-\subsection{ Logstash }
+\subsection{Logstash}
 
 \begin{figure}[!htbp]
     \centering
@@ -246,8 +246,8 @@ Kodeki to filtry strumieniowe, które mogą działać jako część wejścia lub
     \item \textbf{multiline}: łączy wielowierszowe zdarzenia tekstowe, takie jak wyjątki w javia i komunikaty zrzutem stosu (\english{Stack trace}) w jedno zdarzenie\cite{logstashManualHowItWorks}.
 \end{itemize}
 
+\subsection{Metricbeat}
 
-\subsection{ Metricbeat }
 
 \begin{figure}[!htbp]
     \centering
@@ -259,7 +259,7 @@ Kodeki to filtry strumieniowe, które mogą działać jako część wejścia lub
 Metricbeat to program wykorzystywany do okresowego zbierania metryk z systemu operacyjnego i usług działających na serwerze. Metricbeat pobiera zebrane metryki i statystyki a następnie wysyła je do okreslonych przez użytkownika punktów docelowych, takich jak Elasticsearch, Logstash, Redis lub Kafka\cite{metricbeatOverview}.
 
 
-\subsection{ Kibana }
+\subsection{Kibana}
 
 \begin{figure}[!htbp]
     \centering
