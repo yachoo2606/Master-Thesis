@@ -21,7 +21,33 @@
 \usepackage{pgfplots}
 \usepackage{tikz}
 \pgfplotsset{compat=1.17}
+\usepackage{listings}
 
+% Define custom colors
+\definecolor{comment}{rgb}{0.5,0.5,0.5}
+\definecolor{keyword}{rgb}{0.0,0.0,0.8}
+\definecolor{string}{rgb}{0.8,0.0,0.0}
+
+% Define Java language settings for listings
+\lstdefinestyle{customjava}{
+  language=Java,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{keyword}\bfseries,
+  commentstyle=\color{comment}\itshape,
+  stringstyle=\color{string},
+  numberstyle=\tiny\color{comment},
+  stepnumber=1,
+  numbersep=10pt,
+  showspaces=false,
+  showstringspaces=false,
+  tabsize=4,
+  breaklines=true,
+  breakatwhitespace=false,
+  escapeinside={(*@}{@*)}
+}
+
+% Set the style for listings
+\lstset{style=customjava}
 
 %--------------------------------------
 % Strona tytułowa
@@ -92,6 +118,11 @@
 \newpage
 \listoffigures
 
+%--------------------------------------
+% Spis listingów
+%--------------------------------------
+\newpage
+\lstlistoflistings
 
 %--------------------------------------
 % Dodatki
