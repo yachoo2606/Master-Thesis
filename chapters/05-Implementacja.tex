@@ -177,10 +177,286 @@ Pole \verb|eureka.server.enableSelfPreservation| określa tryb samozachowawczy, 
 
 Pole \verb|eureka.server.evictionIntervalTimerInMs| ustawia interwał (w milisekundach), dla którego ma być uruchamiane zadanie usuwania aplikacji których czas dzierżawy wygasł.
 
+\subsubsection{Konfiguracja logowania zdarzeń}
+
+Pola \verb|logging.logstash.destination*| ustawiają adres do usług zbierających dokumenty, do których będą wysyłane informacje o zdarzeniach w aplikacji producenta. Wykorzystuje zmienną środowiskową LOGSTASH\_DESTINATION\_*, która domyślnie jest ustawiona na localhost:5000, jeśli nie zostanie podana przy uruchomieniu aplikacji.\\[0.5cm]
 
 plik \verb|application.yml| definiuje ustawienia konfiguracyjne dla aplikacji Spring Boot z różnymi profilami: peer-1, peer-2 i peer-3. Każdy profil konfiguruje aplikację jako część klastrowej konfiguracji serwera Eureka oraz wykorzystuje pozostałe uruchomione serwery Eureka jako repliki swojego rejestru w celu zapewnienia wysokiej dostępności w przypadku awarii jednego z węzłów w klastrze.
 
 \subsection{Producent}
+
+Producenci w systemach rozproszonych to komponenty lub usługi odpowiedzialne za generowanie i dostarczanie produktów lub danych. Służą jako źródło informacji lub towarów, które następnie są konsumowane przez inne części systemu. W przedstawianym systemie diagram klas usługi producenta został przedstawiony na rys\ref{ProducerUML}.
+
+\begin{figure}[!htbp]
+    \centering
+    \includesvg[width=0.65\textwidth]{schemas/producer/Producer.drawio.svg}
+    \caption{Producent - schemat UML}
+    \label{ProducerUML}
+\end{figure}
+
+\subsubsection{Wymagania funkcjonalne}
+
+Usługa producenta powinna spełniać następujące wymagania funkcjonalne:
+
+\begin{itemize}
+    \item Producent powinien sprawdzać czy dany produkt znajduje się w jego ofercie.
+    \item Producent powinien sprawdzać czy ilość produktów zamawianych przez klienta jest możliwa przez niego do spełnienia. 
+    \item Producent powinien zapewnić możliwość odbioru danych w celu sprawdzenia szybkości transmisji między nim a użytkownikiem.
+\end{itemize}
+
+
+\subsubsection{Główna klasa usługi producenta}
+
+Główna klasa usługi producenta przedstawiona na rys\ref{producerMainClass}, jest podstawową klasą uruchamiającą aplikację z wykorzystaniem frameworku Spring Boot. Jest ona oznaczona adnotacją \verb|@EnableDiscoveryClient|, która zapewnia uruchomienie klienta Eureka w celu rejestracji w serwerze Eureka. Adres serwera na, którym aplikacja ma się zarejestrować  ładowany jest z konfiguracji aplikacji.
+
+\begin{lstlisting}[caption=Główna klasa usługi producenta, label=producerMainClass]
+    package com.example.producer;
+
+    import org.springframework.boot.SpringApplication;
+    import org.springframework.boot.autoconfigure.SpringBootApplication;
+    import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+    
+    @SpringBootApplication
+    @EnableDiscoveryClient
+    public class ProducerApplication {
+    
+        public static void main(String[] args) {
+            SpringApplication.run(ProducerApplication.class, args);
+        }
+    
+    }
+\end{lstlisting}
+
+\subsubsection{Model produktu}
+
+Klasa \verb|Product| przedstawiona na rys\ref{produktmodel} reprezentuje centralną jednostkę w ramach usługi Producenta.
+
+\begin{lstlisting}[caption=Klasa reprezentująca produkt, label=produktmodel]
+    package com.example.producer.model;
+    
+    import lombok.AllArgsConstructor;
+    import lombok.Getter;
+    import lombok.NoArgsConstructor;
+    import lombok.Setter;
+    
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public class Product {
+        String id;
+        String name;
+        String model;
+        String producer;
+        Integer amount;
+        Integer price;
+    
+        @Override
+        public String toString(){
+            return "[id = "+
+                    id+
+                    ", name=" +
+                    name +
+                    ", model=" +
+                    model +
+                    ", producer=" +
+                    producer +
+                    ", amount=" +
+                    amount +
+                    "price=" +
+                    price +
+                    "]";
+        }
+    
+    }
+\end{lstlisting}
+
+Klasa ta jest opatrzona adnotacjami Lombok, \verb|@Getter|, \verb|@Setter|, które pozwalają automatycznie wygenerować funkcję dostępowe do zmiennych znajdujących się w klasie.
+
+Klasa ta zawiera następujące zmienne:
+\begin{itemize}
+    \item \verb|String id| - Unikatowe dla danego typu produktu Id
+    \item \verb|String name| - Nazwa produktu
+    \item \verb|String model| - Model produktu
+    \item \verb|String producer| - Nazwa producenta produktu
+    \item \verb|Integer amount| - ilość produktu oferowana przez producenta
+    \item \verb|Integer price| - cena produktu
+\end{itemize}
+
+Klasa ta zawiera też metodę \verb|toString()| która przeciąża domyślną metodę klasową języka java \verb|toString()| aby zapewnić reprezentację obiektu produktu, która zawiera wszystkie jego atrybuty.
+
+\subsubsection{Serwis Produktów - ProductService}
+
+Klasa \verb|ProductsService| zaprezentowana na listeningu\ref{productsServiceCode} jest usługą Spring odpowiedzialną za zarządzanie produktami w aplikacji producenta. Wykorzystuje ona klasę \verb|Product| w celu zainicjowania produktów, przechowywania produktów, oraz pobierania informacji o produktach. Klasa jest opatrzona adnotacją \verb|@Service|, wskazującej że jest to komponent usługi Spring, oraz \verb|@Slf4j|, aby umożliwić tworzenie dziennika zdarzeń w aplikacji.
+
+\begin{lstlisting}[caption=Kod klasy ProductsService, label=productsServiceCode]
+    package com.example.producer.service;
+
+    import com.example.producer.model.Product;
+    import com.fasterxml.jackson.core.type.TypeReference;
+    import com.fasterxml.jackson.databind.ObjectMapper;
+    import jakarta.annotation.PostConstruct;
+    import lombok.extern.slf4j.Slf4j;
+    import org.springframework.beans.factory.annotation.Value;
+    import org.springframework.core.io.ClassPathResource;
+    import org.springframework.stereotype.Service;
+    
+    import java.io.IOException;
+    import java.io.InputStream;
+    import java.util.ArrayList;
+    import java.util.Collections;
+    import java.util.List;
+    import java.util.Optional;
+    import java.util.stream.Collectors;
+    
+    @Service
+    @Slf4j
+    public class ProductsService {
+    
+        @Value("${products.file.name}")
+        private String productFileName;
+    
+        @Value("${products.count}")
+        private Integer count;
+        private List<Product> products = new ArrayList<>();
+
+
+        @PostConstruct
+        public void loadProducts(){
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Product> tempProducts;
+            try{
+                ClassPathResource resource = new ClassPathResource(this.productFileName);
+                InputStream in = resource.getInputStream();
+                tempProducts = objectMapper.readValue(in, new TypeReference<List<Product>>(){} );
+            }catch (IOException e) {
+                log.error("Producer was unable to read products from file");
+                throw new RuntimeException("Producer was unable to read products from file", e);
+            }
+            Collections.shuffle(tempProducts);
+            this.products = tempProducts.stream().limit(this.count).collect(Collectors.toList());
+        }
+
+        public List<Product> getAllProducts() {
+            return products;
+        }
+
+        public Optional<Product> getProductByName(Product product) {
+            return products.stream().filter(listProduct ->  product.getId().equals(listProduct.getId())  && product.getAmount()<= listProduct.getAmount()).findAny();
+        }
+    }
+\end{lstlisting}
+
+Klasa \verb|ProductsService| zawiera następujące zmienne:
+\begin{itemize}
+    \item \verb|productFileName| - Nazwa pliku przechowującego produktu, z którego są ładowane dane przy starcie aplikacji. Wartość ta jest wstrzykiwana z konfiguracji aplikacji przy użyciu adnotacji \verb|@Value|.
+    \item \verb|count| -  Liczba całkowita określająca liczbę produktów do załadowania. Ta wartość jest również wstrzykiwana z konfiguracji aplikacji.
+    \item \verb|products| - Lista obiektów \verb|Product| zawierająca załadowane produkty.
+\end{itemize}
+
+Klasa \verb|ProductsService| zawiera następujące metody:
+\begin{itemize}
+    \item \verb|loadProducts| - Metoda opatrzona adnotacją \verb|@PostConstruct| zostaje wywołana automatycznie po inicjalizacji komponentu \verb|ProductsService|. Ładuje ona dane produktów z pliku znajdującego się w głównym folderze aplikacji. Następnie tablica jest mieszana w celu zapewnienia różnych produktów przy każdorazowym uruchomieniu aplikacji. Następnie tablica jest ograniczana do ilości produktów określonej w zmiennej \verb|count|.
+    \item \verb|getAllProducts| - metoda zwracająca wszystkie produkty przechowywane w tablicy \verb|products|.
+    \item \verb|getProductByName| - Metoda przyjmuje obiekt klasy \verb|Product| jako parametr i zwraca obiekt tej samej klasy opatrzony dodatkową klasą\verb|Optional<>|, który może służyć jako tymczasowy pojemnik z pustą wartość w momencie gdy szukany produkt nie zostanie znaleziony u producenta. W momencie wywołania funkcji tablica jest filtrowana w celu znalezienia czy produkt znajduje się w ofercie producenta oraz czy jego ilość spełnia szukane kryterium przesłane w obiekcie wejściowym.
+\end{itemize}
+
+\subsubsection{Kontroler prędkości transmisji - SpeedTestController}
+
+Klasa \verb|speedTestController| przedstawiona na listeningu\ref{speedTestControllerCode} zapewnia punkt końcowy do testowania szybkości połączenia pomiędzy producentem a klientem poprzez odbieranie tablicy bajtów i zwracanie bieżącego czasu systemowego w nanosekundach. Punkt końcowy jest mapowany na \verb|/connectionSpeed| i obsługuję żądania \akronim{POST} protokołu \akronim{HTTP} (\english{Hypertext Transfer Protocol}).
+
+\begin{lstlisting}[caption=Kod klasy SpeedTestController, label=speedTestControllerCode]
+    package com.example.producer.controllers;
+
+    import lombok.extern.slf4j.Slf4j;
+    import org.springframework.http.ResponseEntity;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.RequestBody;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RestController;
+    
+    @Slf4j
+    @RestController
+    @RequestMapping("/connectionSpeed")
+    public class SpeedTestController {
+    
+        @PostMapping
+        public ResponseEntity<Long> testSpeed(@RequestBody byte[] data){
+            log.info("Received connection speed request, size: {} bytes", data.length);
+            return ResponseEntity.ok().body(System.nanoTime());
+        }
+    }
+\end{lstlisting}
+
+\subsubsection{Konfiguracja usługi producenta}
+
+Plik konfiguracyjny przedstawiony na listeningu\ref{producerconfigFIle} służy do konfiguracji usługi producenta. Konfiguruje on właściwości aplikacji, ustawienia serwera, konfigurację klienta Eureka, konfigurację dziennika zdarzeń, szczegóły pliku produktów i punkty końcowe zarządzania.
+
+\begin{lstlisting}[caption=Plik konfiguracyjny usługi producenta, label=producerconfigFIle]
+    spring:
+      application:
+        name: producer-${PRODUCER_ID:producer-ERROR}
+      servlet:
+        multipart:
+          max-file-size: 200MB
+          max-request-size: 200MB
+    
+    server:
+      port: ${PORT:10000}
+      tomcat:
+        max-swallow-size: 209715200
+        max-http-form-post-size: 209715200
+    
+    eureka:
+      client:
+        service-url:
+          defaultZone: ${PEER_1_URL:http://localhost:8761/eureka}
+        register-with-eureka: true
+        fetch-registry: true
+    logging:
+      logstash:
+        destinationOne: ${LOGSTASH_DESTINATION_ONE:localhost:5000}
+        destinationTwo: ${LOGSTASH_DESTINATION_TWO:localhost:5001}
+        destinationThree: ${LOGSTASH_DESTINATION_THREE:localhost:5002}
+    
+    #name of products file
+    products:
+      file:
+        name: "products.json"
+      count: ${NUMBER_OF_PRODUCTS:1000}
+    
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: "*"
+\end{lstlisting}
+
+\subsubsection{Konfiguracja aplikacji}
+
+Pole \verb|spring.application.name| ustawia nazwę aplikacji. Wykorzystuje zmienną środowiskową PRODUCER\_ID, który domyślnie ma wartość "producer-ERROR", jeżeli zmienna środowiskowa nie zostanie podana przy uruchomieniu.
+
+Pole \verb|spring.servlet.multipart.max-file-size| - konfiguruje maksymalny rozmiar pliku dla przesyłania plików wieloczęściowych do 200 MB.
+
+Pole \verb|spring.servlet.multipart.max-request-size| - konfiguruje maksymalny rozmiar żądania dla przesyłania plików wieloczęściowych do 200 MB.
+
+\subsubsection{Konfiguracja serwera aplikacji}
+
+Pole \verb|server.port| ustawia port serwera. Wykorzystuje zmienną środowiskową PORT, która domyślnie wynosi 10000, jeśli nie zostanie podana przy uruchomieniu.
+
+Pole \verb|server.tomcat.max-swallow-size| konfiguruje maksymalny rozmiar odbioru plików dla Tomcat do 200 MB.
+
+Pole \verb|server.tomcat.max-http-form-post-size| konfiguruje maksymalny rozmiar żądania \akronim{POST} formularza \akronim{HTTP} dla serwera Tomcat do 200 MB.
+
+\subsubsection{Konfiguracja logowania zdarzeń}
+
+Pola \verb|logging.logstash.destination*| ustawiają adres do usług zbierających dokumenty, do których będą wysyłane informacje o zdarzeniach w aplikacji producenta. Wykorzystuje zmienną środowiskową LOGSTASH\_DESTINATION\_*, która domyślnie jest ustawiona na localhost:5000, jeśli nie zostanie podana przy uruchomieniu aplikacji.
+
+\subsubsection{Konfiguracja pliku produktów}
+
+Pole \verb|products.file.name| określa nazwę pliku przechowującego produkty.
+
+Pole \verb|products.count| ustawia liczbę produktów którą producent ma świadczyć. Wykorzystuje zmienną środowiskową NUMBER\_OF\_PRODUCTS, która domyślnie wynosi 1000, jeśli nie zostanie podana.
 
 \subsection{Węzeł protokołu}
 \subsubsection{Podsystem monitoringu producentów}
