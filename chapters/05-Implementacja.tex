@@ -88,8 +88,6 @@ Głównym elementem w podsystemie użytkowym jest rejestr usług, rejestr ten je
 
 Każda uruchomiona usługa typu producenta oraz węzła protokołu w podsystemie użytkowym jest rejestrowana w usłudze Eureka, gdzie aplikacja przechowywana jest pod unikatową nazwą, która jest wykorzystywana do odpytywania rejestru w usłudze klienckiej w celu otrzymania informacji o działających usługach w systemie. Rejestr przechowuje adresu pod którym usługa jest uruchomiona oraz jej stan. Na rys.\ref{eurekaServerItems} jest przedstawiony przykładowy stan usług zarejestrowanych w rejestrze Eureka.
 
-
-
 \begin{lstlisting}[language=Java, caption=Implementacja rejestru usług serwera Eureka]
     
     package com.example.serviceregistry;
@@ -283,7 +281,7 @@ Klasa ta zawiera następujące zmienne:
     \item \verb|Integer price| - cena produktu
 \end{itemize}
 
-Klasa ta zawiera też metodę \verb|toString()| która przeciąża domyślną metodę klasową języka java \verb|toString()| aby zapewnić reprezentację obiektu produktu, która zawiera wszystkie jego atrybuty.
+Klasa ta zawiera metodę \verb|toString()| która przeciąża domyślną metodę klasową języka java \verb|toString()| aby zapewnić reprezentację obiektu produktu, która zawiera wszystkie atrybuty obiektu.
 
 \subsubsection{Serwis Produktów - ProductService}
 
@@ -459,7 +457,708 @@ Pole \verb|products.file.name| określa nazwę pliku przechowującego produkty.
 Pole \verb|products.count| ustawia liczbę produktów którą producent ma świadczyć. Wykorzystuje zmienną środowiskową NUMBER\_OF\_PRODUCTS, która domyślnie wynosi 1000, jeśli nie zostanie podana.
 
 \subsection{Węzeł protokołu}
+
+Usługa węzła protokołu odpowiedzialna za podejmowanie decyzji o zarządzaniu zasobami w systemie. Usługa zbiera informacje o producentach w systemie, a następnie monitoruje kluczowe wskaźniki wydajności, w tym czas połączenia, szybkość połączenia i średnie obciążenie producenta w ostatniej minucie. Poprzez ciągłą aktualizację tych parametrów węzeł protokołu zapewnia optymalny wybór producentów dla żądania użytkownika, zwiększając wydajność i niezawodność systemu.
+
+\begin{figure}[!htbp]
+    \centering
+    \includesvg[width=\textwidth]{schemas/protocolWorker/Master-Protocol-Worker.drawio.svg}
+    \caption{Węzeł protokołu - schemat UML}
+    \label{ProducerUML}
+\end{figure}
+
+\subsubsection{Wymagania funkcjonalne}
+
+Usługa węzła protokołu powinna spełniać następujące wymagania funkcjonalne:
+
+\begin{itemize}
+    \item Usługa powinna monitorować parametry wydajnościowe producentów.
+    \item Usługa powinna zwracać informację który producent jest najlepszy dla produktów zażądanych przez użytkownika.
+\end{itemize}
+
+\subsubsection{Główna klasa usługi producenta}
+
+Na listeningu\ref{protocolWorkerMainClass} jest przedstawiona główna klasa usługi węzła protokołu, która jest aplikacją Spring Boot.
+
+\begin{lstlisting}[language=Java, caption=Główna klasa węzła protokołu, label=protocolWorkerMainClass]
+    package org.example.masterprotocolworker;
+
+    import org.springframework.boot.SpringApplication;
+    import org.springframework.boot.autoconfigure.SpringBootApplication;
+    import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+    import org.springframework.scheduling.annotation.EnableScheduling;
+    
+    @SpringBootApplication
+    @EnableDiscoveryClient
+    @EnableScheduling
+    public class MasterProtocolWorkerApplication {
+    
+        public static void main(String[] args) {
+            SpringApplication.run(MasterProtocolWorkerApplication.class, args);
+        }
+    
+    }
+\end{lstlisting}
+
+Klasa \verb|MasterProtocolWorkerApplication| jest oznaczona następującymi adnotacjami:
+\begin{itemize}
+    \item Adnotacja \verb|@SpringBootApplication| oznacza klasę aplikacji Spring Boot, umożliwiając automatyczną konfigurację, skanowanie komponentów zadeklarowanych w programie oraz obsługę właściwości konfiguracji usługi.
+    \item Adnotacja \verb|@EnableDiscoveryClient| oznacza umożliwienie aplikacji rejestrację w serwerze Eureka w celu wykrywania usług, umożliwiając jej wykrywanie i komunikację z innymi usługami uruchomionymi w systemie.
+    \item Adnotacja \verb|@EnableScheduling| oznacza aktywację obsługi harmonogramu w aplikacji, umożliwiając jej wykonywanie zaplanowanych zadań w określonych odstępach czasu.
+\end{itemize}
+
 \subsubsection{Podsystem monitoringu producentów}
+
+\subsubsection{Model bufora cyklicznego}
+
+Klasa \verb|MeasurementBuffer| przedstawiona na listeningu\ref{measurementBufferCode} jest klasą pomocniczą wykorzystywaną do przechowywania i zarządzania buforem pomiarów o stałym rozmiarze, umożliwiającą obliczanie średniej pomiarów.
+
+\begin{lstlisting}[language=Java, caption=Kod bufora cyklicznego, label=measurementBufferCode]
+    package org.example.masterprotocolworker.model.helpers;
+    
+    
+    import lombok.AllArgsConstructor;
+    import lombok.Getter;
+    import lombok.NoArgsConstructor;
+    import lombok.Setter;
+    
+    import java.util.ArrayList;
+    import java.util.Collections;
+    import java.util.List;
+    
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class MeasurementBuffer {
+        private static final int BUFFER_SIZE = 10;
+        private List<Double> buffer = new ArrayList<>(Collections.nCopies(BUFFER_SIZE, null));
+        private int index = 0;
+        private int count = 0;
+    
+    
+    
+        public void addMeasurement(double measurement) {
+            buffer.set(index, measurement);
+            index = (index + 1) % BUFFER_SIZE;
+            if (count < BUFFER_SIZE) {
+                count++;
+            }
+        }
+    
+        public Double calculateMean() {
+            double sum = 0;
+            for (int i = 0; i < count; i++) {
+                sum += buffer.get(i);
+            }
+            return count == 0 ? 0 : sum / count;
+        }
+    
+    }
+\end{lstlisting}
+
+Klasa \verb|MeasurementBuffer| posiada następujące pola:
+\begin{itemize}
+    \item \verb|BUFFER_SIZE| - stała definiująca stały rozmiar bufora, ustawiona na 10.
+    \item \verb|buffer| - lista wartości Double o stałym rozmiarze (BUFFER\_SIZE), początkowo wypełniona wartościami null. Lista ta przechowuje pomiary.
+    \item \verb|index| - liczba całkowita śledząca bieżącą pozycję w buforze, gdzie zostanie dodany następny pomiar.
+    \item \verb|count| - liczba całkowita śledząca liczbę pomiarów aktualnie znajdujących się w buforze, aż do maksymalnego rozmiaru bufora.
+\end{itemize}
+
+Klasa \verb|MeasurementBuffer| posiada następujące metody:
+\begin{itemize}
+    \item \verb|addMeasurement| metoda dodająca nowy pomiar do bufora w bieżącej pozycji indeksu. Po dodaniu pomiaru aktualizuje indeks do następnej pozycji, zawijając do 0, gdy zostanie osiągnięty rozmiar bufora. Jeżeli bufor nie jest jeszcze pełny, zwiększa liczbę pomiarów.
+    \item \verb|calculateMean| metoda obliczająca i zwracająca średnią pomiarów aktualnie znajdujących się w buforze. Iteruje po buforze, sumując pomiary i dzieląc przez ich ilość, aby uzyskać średnią. Jeśli nie dodano żadnych pomiarów (count wynosi 0), funkcja zwraca 0.
+\end{itemize}
+
+\subsubsection{Model informacji producenta}
+
+Klasa \verb|ProducerInformation| przechowuje informacje o producencie, koncentrując się w szczególności na metrykach wydajności. Wykorzystuje on obiekty \verb|MeasurementBuffer| do zarządzania i obliczania średnich wartości dla różnych parametrów wydajności. Klasa posiada następujące pola:
+
+\begin{itemize}
+    \item Pole \verb|measurementBufferConnectionSpeed| przechowuje informacje o prędkości transmisji pomiędzy usługą węzła a producentem.
+    \item Pole \verb|measurementBufferConnectionTime| przechowuje informacje o czasie połączenia pomiędzy usługą węzła a producentem.
+    \item Pole \verb|measurementBufferSystemLoadAverage1m| przechowuje informacje o średnim obciążeniu producenta na przestrzeni ostatnich pomiarów.
+\end{itemize}
+
+Klasa \verb|ProducerInformation| została zaprojektowana w celu przechowywania metryk wydajności producenta. Używając instancji \verb|MeasurementBuffer| dla różnych metryk, pozwala na efektywne śledzenie i uśrednianie tych metryk. Metody dostępowe zapewniają dostęp do średnich wartości tych metryk, które mogą być wykorzystywane do monitorowania i podejmowania decyzji w systemie. Klasa ta odgrywa kluczową rolę w ocenie wydajności i niezawodności producentów w systemie rozproszonym, pomagając zidentyfikować najlepszych producentów na podstawie ich wskaźników wydajności.
+
+\subsubsection{Serwis Informacji o producentach}
+
+Klasa \verb|ProducerInfoService| zaprezentowana na listeningu\ref{ProducerInfoServiceCode} to usługa Spring odpowiedzialna za wykrywanie, monitorowanie i zarządzanie metrykami wydajności instancji producentów w systemie rozproszonym. Klasa ta integruje się z serwerem Eureka w celu wykrywania usług i komunikuje się z instancjami producentów. Poniżej znajduje się szczegółowy opis jej komponentów i funkcjonalności:
+
+\begin{lstlisting}[language=Java, caption=Kod usługi ProducerInfoService,label=ProducerInfoServiceCode]
+    package org.example.masterprotocolworker.service;
+
+    import com.netflix.appinfo.InstanceInfo;
+    import com.netflix.discovery.EurekaClient;
+    import com.netflix.discovery.shared.Application;
+    import lombok.Getter;
+    import lombok.extern.slf4j.Slf4j;
+    import org.example.masterprotocolworker.model.MetricResponse;
+    import org.example.masterprotocolworker.model.ProducerInformation;
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.context.annotation.Lazy;
+    import org.springframework.http.*;
+    import org.springframework.scheduling.annotation.Scheduled;
+    import org.springframework.stereotype.Service;
+    import org.springframework.web.client.RestTemplate;
+    
+    import java.io.IOException;
+    import java.net.Socket;
+    import java.util.Arrays;
+    import java.util.HashMap;
+    import java.util.List;
+    import java.util.Map;
+    
+    @Slf4j
+    @Service
+    public class ProducerInfoService {
+    
+        @Lazy
+        @Autowired
+        private EurekaClient eurekaClient;
+    
+        @Autowired
+        private RestTemplate restTemplate;
+    
+        @Getter
+        private final Map<String, ProducerInformation> producerInfoMap = new HashMap<>();
+    
+        public List<Application> getProducers(){
+            List<Application> producerApplications = eurekaClient.getApplications().getRegisteredApplications().stream()
+                    .filter(service -> service.getName().startsWith("PRODUCER-")).toList();
+    //        producerApplications.forEach(producer-> System.out.println(producer.getName()));
+            return producerApplications;
+        }
+    
+    
+        public List<Application> printProducersInfo(){
+            List<Application> producers = getProducers();
+    
+            producers.forEach( producer -> {
+                ResponseEntity<String> response = restTemplate.getForEntity(producer.getInstances().get(0).getHomePageUrl()+"actuator/metrics",String.class);
+                log.info( producer.getName() + " Data:"+ response.getBody());
+            });
+    
+            return producers;
+    
+        }
+    
+        @Scheduled(fixedRate = 30 * 1000)
+        public void testNetworkSpeed() {
+            eurekaClient.getApplications().getRegisteredApplications().stream()
+                    .filter(service -> service.getName().startsWith("PRODUCER-"))
+                    .forEach(producer -> {
+                        measureConnectionTime(producer);
+                        measureConnectionSpeed(producer);
+                        systemLoadAverage1m(producer);
+                    });
+        }
+    
+        private void measureConnectionTime(Application application) {
+            eurekaClient.getApplication(application.getName()).getInstances().forEach(instanceInfo -> {
+                long startTime = System.currentTimeMillis();
+                try (Socket socket = new Socket(instanceInfo.getIPAddr(), instanceInfo.getPort())) {
+                    socket.getOutputStream().write(0);
+                    long endTime = System.currentTimeMillis();
+                    long duration = endTime - startTime;
+                    getProducerInformation(instanceInfo.getAppName()).getMeasurementBufferConnectionTime().addMeasurement(duration+1);
+                } catch (IOException e) {
+                    getProducerInformation(instanceInfo.getAppName()).getMeasurementBufferConnectionTime().addMeasurement(Double.MAX_VALUE);
+                    System.out.println("Failed to connect to " + instanceInfo.getIPAddr() + ":" + instanceInfo.getPort() + "->  " + e.getMessage());
+                }
+            });
+        }
+    
+        private void measureConnectionSpeed(Application application) {
+            eurekaClient.getApplication(application.getName()).getInstances().forEach(instanceInfo -> {
+                try{
+                    // Create a large payload
+                    byte[] payload = new byte[50*1024*1024]; // 50 MB
+                    Arrays.fill(payload, (byte) 1); // Fill with zeros
+    
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+    
+                    HttpEntity<?> request = new HttpEntity<>(payload, headers);
+    
+                    long startTime = System.currentTimeMillis();
+    
+                    ResponseEntity<Long> response = restTemplate.exchange(
+                            "http://"+instanceInfo.getIPAddr()+":"+instanceInfo.getPort()+"/connectionSpeed",
+                            HttpMethod.POST,
+                            request,
+                            Long.class
+                    );
+    
+                    long endTime = System.currentTimeMillis();
+                    if(response.getStatusCode() == HttpStatus.OK){
+                        long timeTaken = endTime - startTime; // Time in milliseconds
+                        double timeTakenInSeconds = timeTaken / 1000.0;
+                        double dataSizeInMB = payload.length / (1024.0 * 1024.0);
+                        double bandwidth = dataSizeInMB / timeTakenInSeconds; // MB/s
+    
+                        getProducerInformation(instanceInfo.getAppName()).getMeasurementBufferConnectionSpeed().addMeasurement(bandwidth);
+    
+                    } else {
+                        getProducerInformation(instanceInfo.getAppName()).getMeasurementBufferConnectionSpeed().addMeasurement(Double.MAX_VALUE);
+                    }
+                }catch (Exception e) {
+                    getProducerInformation(instanceInfo.getAppName()).getMeasurementBufferConnectionSpeed().addMeasurement(Double.MAX_VALUE);
+                    System.out.println("Failed to connect to " + instanceInfo.getIPAddr() + ":" + instanceInfo.getPort() + "-> "+e.getMessage());
+                }
+            });
+        }
+    
+        private void systemLoadAverage1m(Application application){
+            eurekaClient.getApplication(application.getName()).getInstances().forEach(instanceInfo -> {
+                try{
+    
+                    ResponseEntity<MetricResponse> response = restTemplate.exchange(
+                            "http://"+instanceInfo.getIPAddr()+":"+instanceInfo.getPort()+"/actuator/metrics/system.load.average.1m",
+                            HttpMethod.GET,
+                            null,
+                            MetricResponse.class
+                    );
+    
+                    getProducerInformation(instanceInfo.getAppName()).getMeasurementBufferSystemLoadAverage1m().addMeasurement(response.getBody().getMeasurements().get(0).getValue());
+    
+                }catch (Exception e) {
+                    getProducerInformation(instanceInfo.getAppName()).getMeasurementBufferSystemLoadAverage1m().addMeasurement(Double.MAX_VALUE);
+                    System.out.println("Failed to connect to " + instanceInfo.getIPAddr() + ":" + instanceInfo.getPort() + "-> "+e.getMessage());
+                }
+            });
+        }
+    
+        private ProducerInformation getProducerInformation(String producerName) {
+            return producerInfoMap.computeIfAbsent(producerName, k -> new ProducerInformation());
+        }
+    
+        public String getUrl(Application application){
+            InstanceInfo instanceInfo = application.getInstances().get(0);
+            return "http://"+
+                    instanceInfo.getIPAddr()+
+                    ":"+
+                    instanceInfo.getPort();
+    
+        }
+    
+    }
+
+\end{lstlisting}
+
+Klasa \verb|ProducerInfoService| posiada następujące pola:
+\begin{itemize}
+    \item Pole \verb|eurekaClient| odpowiada za deklarację klienta Eureka w celu wykrywania usług w systemie rozproszonym.
+    \item Pole \verb|restTemplate| odpowiada za deklarację klienta \akronim{HTTP} wykorzystywanego do interakcji z instancjami producentów.
+    \item Pole \verb|producerInfoMap| odpowiada za deklarację mapy do przechowywania obiektów klasy \verb|ProducerInformation|, identyfikowanych przez nazwy producentów, które przechowują metryki wydajności.
+\end{itemize}
+
+Klasa \verb|ProducerInfoService| posiada następujące metody:
+\begin{itemize}
+    \item Metoda \verb|getProducers| pobiera listę aplikacji producentów zarejestrowanych w serwerze Eureka, których nazwy zaczynają się od prefixu "PRODUCER-".
+    \item Metoda \verb|printProducersInfo| pobiera i rejestruje dane metryczne z punktu końcowego \verb|/actuator/metrics| każdego producenta.
+    \item Metoda \verb|testNetworkSpeed| jest uruchamiana co 30 sekund w celu pomiaru czasu połączenia, szybkości połączenia i średniego obciążenia systemu dla wszystkich producentów.
+    \item Metoda \verb|measureConnectionTime| mierzy czas połączenia z każdą instancją producenta podanego jako argument metody. Rejestruje czas połączenia w odpowiednim \verb|MeasurementBuffer| dla czasu połączenia w obiekcie \verb|ProducerInformation|.
+    \item Metoda \verb|measureConnectionSpeed| mierzy prędkość połączenia z każdą instancją producenta, wysyłając ładunek o rozmiarze 50 MB. Rejestruje przepustowość (MB/s) w odpowiednim \verb|MeasurementBuffer| dla prędkości połączenia w obiekcie \verb|ProducerInformation|.
+    \item Metoda \verb|systemLoadAverage1m| Pobiera średnią obciążenia systemu w ciągu ostatniej minuty z punktu końcowego \verb|/actuator/metrics/system.load.average.1m| każdej instancji producenta. Zapisuje średnią obciążenia w odpowiednim \verb|MeasurementBuffer| dla średniej obciążenia systemu w obiekcie \verb|ProducerInformation|.
+    \item Metoda \verb|getProducerInformation| pobiera obiekt \verb|ProducerInformation| dla danej nazwy producenta z mapy \verb|producerInfoMap|. Jeśli obiekt o wskazanym kluczu nie istnieje, tworzy nowy obiekt i zapisuje go w mapie pod wskazanym kluczem.
+    \item Metoda \verb|getUrl| konstruuje i zwraca bazowy adres URL dla danej instancji aplikacji.
+\end{itemize}
+
+Klasa \verb|ProducerInfoService| ma kluczowe znaczenie dla utrzymania aktualnego przeglądu wskaźników wydajności producentów w systemie rozproszonym. Okresowo mierząc czasy połączeń, prędkości połączeń i średnie obciążenie systemu, pomaga w ocenie kondycji i wydajności każdego producenta. Informacje te można wykorzystać do podejmowania świadomych decyzji o tym, który producent najlepiej nadaje się do obsługi żądań, zapewniając optymalną wydajność i niezawodność systemu. Wykorzystanie Eureka do wykrywania usług i \verb|RestTemplate| do komunikacji \akronim{HTTP} umożliwia płynną integrację i interakcję z instancjami producentów.
+
 \subsubsection{Podsystem propozycji zasobów}
 
+\subsubsection{Model produktu}
+
+Klasa \verb|Product| przedstawiona na listeningu\ref{produktWorkermodelCode} reprezentuje centralną jednostkę w ramach usługi producenta jak i węzła protokołu.
+
+\begin{lstlisting}[caption=Klasa reprezentująca produkt, label=produktWorkermodelCode]
+    package org.example.masterprotocolworker.model;
+    
+    import lombok.AllArgsConstructor;
+    import lombok.Getter;
+    import lombok.NoArgsConstructor;
+    import lombok.Setter;
+    
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class Product {
+        String id;
+        String name;
+        String model;
+        String producer;
+        Integer amount;
+        Integer price;
+    
+        @Override
+        public String toString(){
+            return "[id = "+
+                    id+
+                    ", name=" +
+                    name +
+                    ", model=" +
+                    model +
+                    ", producer=" +
+                    producer +
+                    ", amount=" +
+                    amount +
+                    "price=" +
+                    price +
+                    "]";
+        }
+    
+    }
+\end{lstlisting}
+
+Klasa ta zawiera następujące zmienne:
+\begin{itemize}
+    \item \verb|String id| - Unikatowe dla danego typu produktu Id
+    \item \verb|String name| - Nazwa produktu
+    \item \verb|String model| - Model produktu
+    \item \verb|String producer| - Nazwa producenta produktu
+    \item \verb|Integer amount| - ilość produktu oferowana przez producenta
+    \item \verb|Integer price| - cena produktu
+\end{itemize}
+
+Klasa ta zawiera metodę \verb|toString()| która przeciąża domyślną metodę klasową języka java \verb|toString()| aby zapewnić reprezentację obiektu produktu, która zawiera wszystkie atrybuty obiektu.
+
+
+\subsubsection{Klasa propozycji produktów producenta}
+
+Klasa \verb|ProducerProposal| przedstawiona na listeningu\ref{ProducerProposalCode} to model danych wykorzystywany do reprezentowania propozycji dla producenta w oparciu o określone kryteria.
+
+\begin{lstlisting}[language=Java, caption=Kod klasy ProducerProposal,label=ProducerProposalCode]
+    package org.example.masterprotocolworker.model;
+
+    import lombok.*;
+    
+    import java.util.List;
+    
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class ProducerProposal {
+        private Double producerCalculatedRating;
+        private List<Product> products;
+    }
+    
+\end{lstlisting}
+
+Klasa \verb|ProducerProposal| posiada następujące pola:
+\begin{itemize}
+    \item Pole \verb|producerCalculatedRating| zawiera wartość reprezentującą obliczoną ocenę producenta. Ocena ta jest pochodną wskaźników wydajnościowych i jest wykorzystywana przy decydowaniu który producent jest najlepszy dla żądania użytkownika.
+    \item Pole \verb|products| zawiera listę obiektów \verb|Product| reprezentujących produkty powiązane z daną propozycją producenta. Każdy obiekt \verb|Product| zawiera szczegółowe informacje o konkretnym produkcie.
+\end{itemize}
+
+Klasa \verb|ProducerProposal| służy do przechowywania i przekazywania informacji o proponowanym producencie i powiązanych z nim produktach. \verb|ProducerCalculatedRating| przechowuje miarę przydatności producenta, podczas gdy lista produktów zawiera szczegółowe informacje na temat konkretnych produktów, które producent oferuje.
+
+\subsubsection{Klasa ostatecznej propozycji}
+
+Klasa \verb|Proposal| zaprezentowana na listeningu\ref{ProposalCode} to model danych do zarządzania kolekcją propozycji producentów. Klasa ta wykorzystuje adnotacje \verb|Lombok| w celu zmniejszenia ilości standardowego kodu i usprawnienia implementacji.
+
+\begin{lstlisting}[language=Java, caption=Kod klasy Proposal,label=ProposalCode]
+    package org.example.masterprotocolworker.model;
+    
+    
+    import lombok.AllArgsConstructor;
+    import lombok.Getter;
+    import lombok.NoArgsConstructor;
+    import lombok.Setter;
+    
+    import java.util.Map;
+    
+    @Setter
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class Proposal {
+        Map<String, ProducerProposal> proposalProducts;
+    }
+\end{lstlisting}
+
+Klasa ta posiada pole \verb|proposalProducts| które jest mapą przechowującą pod kluczem będącym identyfikatorem producenta obiekt klasy \verb|ProducerProposal| z propozycją produktów od danego producenta.
+
+\subsubsection{Serwis produktów - ProductsService}
+
+Klasa \verb|ProductsService| przedstawiona na listingu\ref{productsServiceCode} jest odpowiedzialna za interakcję z usługami producentów w celu sprawdzenia dostępności produktów i mapowania produktów do odpowiednich producentów. Klasa ta wykorzystuje usługę \verb|ProducerInfoService| do wykrywania producentów oraz szablon \verb|RestTemplate| do komunikacji z nimi. 
+
+\begin{lstlisting}[language=Java,caption= Kod klasy ProductsService, label=productsServiceCode]
+    package org.example.masterprotocolworker.service;
+
+    import com.netflix.discovery.shared.Application;
+    import lombok.RequiredArgsConstructor;
+    import lombok.extern.slf4j.Slf4j;
+    import org.example.masterprotocolworker.model.Product;
+    import org.springframework.http.HttpEntity;
+    import org.springframework.http.HttpMethod;
+    import org.springframework.http.ResponseEntity;
+    import org.springframework.stereotype.Service;
+    import org.springframework.web.client.RestTemplate;
+    
+    import java.util.ArrayList;
+    import java.util.Collections;
+    import java.util.HashMap;
+    import java.util.List;
+    import java.util.Map;
+    
+    @Slf4j
+    @Service
+    @RequiredArgsConstructor
+    public class ProductsService {
+    
+        private final ProducerInfoService producerInfoService;
+        private final RestTemplate restTemplate;
+    
+        private Product hasProducerProduct(Application producer, Product product){
+            ResponseEntity<Product> response = this.restTemplate.exchange(
+                    this.producerInfoService.getUrl(producer)+"/products/check",
+                    HttpMethod.POST,
+                    new HttpEntity<>(product),
+                    Product.class
+                    );
+    
+            return response.getBody()!=null ? response.getBody() : null;
+        }
+    
+    
+        public Map<String, List<Product>> getProducersWithProduct(List<Product> productList) {
+            List<Application> producers;
+            try {
+                producers = this.producerInfoService.getProducers();
+            } catch (Exception e) {
+                // Log the error and return an empty map or handle the error as needed
+                System.err.println("Failed to retrieve producers from Eureka: " + e.getMessage());
+                return Collections.singletonMap("ERROR", Collections.singletonList(new Product()));
+            }
+    
+            Map<String, List<Product>> producerProductMap = new HashMap<>();
+            List<Product> notFoundProducts = new ArrayList<>();
+    
+            for (Product product : productList) {
+                boolean found = false;
+                for (Application producer : producers) {
+                    try {
+                        Product response = hasProducerProduct(producer, product);
+                        if (response != null) {
+                            producerProductMap
+                                    .computeIfAbsent(producer.getName(), k -> new ArrayList<>())
+                                    .add(response);
+                            found = true;
+                        }
+                    } catch (Exception e) {
+                        // Log the error and continue with the next producer
+                        log.error("Error checking product in producer {}: {}", producer.getName(), e.getMessage());
+                    }
+                }
+                if (!found) {
+                    notFoundProducts.add(product);
+                }
+            }
+    
+            if (!notFoundProducts.isEmpty()) {
+                producerProductMap.put("NOT-FOUND", notFoundProducts);
+            }
+    
+            return producerProductMap;
+        }
+    
+    }
+
+\end{lstlisting}
+
+Klasa \verb|ProductsService| zawiera następujące pola:
+\begin{itemize}
+    \item Pole \verb|producerInfoService| jest odniesieniem do usługi \verb|ProducerInfoService|, która udostępnia metody pobierania informacji o producencie i metryk wydajności.
+    \item Pole \verb|restTemplate| jest odniesieniem do \verb|RestTemplate|, który jest wykorzystywany do wykonywania żądań \akronim{HTTP} do instancji producenta.
+\end{itemize}
+
+Klasa \verb|ProductsService| zawiera następujące metody:
+\begin{itemize}
+    \item Metoda \verb|hasProducerProduct| sprawdza, czy dany producent może dostarczyć określony produkt. Wysyła żądanie \akronim{POST} do punktu końcowego \verb|/products/check| producenta ze szczegółami produktu i zwraca produkt, jeśli jest dostępny, lub wartość \verb|null|, jeśli producent nie oferuje danego produktu.
+    \item Metoda \verb|getProducersWithProduct| mapuje każdy produkt do producentów, którzy mogą go dostarczyć.
+    Najpierw metoda pobiera listę producentów za pomocą usługi \verb|producerInfoService|. Usługa ta jest odpowiedzialna za interakcję z serwerem Eureka w celu uzyskania niezbędnych informacji o wszystkich zarejestrowanych usługach producentów.
+
+    Następnie metoda inicjalizuje mapę do przechowywania listy produktów dostępnych u każdego producenta. Mapa ta jest skonstruowana w taki sposób, że każdy klucz reprezentuje nazwę producenta, a powiązana wartość jest listą produktów, które producent może dostarczyć. Dodatkowo tworzona jest osobna lista, aby śledzić produkty, które nie zostały znalezione u żadnego producenta.
+
+    Następnie metoda iteruje po dostarczonej liście produktów. Dla każdego produktu na tej liście sprawdza wszystkich dostępnych producentów, aby sprawdzić, czy producent może dostarczyć produkt. To sprawdzenie jest wykonywane przy użyciu metody \verb|hasProducerProduct|, która wysyła żądanie do producenta w celu zweryfikowania dostępności produktu
+
+    Jeżeli producent może dostarczyć produkt, metoda dodaje produkt do listy producentów na mapie. Gwarantuje to, że każdy produkt jest prawidłowo powiązany z producentami, którzy mogą go dostarczyć.
+
+    Jeżeli żaden producent nie może dostarczyć produktu, metoda dodaje produkt do listy "NOT-FOUND". Lista ta służy jako rejestr produktów, które nie zostały znalezione u żadnego z dostępnych producentów, zapewniając, że żaden produkt nie zostanie pominięty.
+
+    Na koniec metoda zwraca mapę producentów i ich dostępnych produktów. Mapa ta zawiera wszystkich producentów i produkty, które mogą dostarczyć, ze specjalnym wpisem pod kluczem "NOT-FOUND" dla produktów, które nie zostały znalezione u żadnego producenta.
+\end{itemize}
+
+\subsubsection{Serwis propozycji - ProposalService}
+
+Klasa \verb|ProposalService| zaprezentowana na listeningu\ref{} jest odpowiedzialna za generowanie propozycji przypisania produktów do producentów w oparciu o wskaźniki wydajności. Klasa ta wykorzystuje pozostałe usługi, takie jak \verb|ProductsService| i \verb|ProducerInfoService|, do gromadzenia niezbędnych danych i podejmowania decyzji.
+
+\begin{lstlisting}
+    package org.example.masterprotocolworker.service;
+
+    import lombok.AllArgsConstructor;
+    import lombok.extern.slf4j.Slf4j;
+    import org.example.masterprotocolworker.exceptions.WrongValueException;
+    import org.example.masterprotocolworker.model.ProducerInformation;
+    import org.example.masterprotocolworker.model.ProducerProposal;
+    import org.example.masterprotocolworker.model.Product;
+    import org.example.masterprotocolworker.model.Proposal;
+    import org.springframework.stereotype.Service;
+    
+    import java.util.*;
+    import java.util.stream.Collectors;
+    
+    @Slf4j
+    @Service
+    @AllArgsConstructor
+    public class ProposalService {
+    
+        private final ProductsService productsService;
+        private final ProducerInfoService producerInfoService;
+    
+    
+        public Proposal getProposal(List<Product> products) {
+            // Step 1: Get the producers with their respective products
+            Map<String, List<Product>> producerProductMap = productsService.getProducersWithProduct(products);
+            Map<String, Double> producerCalculatedValues = new HashMap<>();
+    
+            // Step 2: Calculate proposal values for each producer
+            producerProductMap.forEach((producer, producersProduct) -> {
+                try {
+                    producerCalculatedValues.put(producer, calculateProposal(producer));
+                } catch (WrongValueException e) {
+                    log.warn("{} set value to Long.MAX_VALUE", e.getMessage());
+                    producerCalculatedValues.put(producer, Double.MAX_VALUE);
+                }
+            });
+    
+            // Step 3: Find the producer with the minimal value
+            String bestProducer = producerCalculatedValues.entrySet()
+                    .stream()
+                    .min(Map.Entry.comparingByValue())
+                    .map(Map.Entry::getKey)
+                    .orElseThrow(() -> new RuntimeException("No producers found"));
+    
+            // Step 4: Create a map to store the final proposal for each producer
+            Map<String, ProducerProposal> finalProposals = new HashMap<>();
+    
+            // Step 5: Assign products to the best producer first
+            List<Product> bestProducerProducts = new ArrayList<>(producerProductMap.get(bestProducer));
+            finalProposals.put(bestProducer, new ProducerProposal(producerCalculatedValues.get(bestProducer), bestProducerProducts));
+    
+            // Step 6: Remove products assigned to the best producer from other producers' lists based on product ID
+            Set<String> bestProducerProductIds = bestProducerProducts.stream()
+                    .map(Product::getId)
+                    .collect(Collectors.toSet());
+    
+            for (String producer : producerProductMap.keySet()) {
+                if (!producer.equals(bestProducer)) {
+                    List<Product> filteredProducts = producerProductMap.get(producer)
+                            .stream()
+                            .filter(product -> !bestProducerProductIds.contains(product.getId()))
+                            .collect(Collectors.toList());
+                    producerProductMap.put(producer, filteredProducts);
+                }
+            }
+    
+            // Step 7: Ensure all products from the initial request are covered by assigning remaining products to the next best producer
+            Set<String> allAssignedProductIds = finalProposals.values().stream()
+                    .flatMap(pp -> pp.getProducts().stream())
+                    .map(Product::getId)
+                    .collect(Collectors.toSet());
+    
+            for (Product product : products) {
+                if (!allAssignedProductIds.contains(product.getId())) {
+                    // Find the next best producer that has this product
+                    for (String producer : producerCalculatedValues.keySet()) {
+                        if (producerProductMap.get(producer).stream().anyMatch(p -> p.getId().equals(product.getId()))) {
+                            finalProposals.computeIfAbsent(producer, k -> new ProducerProposal(producerCalculatedValues.get(producer), new ArrayList<>()))
+                                    .getProducts()
+                                    .add(product);
+                            // Remove the product from other producers' lists once it is assigned
+                            producerProductMap.forEach((otherProducer, otherProducts) -> {
+                                if (!otherProducer.equals(producer)) {
+                                    otherProducts.removeIf(p -> p.getId().equals(product.getId()));
+                                }
+                            });
+                            break;
+                        }
+                    }
+                }
+            }
+    
+            // Log the final proposals for debugging
+            log.info("Final proposals: {}", finalProposals);
+    
+            // Step 8: Create and return the final Proposal object
+            return new Proposal(finalProposals);
+        }
+    
+        private Double calculateProposal(String producer) throws WrongValueException {
+    
+            if(producer.equals("NOT-FOUND")) return Double.MAX_VALUE;
+    
+            double proposedValue = 1D;
+            ProducerInformation producerInformation = this.producerInfoService.getProducerInfoMap().get(producer);
+    
+            if(producerInformation.getConnectionSpeed()!=-1L){
+                proposedValue *= producerInformation.getConnectionSpeed();
+            }else{
+                throw new WrongValueException("Wrong value in connectionSpeed");
+            }
+    
+            if(producerInformation.getConnectionTime()!=-1L){
+                proposedValue *= producerInformation.getConnectionTime();
+            }else{
+                throw new WrongValueException("Wrong value in connectionTime");
+            }
+    
+            if(producerInformation.getSystemLoadAverage1m()!=-1D){
+                proposedValue *= producerInformation.getSystemLoadAverage1m();
+            }else{
+                throw new WrongValueException("Wrong value in systemLoadAverage1m");
+            }
+    
+            return proposedValue;
+        }
+    }
+    
+\end{lstlisting}
+
+
+Klasa \verb|ProposalService| posiada następujące pola:
+\begin{itemize}
+    \item Pole \verb|productsService| jest odniesieniem do usługi \verb|ProductsService|, która udostępnia metody pozwalające przyporządkować produkty do producentów.
+    \item Pole \verb|producerInfoService| jest odniesieniem do usługi \verb|ProducerInfoService|, która udostępnia metody pobierania informacji o metrykach wydajności producentów.
+\end{itemize}
+
+Klasa \verb|ProposalService| posiada następujące metody:
+\begin{itemize}
+    \item Metoda \verb|calculateProposal| oblicza proponowaną ocenę dla danego producenta na podstawie jego wskaźników wydajności. Obliczana wartość jest iloczynem średnich wartości metryk otrzymanych z usługi \verb|ProducerInfoService| dla danego producenta.
+    \item Metoda \verb|getProposal| otrzymuje jako argument listę produktów które mają zostać przydzielone użytkownikowi od producentów. W metodzie \verb|getProposal| klasy \verb|ProposalService| proces generowania propozycji przypisania produktów do producentów odbywa się w kilku ściśle określonych krokach. 
+
+    Po pierwsze, metoda pobiera listę producentów i powiązanych z nimi produktów za pomocą usługi \verb|productsService|. To wywołanie usługi pobiera mapę producentów i produktów, które są przez nich oferowane, zapewniając podstawowe dane potrzebne do procesu składania propozycji.
+
+    Następnie metoda oblicza wartości propozycji dla każdego producenta przy użyciu metody \verb|calculateProposal|. Metoda ta ocenia wskaźniki wydajności każdego producenta, takie jak szybkość połączenia, czas połączenia i średnie obciążenie systemu, w celu uzyskania wartości liczbowej reprezentującej ogólną wydajność i przydatność producenta.
+
+    Po obliczeniu proponowanych wartości, metoda identyfikuje producenta z minimalną obliczoną wartością, wyznaczając go jako najlepszy wybór do obsługi produktów. Wybór ten opiera się na założeniu, że niższa wartość propozycji wskazuje na lepszą wydajność i wyższą niezawodność.
+
+    Następnie metoda inicjuje mapę do przechowywania ostatecznych szczegółów propozycji dla każdego producenta. Mapa ta będzie zawierać proponowane przypisania produktów do producentów, zorganizowane w sposób umożliwiający łatwy dostęp i manipulację.
+
+    Następnie metoda przypisuje produkty w pierwszej kolejności do najlepszego producenta. Taka priorytetyzacja zapewnia, że najlepiej oceniony producent obsługuje jak najwięcej produktów, wykorzystując jego doskonałe wskaźniki wydajności w celu zapewnieniu użytkownikowikowi jak najlepszej wydajności.
+
+    Po przypisaniu produktów do najlepszego producenta, metoda usuwa te produkty z list innych producentów. Krok ten polega na odfiltrowaniu produktów na podstawie ich identyfikatorów, zapewniając, że żaden produkt nie jest przypisany do więcej niż jednego producenta.
+
+    Aby upewnić się, że wszystkie produkty z początkowego żądania zostały uwzględnione, metoda iteruje przez pozostałe produkty i przypisuje je do następnych najlepszych producentów. Proces ten obejmuje sprawdzenie, którzy producenci nadal mają nieprzypisane produkty i odpowiednie przydzielenie tych produktów, zachowując integralność oryginalnej listy produktów.
+    
+    Na koniec metoda tworzy i zwraca obiekt \verb|Proposal|, który zawiera wszystkie przypisania produktów. Obiekt ten zawiera pełne mapowanie produktów do producentów, odzwierciedlając decyzje podjęte podczas procesu generowania propozycji.
+
+    W trakcie tej procedury metoda rejestruje w konsoli ostateczną propozycję do celów debugowania. Rejestrowanie zapewnia wgląd w proces generowania propozycji, umożliwiając łatwiejsze rozwiązywanie problemów i weryfikację podjętych decyzji.
+\end{itemize}
 \section{Uruchomienie środowiska}
