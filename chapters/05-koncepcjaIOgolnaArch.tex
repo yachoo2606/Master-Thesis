@@ -1,4 +1,8 @@
-\chapter{}
+\chapter{Koncepcja i architektura systemu}
+
+Niniejszy rozdział opisuje architekturę i koncepcję systemu zaprojektowanego do obsługi środowiska Metaverse. Poprzez integrację różnych technologii. System ten ułatwia dynamiczne wykrywanie usług, solidne przetwarzanie danych i monitorowanie w czasie rzeczywistym. Celem jest stworzenie skalowalnego i interaktywnego wirtualnego świata, w którym producenci i użytkownicy mogą płynnie wchodzić w interakcje, zapewniając optymalną wydajność i niezawodność dzięki skutecznym praktykom monitorowania systemu.
+
+System przedstawiony na rys.\ref{designedSystem} został zaprojektowany w celu wspierania dynamicznego i interaktywnego środowiska Metaverse poprzez integrację dwóch podstawowych podsystemów: jednego skoncentrowanego na producentach i użytkownikach, a drugiego na monitorowaniu i utrzymaniu.
 
 % Temporarily change the margins for this page
 \newgeometry{
@@ -7,17 +11,56 @@
   top=1.5in,
   bottom=1in,
 }
-\section{Elementy tworzonego systemu}
 \begin{figure}[!htbp]
     \centering
-    \includesvg[width=\textwidth]{schemas/master-Dev.drawio.svg}
+    \includesvg[width=\textwidth]{schemas/master—koncepcja-Dev.drawio.svg}
     \caption{Schemat tworzonego systemu}
-    \label{fig:enter-label}
+    \label{designedSystem}
 \end{figure}
-
 % Restore the original margins
 \restoregeometry
 \newpage
+
+
+\section{Podsystem użytkowy}
+
+Podsystem użytkowy ułatwia interakcję między producentami i użytkownikami. Producenci to podmioty, które tworzą i dostarczają wirtualne środowiska, zasoby cyfrowe lub usługi w ramach Metaverse. Z kolei użytkownicy wykorzystują te zasoby, aby uczestniczyć w różnych działaniach i doświadczeniach. Każdy użytkownik uruchamia wyspecjalizowaną aplikację z unikalnym identyfikatorem, co pozwala mu na interakcję z systemem, żądanie zasobów i płynną współpracę z producentami. Rejestr usług zapewnia, że producenci i użytkownicy mogą dynamicznie odkrywać i wchodzić ze sobą w interakcje, wspierając wydajny i skalowalny ekosystem.
+
+\subsection{Rejestr usług}
+
+Pierwszym centralnym elementem podsystemu użytkowego jest rejestr usług, który zarządza wykrywaniem i przechowywaniem informacji o uruchomionych usługach w sieci. Komponent ten działa jako centralny katalog, w którym każda usługa rejestruje się po uruchomieniu, podając szczegóły, takie jak jej lokalizacja i status. Inne usługi i aplikacje w sieci mogą następnie odpytywać ten rejestr, aby znaleźć i uzyskać informacje o zarejestrowanych usługach. Mechanizm ten zapewnia, że wszystkie usługi mogą dynamicznie lokalizować się nawzajem i efektywnie współdziałać, wspierając płynną komunikację i alokację zasobów w systemie.
+
+\subsection{Producenci}
+
+W zaprojektowanym systemie producenci są podmiotami, które tworzą i oferują różne wirtualne produkty i usługi. Producenci muszą najpierw zarejestrować się w centralnym rejestrze usług. Po zarejestrowaniu producenci stają się wykrywalni przez inne komponenty i użytkowników w systemie. Po rejestracji producenci są odpowiedzialni za dostarczanie swoich produktów i usług, oraz na żądanie użytkownika zapewniają, że ich oferty są dostępne dla użytkowników. Ten proces rejestracji i wykrywania ułatwia wydajną interakcję i wykorzystanie zasobów w środowisku Metaverse.
+
+\subsection{Użytkownicy}
+
+Aby uczestniczyć w przetwarzaniu systemu i zamawiać zasoby od producentów, użytkownicy muszą uruchomić usługę węzła protokołu z unikalnym identyfikatorem. Ten unikalny identyfikator jest niezbędny do identyfikacji i zarządzania interakcjami każdego użytkownika w systemie.
+
+\subsubsection{Funkcje i działania użytkownika}
+
+Zaprojektowany użytkownik zapewnia następujące funkcje:
+
+\begin{itemize}
+    \item Aplikacja węzła protokołu: Użytkownicy są zobowiązani do uruchomienia usługi o nazwie protocol-worker. Aplikacja ta służy jako interfejs, za pośrednictwem którego użytkownicy wchodzą w interakcję z systemem Metaverse, umożliwiając im żądanie zasobów dostarczanych przez producentów.
+    \item W momencie uruchomienia usługi zostaje jej nadany unikatowy w skali systemu identyfikator. Ten identyfikator ma kluczowe znaczenie dla śledzenia działań użytkownika, zarządzania jego żądaniami i zapewnienia, że zasoby są odpowiednio przydzielane.
+    \item Rejestracja usługi w serwerze usług: Aplikacja protocol-worker rejestruje się w serwerze usług przy użyciu unikalnego identyfikatora. Ten proces rejestracji sprawia, że użytkownik jest wykrywalny w systemie Metaverse.
+    \item Zamawianie zasobów: Po rejestracji użytkownicy mogą zamawiać zasoby od producentów w systemie. Aplikacja protocol-worker zapewnia te interakcje, zbierając dane monitorujące producentów w celu późniejszego określenia, który z nich jest najbardziej odpowiedni dla użytkownika zamawiającego zasoby.
+\end{itemize}
+
+Na rys.\ref{wymianaWiadomosciWSystemie} przedstawiono sekwencję wymiany komunikatów w ramach systemu rezerwacji zasobów. Wykres ten szczegółowo opisuje interakcje pomiędzy elementami systemu:
+
+\begin{itemize}
+    \item Proces rozpoczyna się od zainicjowania przez użytkownika żądania rezerwacji zasobów. Żądanie to jest wysyłane do usługi  protocol-worker.
+    \item Po otrzymaniu żądania użytkownika, usługa protocol-worker wysyła zapytanie do rejestru usług w celu uzyskania listy wszystkich zarejestrowanych producentów. Ten krok zapewnia, że protocol-worker ma najbardziej aktualne informacje o dostępnych producentach w systemie.
+    \item Rejestr usług odpowiada na żądanie usługi protocol-worker z listą zarejestrowanych producentów. Lista ta zawiera informacje o producentach, którzy mogą potencjalnie spełnić żądanie użytkownika.
+    \item Usługa protocol-worker przetwarza każdego producenta z listy, aby sprawdzić dostępność żądanych zasobów.
+    \item Dla każdego producenta na liście usługa protocol-worker wysyła wiadomości w celu sprawdzenia dostępności żądanych zasobów. Wiąże się to z wysłaniem zapytania do producenta w celu ustalenia, czy może on zapewnić wymagane zasoby.
+    \item Każdy producent odpowiada do protocol-worker z informacją o dostępności żądanych zasobów. Ta odpowiedź wskazuje, czy producent może spełnić żądanie użytkownika.
+    \item Po zebraniu informacji o dostępności zasobów od wszystkich producentów, usługa protocol-worker przetwarza te odpowiedzi w celu określenia najlepszych opcji realizacji żądania użytkownika. Może to obejmować wybór producentów, którzy mogą najbardziej efektywnie zapewnić niezbędne zasoby.
+    \item Na koniec usługa protocol-worker zwraca użytkownikowi zebrane informacje o dostępności zasobów u producentów.
+\end{itemize}
 
 \begin{figure}[h!]
     \centering
@@ -73,5 +116,9 @@
             \mess{Return Resource Availability}{protocolWorker}{user}
         \end{msc}
     \caption{ Schemat wymiany wiadomości podczas przetwarzania żądania użytkownika}
-    \label{fig:enter-label}
+    \label{wymianaWiadomosciWSystemie}
 \end{figure}
+
+\section{Podsystem monitoringu}
+
+Drugi podsystem jest przeznaczony do monitorowania i utrzymywania kondycji i wydajności infrastruktury Metaverse. Podsystem ten stale gromadzi i przetwarza dzienniki zdarzeń ze wszystkich komponentów systemu, zapewniając wgląd w czasie rzeczywistym w działania systemu. Dzięki kompleksowym narzędziom wizualizacyjnym administratorzy mogą monitorować stan systemu, identyfikować potencjalne problemy i podejmować decyzje oparte na danych w celu zapewnienia optymalnej funkcjonalności. Takie podejście do monitorowania i konserwacji pomaga utrzymać niezawodne i wydajne środowisko Metaverse, wspierając płynną interakcję między producentami i użytkownikami.

@@ -1,5 +1,8 @@
 \chapter{Implementacja}
 
+Niniejszy rozdział zawiera szczegółową analizę implementacji systemu. Obejmuje on konfigurację komponentów, integrację mechanizmów wykrywania usług i zarządzania zasobami oraz konfigurację narzędzi do monitorowania. Analizując te aspekty implementacji, rozdział ujawnia, w jaki sposób realizowana jest architektura systemu, umożliwiając dynamiczną interakcję między producentami i użytkownikami, efektywną alokację zasobów i solidne monitorowanie wydajności.
+
+\section{Podsystem użytkowy}
 \subsection{Rejestr usług}
 
 Głównym elementem w podsystemie użytkowym jest rejestr usług, rejestr ten jest wykorzystywany jako zbiór informacji na temat usług uruchomionych w systemie. W usłudze następuje rejestracja producentów świadczący usługi w systemie oraz węzłów protokołu użytkowników, które są wykorzystywane do zarządzania przydziałem zasobów.
@@ -209,7 +212,7 @@ Klasa ta zawiera metodę \verb|toString()| która przeciąża domyślną metodę
 
 \subsubsection{Serwis Produktów - ProductService}
 
-Klasa \verb|ProductsService| zaprezentowana na listeningu\ref{productsServiceCode} jest usługą Spring odpowiedzialną za zarządzanie produktami w aplikacji producenta. Wykorzystuje ona klasę \verb|Product| w celu zainicjowania produktów, przechowywania produktów, oraz pobierania informacji o produktach. Klasa jest opatrzona adnotacją \verb|@Service|, wskazującej że jest to komponent usługi Spring, oraz \verb|@Slf4j|, aby umożliwić tworzenie dziennika zdarzeń w aplikacji.
+Klasa \verb|ProductsService| zaprezentowana na listingu\ref{productsServiceCode} jest usługą Spring odpowiedzialną za zarządzanie produktami w aplikacji producenta. Wykorzystuje ona klasę \verb|Product| w celu zainicjowania produktów, przechowywania produktów, oraz pobierania informacji o produktach. Klasa jest opatrzona adnotacją \verb|@Service|, wskazującej że jest to komponent usługi Spring, oraz \verb|@Slf4j|, aby umożliwić tworzenie dziennika zdarzeń w aplikacji.
 
 \begin{lstlisting}[caption=Kod klasy ProductsService, label=productsServiceCode]
     package com.example.producer.service;
@@ -285,7 +288,7 @@ Klasa \verb|ProductsService| zawiera następujące metody:
 
 \subsubsection{Kontroler prędkości transmisji - SpeedTestController}
 
-Klasa \verb|speedTestController| przedstawiona na listeningu\ref{speedTestControllerCode} zapewnia punkt końcowy do testowania szybkości połączenia pomiędzy producentem a klientem poprzez odbieranie tablicy bajtów i zwracanie bieżącego czasu systemowego w nanosekundach. Punkt końcowy jest mapowany na \verb|/connectionSpeed| i obsługuję żądania \akronim{POST} protokołu \akronim{HTTP} (\english{Hypertext Transfer Protocol}).
+Klasa \verb|speedTestController| przedstawiona na listingu\ref{speedTestControllerCode} zapewnia punkt końcowy do testowania szybkości połączenia pomiędzy producentem a klientem poprzez odbieranie tablicy bajtów i zwracanie bieżącego czasu systemowego w nanosekundach. Punkt końcowy jest mapowany na \verb|/connectionSpeed| i obsługuję żądania \akronim{POST} protokołu \akronim{HTTP} (\english{Hypertext Transfer Protocol}).
 
 \begin{lstlisting}[caption=Kod klasy SpeedTestController, label=speedTestControllerCode]
     package com.example.producer.controllers;
@@ -312,7 +315,7 @@ Klasa \verb|speedTestController| przedstawiona na listeningu\ref{speedTestContro
 
 \subsubsection{Konfiguracja usługi producenta}
 
-Plik konfiguracyjny przedstawiony na listeningu\ref{producerconfigFIle} służy do konfiguracji usługi producenta. Konfiguruje on właściwości aplikacji, ustawienia serwera, konfigurację klienta Eureka, konfigurację dziennika zdarzeń, szczegóły pliku produktów i punkty końcowe zarządzania.
+Plik konfiguracyjny przedstawiony na listingu\ref{producerconfigFIle} służy do konfiguracji usługi producenta. Konfiguruje on właściwości aplikacji, ustawienia serwera, konfigurację klienta Eureka, konfigurację dziennika zdarzeń, szczegóły pliku produktów i punkty końcowe zarządzania.
 
 \begin{lstlisting}[caption=Plik konfiguracyjny usługi producenta, label=producerconfigFIle]
     spring:
@@ -402,7 +405,7 @@ Usługa węzła protokołu powinna spełniać następujące wymagania funkcjonal
 
 \subsubsection{Główna klasa usługi producenta}
 
-Na listeningu\ref{protocolWorkerMainClass} jest przedstawiona główna klasa usługi węzła protokołu, która jest aplikacją Spring Boot.
+Na listingu\ref{protocolWorkerMainClass} jest przedstawiona główna klasa usługi węzła protokołu, która jest aplikacją Spring Boot.
 
 \begin{lstlisting}[language=Java, caption=Główna klasa węzła protokołu, label=protocolWorkerMainClass]
     package org.example.masterprotocolworker;
@@ -435,7 +438,7 @@ Klasa \verb|MasterProtocolWorkerApplication| jest oznaczona następującymi adno
 
 \subsubsection{Model bufora cyklicznego}
 
-Klasa \verb|MeasurementBuffer| przedstawiona na listeningu\ref{measurementBufferCode} jest klasą pomocniczą wykorzystywaną do przechowywania i zarządzania buforem pomiarów o stałym rozmiarze, umożliwiającą obliczanie średniej pomiarów.
+Klasa \verb|MeasurementBuffer| przedstawiona na listingu\ref{measurementBufferCode} jest klasą pomocniczą wykorzystywaną do przechowywania i zarządzania buforem pomiarów o stałym rozmiarze, umożliwiającą obliczanie średniej pomiarów.
 
 \begin{lstlisting}[language=Java, caption=Kod bufora cyklicznego, label=measurementBufferCode]
     package org.example.masterprotocolworker.model.helpers;
@@ -509,7 +512,7 @@ Klasa \verb|ProducerInformation| została zaprojektowana w celu przechowywania m
 
 \subsubsection{Serwis Informacji o producentach}
 
-Klasa \verb|ProducerInfoService| zaprezentowana na listeningu\ref{ProducerInfoServiceCode} to usługa Spring odpowiedzialna za wykrywanie, monitorowanie i zarządzanie metrykami wydajności instancji producentów w systemie rozproszonym. Klasa ta integruje się z serwerem Eureka w celu wykrywania usług i komunikuje się z instancjami producentów. Poniżej znajduje się szczegółowy opis jej komponentów i funkcjonalności:
+Klasa \verb|ProducerInfoService| zaprezentowana na listingu\ref{ProducerInfoServiceCode} to usługa Spring odpowiedzialna za wykrywanie, monitorowanie i zarządzanie metrykami wydajności instancji producentów w systemie rozproszonym. Klasa ta integruje się z serwerem Eureka w celu wykrywania usług i komunikuje się z instancjami producentów. Poniżej znajduje się szczegółowy opis jej komponentów i funkcjonalności:
 
 \begin{lstlisting}[language=Java, caption=Kod usługi ProducerInfoService,label=ProducerInfoServiceCode]
     package org.example.masterprotocolworker.service;
@@ -694,7 +697,7 @@ Klasa \verb|ProducerInfoService| ma kluczowe znaczenie dla utrzymania aktualnego
 
 \subsubsection{Model produktu}
 
-Klasa \verb|Product| przedstawiona na listeningu\ref{produktWorkermodelCode} reprezentuje centralną jednostkę w ramach usługi producenta jak i węzła protokołu.
+Klasa \verb|Product| przedstawiona na listingu\ref{produktWorkermodelCode} reprezentuje centralną jednostkę w ramach usługi producenta oraz usłudze węzła protokołu.
 
 \begin{lstlisting}[caption=Klasa reprezentująca produkt, label=produktWorkermodelCode]
     package org.example.masterprotocolworker.model;
@@ -738,12 +741,12 @@ Klasa \verb|Product| przedstawiona na listeningu\ref{produktWorkermodelCode} rep
 
 Klasa ta zawiera następujące zmienne:
 \begin{itemize}
-    \item \verb|String id| - Unikatowe dla danego typu produktu Id
-    \item \verb|String name| - Nazwa produktu
-    \item \verb|String model| - Model produktu
-    \item \verb|String producer| - Nazwa producenta produktu
-    \item \verb|Integer amount| - ilość produktu oferowana przez producenta
-    \item \verb|Integer price| - cena produktu
+    \item \verb|String id| --- Unikatowe dla danego typu produktu Id
+    \item \verb|String name| --- Nazwa produktu
+    \item \verb|String model| --- Model produktu
+    \item \verb|String producer| --- Nazwa producenta produktu
+    \item \verb|Integer amount| --- ilość produktu oferowana przez producenta
+    \item \verb|Integer price| --- cena produktu
 \end{itemize}
 
 Klasa ta zawiera metodę \verb|toString()| która przeciąża domyślną metodę klasową języka java \verb|toString()| aby zapewnić reprezentację obiektu produktu, która zawiera wszystkie atrybuty obiektu.
@@ -751,7 +754,7 @@ Klasa ta zawiera metodę \verb|toString()| która przeciąża domyślną metodę
 
 \subsubsection{Klasa propozycji produktów producenta}
 
-Klasa \verb|ProducerProposal| przedstawiona na listeningu\ref{ProducerProposalCode} to model danych wykorzystywany do reprezentowania propozycji dla producenta w oparciu o określone kryteria.
+Klasa \verb|ProducerProposal| przedstawiona na listingu\ref{ProducerProposalCode} to model danych wykorzystywany do reprezentowania propozycji dla producenta w oparciu o określone kryteria.
 
 \begin{lstlisting}[language=Java, caption=Kod klasy ProducerProposal,label=ProducerProposalCode]
     package org.example.masterprotocolworker.model;
@@ -781,7 +784,7 @@ Klasa \verb|ProducerProposal| służy do przechowywania i przekazywania informac
 
 \subsubsection{Klasa ostatecznej propozycji}
 
-Klasa \verb|Proposal| zaprezentowana na listeningu\ref{ProposalCode} to model danych do zarządzania kolekcją propozycji producentów. Klasa ta wykorzystuje adnotacje \verb|Lombok| w celu zmniejszenia ilości standardowego kodu i usprawnienia implementacji.
+Klasa \verb|Proposal| zaprezentowana na listingu\ref{ProposalCode} to model danych do zarządzania kolekcją propozycji producentów. Klasa ta wykorzystuje adnotacje \verb|Lombok| w celu zmniejszenia ilości standardowego kodu i usprawnienia implementacji.
 
 \begin{lstlisting}[language=Java, caption=Kod klasy Proposal,label=ProposalCode]
     package org.example.masterprotocolworker.model;
@@ -805,7 +808,7 @@ Klasa \verb|Proposal| zaprezentowana na listeningu\ref{ProposalCode} to model da
 
 Klasa ta posiada pole \verb|proposalProducts| które jest mapą przechowującą pod kluczem będącym identyfikatorem producenta obiekt klasy \verb|ProducerProposal| z propozycją produktów od danego producenta.
 
-\subsubsection{Serwis produktów - ProductsService}
+\subsubsection{Serwis produktów --- ProductsService}
 
 Klasa \verb|ProductsService| przedstawiona na listingu\ref{productsServiceCode} jest odpowiedzialna za interakcję z usługami producentów w celu sprawdzenia dostępności produktów i mapowania produktów do odpowiednich producentów. Klasa ta wykorzystuje usługę \verb|ProducerInfoService| do wykrywania producentów oraz szablon \verb|RestTemplate| do komunikacji z nimi. 
 
@@ -911,14 +914,14 @@ Klasa \verb|ProductsService| zawiera następujące metody:
 
     Jeżeli producent może dostarczyć produkt, metoda dodaje produkt do listy producentów na mapie. Gwarantuje to, że każdy produkt jest prawidłowo powiązany z producentami, którzy mogą go dostarczyć.
 
-    Jeżeli żaden producent nie może dostarczyć produktu, metoda dodaje produkt do listy "NOT-FOUND". Lista ta służy jako rejestr produktów, które nie zostały znalezione u żadnego z dostępnych producentów, zapewniając, że żaden produkt nie zostanie pominięty.
+    Jeżeli żaden producent nie może dostarczyć produktu, metoda dodaje produkt do listy "NOT---FOUND". Lista ta służy jako rejestr produktów, które nie zostały znalezione u żadnego z dostępnych producentów, zapewniając, że żaden produkt nie zostanie pominięty.
 
-    Na koniec metoda zwraca mapę producentów i ich dostępnych produktów. Mapa ta zawiera wszystkich producentów i produkty, które mogą dostarczyć, ze specjalnym wpisem pod kluczem "NOT-FOUND" dla produktów, które nie zostały znalezione u żadnego producenta.
+    Na koniec metoda zwraca mapę producentów i ich dostępnych produktów. Mapa ta zawiera wszystkich producentów i produkty, które mogą dostarczyć, ze specjalnym wpisem pod kluczem "NOT---FOUND" dla produktów, które nie zostały znalezione u żadnego producenta.
 \end{itemize}
 
-\subsubsection{Serwis propozycji - ProposalService}
+\subsubsection{Serwis propozycji --- ProposalService}
 
-Klasa \verb|ProposalService| zaprezentowana na listeningu\ref{ProposalServiceCode} jest odpowiedzialna za generowanie propozycji przypisania produktów do producentów w oparciu o wskaźniki wydajności. Klasa ta wykorzystuje pozostałe usługi, takie jak \verb|ProductsService| i \verb|ProducerInfoService|, do gromadzenia niezbędnych danych i podejmowania decyzji.
+Klasa \verb|ProposalService| zaprezentowana na listingu\ref{ProposalServiceCode} jest odpowiedzialna za generowanie propozycji przypisania produktów do producentów w oparciu o wskaźniki wydajności. Klasa ta wykorzystuje pozostałe usługi, takie jak \verb|ProductsService| i \verb|ProducerInfoService|, do gromadzenia niezbędnych danych i podejmowania decyzji.
 
 \begin{lstlisting}[caption=Kod klasy ProposalService, label=ProposalServiceCode]
     package org.example.masterprotocolworker.service;
@@ -1033,19 +1036,17 @@ Klasa \verb|ProposalService| zaprezentowana na listeningu\ref{ProposalServiceCod
             }else{
                 throw new WrongValueException("Wrong value in connectionSpeed");
             }
-    
+            
             if(producerInformation.getConnectionTime()!=-1L){
                 proposedValue *= producerInformation.getConnectionTime();
             }else{
                 throw new WrongValueException("Wrong value in connectionTime");
             }
-    
             if(producerInformation.getSystemLoadAverage1m()!=-1D){
                 proposedValue *= producerInformation.getSystemLoadAverage1m();
             }else{
                 throw new WrongValueException("Wrong value in systemLoadAverage1m");
             }
-    
             return proposedValue;
         }
     }
@@ -1083,3 +1084,730 @@ Klasa \verb|ProposalService| posiada następujące metody:
     W trakcie tej procedury metoda rejestruje w konsoli ostateczną propozycję do celów debugowania. Rejestrowanie zapewnia wgląd w proces generowania propozycji, umożliwiając łatwiejsze rozwiązywanie problemów i weryfikację podjętych decyzji.
 \end{itemize}
 \section{Uruchomienie środowiska}
+
+\subsection{Podstawowe środowisko}
+
+W celu uruchomienia systemu, na komputerze wymagane są zainstalowane narzędzia \verb|Docker| i \verb|Docker Compose|. Głównym plikiem niezbędnym to uruchomienia systemu jest plik \verb|docker-compose.yml| (listing \ref{dockerComposeFile}) w którym zdefiniowane są usługi monitoringu oraz rozproszony rejestr usług.
+
+\begin{lstlisting}[caption=Plik docker-comose.yml, label=dockerComposeFile]
+    version: '3.8'
+    
+    x-common-elastisearch-image: &elasticsearchImage
+      image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    x-common-logstash-image: &logstashImage
+      image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
+    x-common-my-eureka-image: &myEureka
+      build: Service-registry
+      image: my-eureka-builder-image
+    
+    volumes:
+      certs:
+        driver: local
+      esdata01:
+        driver: local
+      esdata02:
+        driver: local
+      esdata03:
+        driver: local
+      kibanadata:
+        driver: local
+      metricbeatdata01:
+        driver: local
+      logstashdata01:
+        driver: local
+      logstashdata02:
+        driver: local
+      logstashdata03:
+        driver: local
+    
+    networks:
+      masterNetwork:
+        driver: bridge
+        name: masterNetwork
+        ipam:
+          config:
+            - subnet: 172.20.0.0/16
+    
+    services:  
+      setup:
+        container_name: setup
+        <<: *elasticsearchImage
+        volumes:
+          - certs:/usr/share/elasticsearch/config/certs
+        user: "0"
+        networks:
+          masterNetwork:
+            ipv4_address: 172.20.0.5
+        command: >
+          bash -c '
+            if [ x${ELASTIC_PASSWORD} == x ]; then
+              echo "Set the ELASTIC_PASSWORD environment variable in the .env file";
+              exit 1;
+            elif [ x${KIBANA_PASSWORD} == x ]; then
+              echo "Set the KIBANA_PASSWORD environment variable in the .env file";
+              exit 1;
+            fi;
+            if [ ! -f config/certs/ca.zip ]; then
+              echo "Creating CA";
+              bin/elasticsearch-certutil ca --silent --pem -out config/certs/ca.zip;
+              unzip config/certs/ca.zip -d config/certs;
+            fi;
+            if [ ! -f config/certs/certs.zip ]; then
+              echo "Creating certs";
+              echo -ne \
+              "instances:\n"\
+              "  - name: es01\n"\
+              "    dns:\n"\
+              "      - es01\n"\
+              "      - localhost\n"\
+              "    ip:\n"\
+              "      - 127.0.0.1\n"\
+              "  - name: es02\n"\
+              "    dns:\n"\
+              "      - es02\n"\
+              "      - localhost\n"\
+              "    ip:\n"\
+              "      - 127.0.0.1\n"\
+              "  - name: es03\n"\
+              "    dns:\n"\
+              "      - es03\n"\
+              "      - localhost\n"\
+              "    ip:\n"\
+              "      - 127.0.0.1\n"\
+              "  - name: kibana\n"\
+              "    dns:\n"\
+              "      - kibana\n"\
+              "      - localhost\n"\
+              "    ip:\n"\
+              "      - 127.0.0.1\n"\
+              > config/certs/instances.yml;
+              bin/elasticsearch-certutil cert --silent --pem -out config/certs/certs.zip --in config/certs/instances.yml --ca-cert config/certs/ca/ca.crt --ca-key config/certs/ca/ca.key;
+              unzip config/certs/certs.zip -d config/certs;
+            fi;
+            echo "Setting file permissions"
+            chown -R root:root config/certs;
+            find . -type d -exec chmod 750 \{\} \;;
+            find . -type f -exec chmod 640 \{\} \;;
+            echo "Waiting for Elasticsearch availability";
+            until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
+            echo "Setting kibana_system password";
+            until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
+            echo "All done!";
+          '
+        healthcheck:
+          test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
+          interval: 1s
+          timeout: 5s
+          retries: 120
+    
+      es01:
+        container_name: elasticsearch01
+        depends_on:
+          setup:
+            condition: service_healthy
+        <<: *elasticsearchImage
+        volumes:
+          - certs:/usr/share/elasticsearch/config/certs
+          - esdata01:/usr/share/elasticsearch/data
+        ports:
+          - ${ES_PORT}:9200
+        networks:
+          masterNetwork:
+            ipv4_address: 172.20.0.6
+        environment:
+          - node.name=es01
+          - cluster.name=${CLUSTER_NAME}
+          - cluster.initial_master_nodes=es01,es02,es03
+          - discovery.seed_hosts=es02,es03
+          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+          - bootstrap.memory_lock=true
+          - xpack.security.enabled=true
+          - xpack.security.http.ssl.enabled=true
+          - xpack.security.http.ssl.key=certs/es01/es01.key
+          - xpack.security.http.ssl.certificate=certs/es01/es01.crt
+          - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
+          - xpack.security.transport.ssl.enabled=true
+          - xpack.security.transport.ssl.key=certs/es01/es01.key
+          - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
+          - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
+          - xpack.security.transport.ssl.verification_mode=certificate
+          - xpack.license.self_generated.type=${LICENSE}
+          - xpack.monitoring.collection.enabled=true
+        mem_limit: 1g
+        deploy:
+          resources:
+            limits:
+              cpus: '0.5'
+              memory: 1g
+        ulimits:
+          memlock:
+            soft: -1
+            hard: -1
+        healthcheck:
+          test:
+            [
+              "CMD-SHELL",
+              "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+            ]
+          interval: 10s
+          timeout: 10s
+          retries: 120
+    
+      es02:
+        container_name: elasticsearch02
+        depends_on:
+          - es01
+        <<: *elasticsearchImage
+        networks:
+          masterNetwork:
+            ipv4_address: 172.20.0.7
+        volumes:
+          - certs:/usr/share/elasticsearch/config/certs
+          - esdata02:/usr/share/elasticsearch/data
+        environment:
+          - node.name=es02
+          - cluster.name=${CLUSTER_NAME}
+          - cluster.initial_master_nodes=es01,es02,es03
+          - discovery.seed_hosts=es01,es03
+          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+          - bootstrap.memory_lock=true
+          - xpack.security.enabled=true
+          - xpack.security.http.ssl.enabled=true
+          - xpack.security.http.ssl.key=certs/es02/es02.key
+          - xpack.security.http.ssl.certificate=certs/es02/es02.crt
+          - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
+          - xpack.security.transport.ssl.enabled=true
+          - xpack.security.transport.ssl.key=certs/es02/es02.key
+          - xpack.security.transport.ssl.certificate=certs/es02/es02.crt
+          - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
+          - xpack.security.transport.ssl.verification_mode=certificate
+          - xpack.license.self_generated.type=${LICENSE}
+          - xpack.monitoring.collection.enabled=true
+        mem_limit: 1g
+        deploy:
+          resources:
+            limits:
+              cpus: '0.5'
+              memory: 1g
+        ulimits:
+          memlock:
+            soft: -1
+            hard: -1
+        healthcheck:
+          test:
+            [
+              "CMD-SHELL",
+              "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+            ]
+          interval: 10s
+          timeout: 10s
+          retries: 120
+    
+      es03:
+        container_name: elasticsearch03
+        depends_on:
+          - es02
+        <<: *elasticsearchImage
+        networks:
+          masterNetwork:
+            ipv4_address: 172.20.0.8
+        volumes:
+          - certs:/usr/share/elasticsearch/config/certs
+          - esdata03:/usr/share/elasticsearch/data
+        environment:
+          - node.name=es03
+          - cluster.name=${CLUSTER_NAME}
+          - cluster.initial_master_nodes=es01,es02,es03
+          - discovery.seed_hosts=es01,es02
+          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+          - bootstrap.memory_lock=true
+          - xpack.security.enabled=true
+          - xpack.security.http.ssl.enabled=true
+          - xpack.security.http.ssl.key=certs/es03/es03.key
+          - xpack.security.http.ssl.certificate=certs/es03/es03.crt
+          - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
+          - xpack.security.transport.ssl.enabled=true
+          - xpack.security.transport.ssl.key=certs/es03/es03.key
+          - xpack.security.transport.ssl.certificate=certs/es03/es03.crt
+          - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
+          - xpack.security.transport.ssl.verification_mode=certificate
+          - xpack.license.self_generated.type=${LICENSE}
+          - xpack.monitoring.collection.enabled=true
+        mem_limit: 1g
+        deploy:
+          resources:
+            limits:
+              cpus: '0.5'
+              memory: 1g
+        ulimits:
+          memlock:
+            soft: -1
+            hard: -1
+        healthcheck:
+          test:
+            [
+              "CMD-SHELL",
+              "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+            ]
+          interval: 10s
+          timeout: 10s
+          retries: 120
+    
+      kibana:
+        container_name: kibana
+        depends_on:
+          es01:
+            condition: service_healthy
+          es02:
+            condition: service_healthy
+          es03:
+            condition: service_healthy
+        image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+        volumes:
+          - certs:/usr/share/kibana/config/certs
+          - kibanadata:/usr/share/kibana/data
+        ports:
+          - ${KIBANA_PORT}:5601
+        networks:
+          masterNetwork:
+            ipv4_address: 172.20.0.9
+        environment:
+          - SERVERNAME=kibana
+          - ELASTICSEARCH_HOSTS=["https://es01:9200","https://es02:9200","https://es03:9200"]
+          - ELASTICSEARCH_USERNAME=kibana_system
+          - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+          - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
+          - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+          - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+          - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+        mem_limit: 1g
+        deploy:
+          resources:
+            limits:
+              cpus: '0.5'
+              memory: 1g
+        healthcheck:
+          test:
+            [
+              "CMD-SHELL",
+              "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
+            ]
+          interval: 10s
+          timeout: 10s
+          retries: 120
+    
+      logstash01:
+        <<: *logstashImage
+        container_name: logstash01
+        ports:
+          - 5000:5000
+        depends_on:
+          es01:
+            condition: service_healthy
+          es02:
+            condition: service_healthy
+          es03:
+            condition: service_healthy
+          kibana:
+            condition: service_healthy
+        labels:
+          co.elastic.logs/module: logstash
+        user: root
+        networks:
+          masterNetwork:
+            ipv4_address: 172.20.0.12
+        volumes:
+          - certs:/usr/share/logstash/certs
+          - logstashdata01:/usr/share/logstash/data
+          - "./ELK-monitoring/logstash_ingest_data/:/usr/share/logstash/ingest_data/"
+          - "./ELK-monitoring/logstashConfig/pipeline:/usr/share/logstash/pipeline:ro"
+        environment:
+          - xpack.monitoring.enabled=true
+          - xpack.monitoring.collection.enabled=true
+          - xpack.monitoring.elasticsearch.hosts=["https://es01:9200","https://es02:9200","https://es03:9200"]
+          - xpack.monitoring.elasticsearch.username="elastic"
+          - xpack.monitoring.elasticsearch.password=${ELASTIC_PASSWORD}
+          - xpack.monitoring.elasticsearch.ssl.certificate_authority=certs/ca/ca.crt
+          - ELASTIC_USER=elastic
+          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+        mem_limit: 512m
+        deploy:
+          resources:
+            limits:
+              cpus: '0.25'
+              memory: 512m
+        healthcheck:
+          test: [
+            "CMD-SHELL",
+            "curl -XGET 'localhost:9600/_node/stats'"
+          ]
+          interval: 30s
+          timeout: 10s
+          retries: 120
+    
+      logstash02:
+        <<: *logstashImage
+        container_name: logstash02
+        ports:
+          - 5001:5000
+        depends_on:
+          es01:
+            condition: service_healthy
+          es02:
+            condition: service_healthy
+          es03:
+            condition: service_healthy
+          kibana:
+            condition: service_healthy
+        labels:
+          co.elastic.logs/module: logstash
+        user: root
+        networks:
+          masterNetwork:
+            ipv4_address: 172.20.0.13
+        volumes:
+          - certs:/usr/share/logstash/certs
+          - logstashdata02:/usr/share/logstash/data
+          - "./ELK-monitoring/logstash_ingest_data/:/usr/share/logstash/ingest_data/"
+          - "./ELK-monitoring/logstashConfig/pipeline:/usr/share/logstash/pipeline:ro"
+        environment:
+          - xpack.monitoring.enabled=true
+          - xpack.monitoring.collection.enabled=true
+          - xpack.monitoring.elasticsearch.hosts=["https://es01:9200","https://es02:9200","https://es03:9200"]
+          - xpack.monitoring.elasticsearch.username="elastic"
+          - xpack.monitoring.elasticsearch.password=${ELASTIC_PASSWORD}
+          - xpack.monitoring.elasticsearch.ssl.certificate_authority=certs/ca/ca.crt
+          - ELASTIC_USER=elastic
+          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+        mem_limit: 512m
+        deploy:
+          resources:
+            limits:
+              cpus: '0.25'
+              memory: 512m
+        healthcheck:
+          test: [
+            "CMD-SHELL",
+            "curl -XGET 'localhost:9600/_node/stats'"
+          ]
+          interval: 30s
+          timeout: 10s
+          retries: 120
+    
+      logstash03:
+        <<: *logstashImage
+        container_name: logstash03
+        ports:
+          - 5002:5000
+        depends_on:
+          es01:
+            condition: service_healthy
+          es02:
+            condition: service_healthy
+          es03:
+            condition: service_healthy
+          kibana:
+            condition: service_healthy
+        labels:
+          co.elastic.logs/module: logstash
+        user: root
+        networks:
+          masterNetwork:
+            ipv4_address: 172.20.0.14
+        volumes:
+          - certs:/usr/share/logstash/certs
+          - logstashdata03:/usr/share/logstash/data
+          - "./ELK-monitoring/logstash_ingest_data/:/usr/share/logstash/ingest_data/"
+          - "./ELK-monitoring/logstashConfig/pipeline:/usr/share/logstash/pipeline:ro"
+        environment:
+          - xpack.monitoring.enabled=true
+          - xpack.monitoring.collection.enabled=true
+          - xpack.monitoring.elasticsearch.hosts=["https://es01:9200","https://es02:9200","https://es03:9200"]
+          - xpack.monitoring.elasticsearch.username="elastic"
+          - xpack.monitoring.elasticsearch.password=${ELASTIC_PASSWORD}
+          - xpack.monitoring.elasticsearch.ssl.certificate_authority=certs/ca/ca.crt
+          - ELASTIC_USER=elastic
+          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+        mem_limit: 512m
+        deploy:
+          resources:
+            limits:
+              cpus: '0.25'
+              memory: 512m
+        healthcheck:
+          test: [
+            "CMD-SHELL",
+            "curl -XGET 'localhost:9600/_node/stats'"
+          ]
+          interval: 30s
+          timeout: 10s
+          retries: 120
+    
+      metricbeat01:
+        container_name: metricbeat01
+        depends_on:
+          es01:
+            condition: service_healthy
+          es02:
+            condition: service_healthy
+          es03:
+            condition: service_healthy
+          kibana:
+            condition: service_healthy
+        image: docker.elastic.co/beats/metricbeat:${STACK_VERSION}
+        user: root
+        networks:
+          masterNetwork:
+            ipv4_address: 172.20.0.10
+        volumes:
+          - certs:/usr/share/metricbeat/certs
+          - metricbeatdata01:/usr/share/metricbeat/data
+          - "./ELK-monitoring/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro"
+          - "/var/run/docker.sock:/var/run/docker.sock:ro"
+          - "/sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro"
+          - "/proc:/hostfs/proc:ro"
+          - "/:/hostfs:ro"
+        environment:
+          - ELASTIC_USER=elastic
+          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+          - ELASTIC_HOSTS=["https://es01:9200","https://es02:9200","https://es03:9200"]
+          - KIBANA_HOSTS=http://kibana:5601
+          - LOGSTASH_HOSTS=["http://logstash01:9600","http://logstash02:9600","http://logstash03:9600"]
+        mem_limit: 512m
+        deploy:
+          resources:
+            limits:
+              cpus: '0.25'
+              memory: 512m
+    
+      eureka-server-peer-1:
+        <<: *myEureka
+        depends_on:
+          logstash01:
+            condition: service_healthy
+          logstash02:
+            condition: service_healthy
+          logstash03:
+            condition: service_healthy
+        container_name: eureka-server-peer-1
+        ports:
+          - "9001:9001"
+        environment:
+          - SPRING_PROFILES_ACTIVE=peer-1
+          - PEER_2_URL=http://172.20.0.3:9002/eureka/
+          - PEER_3_URL=http://172.20.0.4:9003/eureka/
+          - LOGSTASH_DESTINATION_ONE=172.20.0.12:5000
+          - LOGSTASH_DESTINATION_TWO=172.20.0.13:5000
+          - LOGSTASH_DESTINATION_THREE=172.20.0.14:5000
+        networks:
+          masterNetwork:
+            ipv4_address: 172.20.0.2
+        mem_limit: 1g
+        deploy:
+          resources:
+            limits:
+              cpus: '0.5'
+              memory: 1g
+    
+      eureka-server-peer-2:
+        <<: *myEureka
+        depends_on:
+          logstash01:
+            condition: service_healthy
+          logstash02:
+            condition: service_healthy
+          logstash03:
+            condition: service_healthy
+        container_name: eureka-server-peer-2
+        ports:
+          - "9002:9002"
+        environment:
+          - SPRING_PROFILES_ACTIVE=peer-2
+          - PEER_1_URL=http://172.20.0.2:9001/eureka/
+          - PEER_3_URL=http://172.20.0.4:9003/eureka/
+          - LOGSTASH_DESTINATION_ONE=172.20.0.12:5000
+          - LOGSTASH_DESTINATION_TWO=172.20.0.13:5000
+          - LOGSTASH_DESTINATION_THREE=172.20.0.14:5000
+        networks:
+          masterNetwork:
+            ipv4_address: 172.20.0.3
+        mem_limit: 1g
+        deploy:
+          resources:
+            limits:
+              cpus: '0.5'
+              memory: 1g
+    
+      eureka-server-peer-3:
+        <<: *myEureka
+        depends_on:
+          logstash01:
+            condition: service_healthy
+          logstash02:
+            condition: service_healthy
+          logstash03:
+            condition: service_healthy
+        container_name: eureka-server-peer-3
+        ports:
+          - "9003:9003"
+        environment:
+          - SPRING_PROFILES_ACTIVE=peer-3
+          - PEER_1_URL=http://172.20.0.2:9001/eureka/
+          - PEER_2_URL=http://172.20.0.3:9002/eureka/
+          - LOGSTASH_DESTINATION_ONE=172.20.0.12:5000
+          - LOGSTASH_DESTINATION_TWO=172.20.0.13:5000
+          - LOGSTASH_DESTINATION_THREE=172.20.0.14:5000
+        networks:
+          masterNetwork:
+            ipv4_address: 172.20.0.4
+        mem_limit: 1g
+        deploy:
+          resources:
+            limits:
+              cpus: '0.5'
+              memory: 1g
+\end{lstlisting}
+
+
+Bloki x--common--elastisearch--image, x-common--logstash--image i x--common--my--eureka--image definiują informacje o konfiguracji wielokrotnego użytku odpowiednio dla Elasticsearch, Logstash i obrazu rejestru usług. Są one wykorzystywane w celu uniknięcia powtórzeń definicji obrazu w poszczególnych usługach.
+
+Sekcja woluminów definiuje trwałe obszary przechowywania dla poszczególnych kontenerów.
+
+Sekcja sieci, definiuje sieć razem z podsiecią łączącą usługi w ramach uruchamianego środowiska.
+
+Podstawowe środowisko składa się z następujących usług:
+\begin{itemize}
+    \item Usługa \verb|setu| inicjuje certyfikaty Elasticsearch. 
+    \item Zdefiniowane są trzy węzły Elasticsearch (es01, es02, es03). Są one zależne od usługi \verb|setup|. Każda z tych usług przyjmuje w polu \verb|discovery.seed_hosts| adresy pozostałych uruchomionych usług Elasticsearch w celu utworzenia klastra usług zapewniającego wysoką dostępność.
+    \item Usługa \verb|Kibana| łączy się z klastrem Elasticsearch w celu dostępu do zbieranych dokumentów i wizualizacji danych w interfejsie sieciowym uruchomionym na porcie 5601.
+    \item Trzy instancje Logstash (logstash01, logstash02, logstash03) są zdefiniowane do obsługi pozyskiwania i przetwarzania danych. Każda instancja Logstash przyjmuje jako argument każdy węzeł z uruchomionego klastra Elasticsearch w celu zapewnienia wysokiej dostępności w razie awarii węzłów w klastrze.
+    \item Usługa metricbeat01 służy do zbierania metryk z innych usług ze stosu ELK i wysyłania tych metryk do Elasticsearch.
+    \item Trzy instancje serwera Eureka (eureka--server--peer--1, eureka--server--peer--2, eureka--server--peer--3) są zdefiniowane do wykrywania usług. Do każdej usługi są podane zmienne środowiskowo uruchamiające usługę jako wcześniej zdefiniowany profil aplikacyjny w celu uruchomienia klastra rejestrów Eureka.
+\end{itemize}
+
+Aby uruchomić powyższą konfigurację Docker Compose, należy użyć następującego polecenia:
+
+\begin{verbatim}
+sudo docker compose --env-file ELK-monitoring/.env down -v && \
+sudo docker compose --env-file ELK-monitoring/.env build --no-cache && \
+sudo docker compose --env-file ELK-monitoring/.env up --force-recreate -d
+\end{verbatim}
+
+Powyższe polecenie wykonuje następujące czynności:
+
+\begin{itemize}
+    \item Zatrzymuje i usuwa wszystkie uruchomione usługi i woluminy.
+    \item Buduje obrazy Docker bez użycia pamięci podręcznej.
+    \item Uruchamia usługi, wymuszając odtworzenie kontenerów i uruchomienie ich w trybie odłączonym.
+\end{itemize}
+
+Opisany powyżej plik \verb|docker-compose.yml| konfiguruje środowisko rozruchowe klastra Elasticsearch, wraz z instancjami Logstash do przetwarzania danych, Kibana do wizualizacji, Metricbeat do zbierania metryk i konfiguracją serwera Eureka do wykrywania usług w systemie. Usługi są połączone za pomocą sieci Docker, a trwałe przechowywanie w przypadku wyłączenia systemu jest zarządzane za pomocą woluminów Docker. Wykorzystanie zmiennych środowiskowych i kontroli kondycji zapewnia, że usługi są poprawnie skonfigurowane i uruchamiane w ściśle określonej kolejności.
+
+\subsection{Producent}
+
+Skrypt Bash przedstawiony na listingu\ref{producerBashScript} jest przeznaczony do uruchamiania wielu instancji usługi kontenerowej Docker, z których każda reprezentuje producenta. Skrypt zapewnia dostępność obrazu Docker dla producentów, buduje go w razie potrzeby, a następnie uruchamia określoną liczbę instancji producentów z odpowiednimi zmiennymi środowiskowymi i konfiguracjami sieciowymi.
+
+\begin{lstlisting}[language=bash,caption=Kod skryptu producers.sh,label=producerBashScript]
+    #!/bin/bash
+
+    # Check if the necessary arguments are provided
+    if [ $# -ne 2 ]; then
+        echo "Usage: $0 <first producer id> <number of producers>"
+        exit 1
+    fi
+    
+    # First producer ID and number of producers to run
+    first_producer_id=$1
+    num_producers=$2
+    
+    # Function to check if the Docker image exists and build it if not
+    ensure_docker_image() {
+        if [ -z "$(docker images -q producer:latest 2> /dev/null)" ]; then
+            echo "'producer:latest' image not found. Building image..."
+            if ! docker build Producer -t producer:latest --no-cache; then
+                echo "Error building Docker image 'producer:latest'. Exiting."
+                exit 1
+            fi
+        fi
+    }
+    
+    # Ensure the Docker image is available
+    ensure_docker_image
+    
+    # Loop and run the Docker command
+    for (( i=first_producer_id; i<first_producer_id+num_producers; i++ )); do
+    
+        docker run --rm -d --network=masterNetwork \
+        -e PEER_1_URL=http://172.20.0.2:9001/eureka/,http://172.20.0.3:9002/eureka/,http://172.20.0.4:9003/eureka/ \
+        -e PRODUCER_ID=$i \
+        -e LOGSTASH_DESTINATION_ONE=172.20.0.12:5000 \
+        -e LOGSTASH_DESTINATION_TWO=172.20.0.13:5000 \
+        -e LOGSTASH_DESTINATION_THREE=172.20.0.14:5000 \
+        -e NUMBER_OF_PRODUCTS=10 \
+        -e PORT=10000 \
+        -p $((10000+$i)):10000 \
+        --name=PRODUCER_$i producer:latest
+    
+    done
+
+\end{lstlisting}
+
+Skrypt oczekuje dwóch argumentów: identyfikatora pierwszego producenta i liczby instancji producenta do uruchomienia. Jeżeli te argumenty nie zostaną dostarczone, skrypt wyświetli informacje o braku argumentów i zakończy działanie. Następnie ensure\_docker\_image sprawdza, czy obraz Docker o nazwie \verb|producer:latest| istnieje. Jeśli obraz nie istnieje, buduje obraz z katalogu Producer. Jeśli kompilacja nie powiedzie się, skrypt kończy działanie z komunikatem o błędzie. Następnie skrypt wykonuje pętlę od pierwszego identyfikatora producenta do określonej liczby producentów. Dla każdej iteracji uruchamia kontener Docker z niezbędnymi zmiennymi środowiskowymi i konfiguracjami sieciowymi. Każdy kontener ma unikalną nazwę i jest połączony z siecią \verb|masterNetwork|.
+
+Skrypt \verb|producers.sh| automatyzuje wdrażanie wielu instancji producentów. Zapewnia on dostępność wymaganego obrazu Docker, buduje go w razie potrzeby, a następnie uruchamia określoną liczbę producentów z odpowiednimi konfiguracjami. Ta konfiguracja jest przydatna do testowania i skalowania usług producentów w kontrolowanym środowisku.
+
+\subsection{Węzeł protokołu}
+
+Skrypt przedstawiony na listingu\ref{workersBashScript} jest przeznaczony do uruchamiania wielu instancji aplikacji kontenerowej Docker, z których każda reprezentuje węzeł protokołu. Skrypt zapewnia dostępność obrazu Docker dla węzła protokołu, buduje go w razie potrzeby, a następnie uruchamia określoną liczbę instancji węzłów z odpowiednimi zmiennymi środowiskowymi i konfiguracjami sieciowymi.
+
+\begin{lstlisting}[language=bash,caption=Kod skryptu workers.sh,label=workersBashScript]
+    #!/bin/bash
+
+    # Check if the necessary arguments are provided
+    if [ $# -ne 2 ]; then
+        echo "Usage: $0 <first worker id> <number of workers>"
+        exit 1
+    fi
+    
+    # First producer ID and number of producers to run
+    first_worker_id=$1
+    num_workers=$2
+    
+    # Function to check if the Docker image exists and build it if not
+    ensure_docker_image() {
+        if [ -z "$(docker images -q worker:latest 2> /dev/null)" ]; then
+            echo "'worker:latest' image not found. Building image..."
+            if ! docker build Master-Protocol-Worker -t worker:latest --no-cache; then
+                echo "Error building Docker image 'worker:latest'. Exiting."
+                exit 1
+            fi
+        fi
+    }
+    
+    # Ensure the Docker image is available
+    ensure_docker_image
+    
+    # Loop and run the Docker command
+    for (( i=first_worker_id; i<first_worker_id+num_workers; i++ )); do
+    
+        docker run --rm -d --network=masterNetwork \
+        -e PEER_1_URL=http://172.20.0.2:9001/eureka/,http://172.20.0.3:9002/eureka/,http://172.20.0.4:9003/eureka/ \
+        -e WORKER_ID=$i \
+        -e LOGSTASH_DESTINATION_ONE=172.20.0.12:5000 \
+        -e LOGSTASH_DESTINATION_TWO=172.20.0.13:5000 \
+        -e LOGSTASH_DESTINATION_THREE=172.20.0.14:5000 \
+        -e PORT=11000\
+        -p $((12000+$i)):11000 \
+        --name=Worker-$i \
+        worker
+    
+    done
+\end{lstlisting}
+
+Skrypt oczekuje dwóch argumentów: identyfikatora pierwszego węzła i liczby instancji węzłów do uruchomienia. Jeżeli te argumenty nie zostaną dostarczone, skrypt wyświetli informacje o braku argumentów i zakończy działanie. Funkcja ensure\_docker\_image sprawdza, czy obraz Docker o nazwie \verb|worker:latest| istnieje. Jeżeli obraz nie istnieje, buduje obraz z katalogu Master--Protocol--Worker. Jeśli kompilacja nie powiedzie się, skrypt kończy działanie z komunikatem o błędzie. Następnie skrypt wykonuje pętlę od pierwszego identyfikatora węzła do określonej liczby węzłów. Dla każdej iteracji uruchamia kontener Docker z niezbędnymi zmiennymi środowiskowymi i konfiguracjami sieciowymi. Każdy kontener ma unikalną nazwę i jest połączony z siecią \verb|masterNetwork|.
+
+Skrypt automatyzuje wdrażanie wielu instancji roboczych w sieci Docker. Zapewnia on dostępność wymaganego obrazu Docker, buduje go w razie potrzeby, a następnie uruchamia określoną liczbę pracowników z odpowiednimi konfiguracjami. Ta konfiguracja jest przydatna do testowania i skalowania usług roboczych w kontrolowanym środowisku.
+
+
+\section{Podsystem monitoringu}
+

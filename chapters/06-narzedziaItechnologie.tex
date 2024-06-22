@@ -1,19 +1,20 @@
 \chapter{Wybrane narzędzia i technologie}
 
 
+W pracy magisterskiej podczas opracowywania i wdrażania systemu wykorzystano rozmaite narzędzia i technologie. Każde narzędzie odgrywa kluczową rolę w zapewnieniu wydajności, skalowalności i łatwości utrzymania systemu.
 
-\subsection{Java}
+\section{Java}
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=0.2\textwidth]{images/javaLogo.png}
+    \includegraphics[width=0.1\textwidth]{images/javaLogo.png}
     \caption{Oficjalne logo języka Java}
     \label{fig:enter-label}
 \end{figure}
 
-Java jest to szeroko stosowany obiektowy język programowania i platforma oprogramowania, która działa na miliardach urządzeń. Zasady oraz składnia języka zostały oparte na językach \acronym{C} i \acronym{C++}. Java powstała aby udoskonalić i naprawić wiele błędnych konceptów wprowadzonych przez te języki. Jedną z głównych zalet tworzenia oprogramowania w Javie jest jej przenoszalność. Po napisaniu kodu programu na jednym urządzeniu można go łatwo przenieść na inne urządzenie o innej architekturze. Język ten został wynaleziony w 1995 roku przez Jamesa Goslinga z Sun Microsystems (później przejętego przez Oracle), główną ideą jego wynalezienia była możliwość, \definicja{"napisania raz, uruchomienia w dowolnym miejscu"}  (\english{write once, run anywhere}). Nowe i ulepszone narzędzia do tworzenia oprogramowania pojawiają się na rynku w nizwykłym tempie, wypierając dotychczasowe produkty, które kiedyś uważano za niezbędne. W świetle tej ciągłej rotacji, długowieczność Javy jest imponująca, prawie trzy dekady po jej stworzeniu, Java jest nadal najpopularniejszym językiem do tworzenia oprogramowania użytkowego\cite{javaIBM}\cite{javaDEV}.
+Java jest to szeroko stosowany obiektowy język programowania i platforma oprogramowania, która działa na miliardach urządzeń. Zasady oraz składnia języka zostały oparte na językach \acronym{C} i \acronym{C++}\cite{javaIBM}\cite{cstandard}\cite{cppstandard}. Java powstała aby udoskonalić i naprawić wiele błędnych konceptów wprowadzonych przez te języki. Jedną z głównych zalet tworzenia oprogramowania w Javie jest jej przenoszalność. Po napisaniu kodu programu na jednym urządzeniu można go łatwo przenieść na inne urządzenie o innej architekturze. Język ten został wynaleziony w 1995 roku przez Jamesa Goslinga z Sun Microsystems (później przejętego przez Oracle), główną ideą jego wynalezienia była możliwość, \definicja{"napisania raz, uruchomienia w dowolnym miejscu"}  (\english{write once, run anywhere}). Nowe i ulepszone narzędzia do tworzenia oprogramowania pojawiają się na rynku w niezwykłym tempie, wypierając dotychczasowe produkty, które kiedyś uważano za niezbędne. W świetle tej ciągłej rotacji, długowieczność Javy jest imponująca, prawie trzy dekady po jej stworzeniu, Java jest nadal jednym z najbardziej popularnych języków do tworzenia oprogramowania użytkowego\cite{javaIBM}\cite{javaDEV}.
 
-Wszystkie języki programowania służą do komunikacji z maszynami. Sprzęt maszynowy reaguje tylko na komunikację elektroniczną. Języki programowania wysokiego poziomu, takie jak Java, działają jako pomost między językiem ludzkim a językiem sprzętu. Aby korzystać z języka Java programista musi mieć świadomość o dwóch poziomach abstrakcji pisanych programów: 
+Wszystkie języki programowania służą do komunikacji z maszynami. Sprzęt maszynowy reaguje tylko na komunikację elektroniczną. Języki programowania wysokiego poziomu, takie jak Java, działają jako pomost między językiem ludzkim a językiem sprzętu. Aby korzystać z języka Java, programista powinien mieć świadomość istnienia dwóch poziomów abstrakcji pisanych programów: 
 
 \begin{itemize}
     \item Język Java i \definicja{interfejsy \acronym{API} }(\english{application programming interface})
@@ -26,44 +27,44 @@ Interfejsy API są ważnymi komponentami oprogramowania dołączonymi do platfor
 Wirtualna maszyna Javy działa jako dodatkowa warstwa abstrakcji między platformą Java a sprzętem maszyny. Kod źródłowy Java może działać tylko na tych maszynach na których zainstalowano JVM. Kiedy po raz pierwszy opracowano języki programowania, dzieliły się one na dwie szerokie kategorie, w zależności od tego, w jaki sposób komunikowały się ze sprzętem: 
 
 \begin{itemize}
-    \item \textbf{Kompilowany} - program jest napisany w składni języka, a następnie kompilator tłumaczy cały kod na kod maszynowy. Skompilowany kod jest następnie uruchamiany na sprzęcie.
-    \item \textbf{Interpretowany} - Dzięki interpreterom każda instrukcja kody wysokiego poziomu jest na bieżąco interpretowana na kod maszynowy. Napisane instrukcji są natychmiast uruchamiane przez sprzęt przed przejściem do następnej instrukcji
+    \item \textbf{Kompilowany} --- program jest napisany w składni języka, a następnie kompilator tłumaczy cały kod na kod maszynowy. Skompilowany kod jest następnie uruchamiany na sprzęcie.
+    \item \textbf{Interpretowany} --- Dzięki interpreterom każda instrukcja kodu wysokiego poziomu jest na bieżąco interpretowana na kod maszynowy. Napisane instrukcje są natychmiast uruchamiane przez sprzęt przed przejściem do następnej instrukcji
 \end{itemize}
 
-Język Java był pierwszym językiem, który połączył obie powyższe metody, przy użyciu JVM. Każdy plik programu jest najpierw kompilowany do kodu bajtowego (\english{bytecode}). Kod bajtowy Java może być uruchamiany tylko w maszynie JVM. Następnie JVM interpretuje kod bajtowy, aby uruchomić go na podstawowej platformie sprzętowej. Jeżeli aplikacja działa na komputerze z systemem Windows, maszyna JVM zinterpretuje ją dla systemu Windows. Natomiast jeżeli aplikacja uruchomiona jest na platformie open-source, takiej jak Linux, JVM zinterpretuje ją dla systemu Linux\cite{javaAmazon}\cite{javaDEV}.
+Język Java był pierwszym językiem, który połączył obie powyższe metody, przy użyciu JVM. Każdy plik programu jest najpierw kompilowany do kodu bajtowego (\english{bytecode}). Kod bajtowy Java może być uruchamiany tylko w maszynie JVM. Następnie JVM interpretuje kod bajtowy, aby uruchomić go na podstawowej platformie sprzętowej. Jeżeli aplikacja działa na komputerze z systemem Windows, maszyna JVM zinterpretuje ją dla systemu Windows. Natomiast jeżeli aplikacja uruchomiona jest na platformie open--source, takiej jak Linux, JVM zinterpretuje ją dla systemu Linux\cite{javaAmazon}\cite{javaDEV}.
 
-\subsection{Maven}
+\section{Maven}
 
 \begin{figure}[htbp!]
     \centering
-    \includegraphics[width=0.5\textwidth]{images/mavenLogo.png}
+    \includegraphics[width=0.2\textwidth]{images/mavenLogo.png}
     \caption{Logo programu Apache Maven\cite{mavenSite}.}
     \label{fig:enter-label}
 \end{figure}
 
-Maven słowo w języku jidysz oznacza gromadzenie wiedzy. Apache Maven to narzędzie do zarządzania projektami oprogramowania. Opiera się ono na koncepcji \definicja{modelu obiektu projektu} (\acronym{POM} \english{Project Object Model}), Maven może zarządzać kompilacją, raportowaniem i dokumentacją projektu z centralnej informacji. Narzędzie to wykorzystywane jest do budowania i zarządzania dowolnym projektem opartym na Javie. Głównym źródłem informacji o projekcie jest plik \akronim{XML} (\english{Extensible Markup Language}) nazywany \acronym{POM}, w którym definiowana jest struktura projektu, sposób jego budowania oraz zależności jakie są wymagane do prawidłowego funkcjonowania programu. Maven podcza budowania aplikacji pobiera niezbędne biblioteki oraz inne zależności z globalnego repozytorium Maven Central\cite{mavenSite}.
+Słowo maven  w języku jidysz oznacza gromadzenie wiedzy. Apache Maven to narzędzie do zarządzania projektami oprogramowania. Opiera się ono na koncepcji \definicja{modelu obiektu projektu} (\acronym{POM} \english{Project Object Model}), Maven może zarządzać kompilacją, raportowaniem i dokumentacją projektu na podstawie centralnej informacji. Narzędzie to wykorzystywane jest do budowania i zarządzania dowolnym projektem opartym na języku Java. Głównym źródłem informacji o projekcie jest plik \akronim{XML} (\english{Extensible Markup Language}) nazywany \acronym{POM}, w którym definiowana jest struktura projektu, sposób jego budowania oraz zależności jakie są wymagane do prawidłowego funkcjonowania programu. Maven podcza budowania aplikacji pobiera niezbędne biblioteki oraz inne zależności z globalnego repozytorium Maven Central\cite{mavenSite}.
 
-\subsection{Spring boot}
+\section{Spring boot}
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=0.5\textwidth]{images/springboot/springBootLogo.png}
+    \includegraphics[width=0.2\textwidth]{images/springboot/springBootLogo.png}
     \caption{Logo frameworka Spring Boot \cite{springLogo}}
     \label{fig:enter-label}
 \end{figure}
 
 
-Spring boot jest jednym z najpopularniejszych frameworków języka Java wynalezionym przez Roda Johnsona w 2014 roku, który zapewnia funkcjonalność błyskawicznego wytwarzania aplikacji (\english{\definicja{Rapid Application Development \akronim{RAD}}}) polegającego na udostępnianiu programiście dużych możliwości prototypowania oraz dużego zestawu gotowych komponentów, narzędzi i modułów\cite{RADwiki}. Spring boot zbudowany jest na popularnym Java Spring Framework, aby zapewnić szybki dostęp do informacji podczas tworzenia projektu. Metodyka RAD jest dość łatwa do skonfigurowania i uruchomienia w internetowych i korporacyjnych aplikacjach przy użyciu języka Java. Najważniejszą rzeczą w tym frameworku jest jego prostota, do uruchomienia aplikacji wymagana jest minimalna konfiguracja, dzięki czemu tworzenie samodzielnych aplikacji opartych na Springu jest o wiele łatwiejsze\cite{springbootAnalysis}.
+Spring boot jest jednym z najpopularniejszych frameworków języka Java zaproponowanym przez Roda Johnsona w 2014 roku, który zapewnia funkcjonalność szybkiego wytwarzania aplikacji (\english{\definicja{Rapid Application Development \akronim{RAD}}}) polegającego na udostępnianiu programiście dużych możliwości prototypowania oraz dużego zestawu gotowych komponentów, narzędzi i modułów\cite{RADwiki}. Spring boot zbudowany jest na popularnym Java Spring Framework, aby zapewnić szybki dostęp do informacji podczas tworzenia projektu. Metodyka RAD jest dość łatwa do skonfigurowania i uruchomienia w internetowych i korporacyjnych aplikacjach przy użyciu języka Java. Najważniejszą rzeczą w tym frameworku jest jego prostota, do uruchomienia aplikacji wymagana jest minimalna konfiguracja, dzięki czemu tworzenie samodzielnych aplikacji opartych na Springu jest o wiele łatwiejsze\cite{springbootAnalysis}.
 
 \subsubsection{Główne cechy Spring Boot Framework}
 
 \begin{enumerate}
-    \item \textbf{Autokonfiguracja}: Funkcja automatycznej konfiguracji Spring Boot automatycznie konfiguruje aplikację Spring na podstawie dodanych zależności. Na przykład, jeżeli została dołączona zależność spring-boot-starter-web, automatycznie zostaje skonfigurowany serwer Tomcat i Spring \acronym{MVC} (\english{Model-View-Controller})\cite{springbootFeatures}.
+    \item \textbf{Autokonfiguracja}: Funkcja automatycznej konfiguracji Spring Boot automatycznie konfiguruje aplikację Spring na podstawie dodanych zależności. Na przykład, jeżeli została dołączona zależność spring--boot--starter--web, automatycznie zostaje skonfigurowany serwer Tomcat i Spring \acronym{MVC} (\english{Model--View--Controller})\cite{springbootFeatures}.
     \item \textbf{Samodzielna aplikacja}: Aplikacje Spring Boot mogą być uruchamiane jako samodzielne aplikacje Java. Jest to ułatwione dzięki osadzeniu serwera HTTP (takiego jak Tomcat, Jetty lub Undertow) bezpośrednio w aplikacji, co ułatwia jej wdrożenie\cite{springbootFeatures}.
     \item \textbf{Funkcje gotowe do produkcji}: Spring Boot zawiera kilka wbudowanych funkcji ułatwiających uruchamianie aplikacji w środowisku produkcyjnym. Obejmują one kontrole kondycji, metryki, monitorowanie aplikacji i konfigurację zewnętrzną\cite{springbootFeatures}.
     \item \textbf{Konwencja ponad konfiguracją}: Spring Boot kieruje się filozofią zapewniania rozsądnych wartości domyślnych, aby zminimalizować ilość wymaganej konfiguracji. Jednak nadal pozwala na zastąpienie tych domyślnych ustawień, gdy jest to konieczne\cite{springbootFeatures}.
     \item \textbf{Rozwój mikrousług}: Spring Boot jest szeroko stosowany do tworzenia mikrousług ze względu na jego lekki i modułowy charakter. Zapewnia wbudowane serwery, łatwą integrację ze środowiskami chmurowymi i wsparcie dla systemów rozproszonych\cite{springbootFeatures}.
-    \item \textbf{Startery Spring Boot}: Startery to zestaw wygodnych deskryptorów zależności, które można dołączyć do aplikacji. Na przykład spring-boot-starter-data-jpa zawiera zależności do używania \acronym{JPA} (\english{Java Persistence \acronym{API}}) ze Spring Data\cite{springbootFeatures}.
+    \item \textbf{Startery Spring Boot}: Startery to zestaw wygodnych deskryptorów zależności, które można dołączyć do aplikacji. Na przykład spring-boot--starter--data--jpa zawiera zależności do używania \acronym{JPA} (\english{Java Persistence \acronym{API}}) ze Spring Data\cite{springbootFeatures}.
     \item \textbf{Wbudowane serwery}: Spring Boot obsługuje wbudowane serwery, takie jak Tomcat, Jetty i Undertow, umożliwiając pakowanie aplikacji jako plików \acronym{JAR} (\english{Java Archive}) i uruchamianie ich niezależnie od zewnętrznych serwerów\cite{springbootFeatures}.
     \item \textbf{Spring Initializr}: Spring Initializr to narzędzie internetowe do szybkiego generowania struktury projektu Spring Boot. Pozwala programistom wybrać żądane zależności projektu i wygenerować szkielet projektu\cite{springbootFeatures}.
     \item \textbf{Obszerna dokumentacja i wsparcie społeczności}: Spring Boot jest dobrze udokumentowany i ma dużą i aktywną społeczność, która przyczynia się do jego ciągłego rozwoju i wsparcia\cite{springbootFeatures}.
@@ -72,7 +73,7 @@ Spring boot jest jednym z najpopularniejszych frameworków języka Java wynalezi
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.8\textwidth]{images/springboot/exampleJavaSpringBootProgram.png}
+    \includegraphics[width=0.2\textwidth]{images/springboot/exampleJavaSpringBootProgram.png}
     \caption{Przykładowy program java napisany z wykorzystaniem frameworku Springboot\cite{springJavaExampleProgram}}
     \label{fig:enter-label}
 \end{figure}
@@ -80,16 +81,16 @@ Spring boot jest jednym z najpopularniejszych frameworków języka Java wynalezi
 Powyższy program składa się z głównej klasy aplikacji z adnotacją @SpringBootApplication, która wskazuje klasę konfiguracyjną, która deklaruje jedną lub więcej metod @Bean, a także uruchamia automatyczną konfigurację i skanowanie komponentów. Klasa DemoApplication zawiera główną metodę, która jest punktem wejścia aplikacji. Metoda SpringApplication.run uruchamia cały framework Spring.
 Dodatkowo klasa jest opatrzona adnotacją @RestController, wskazującą, że jest to kontroler sieciowy, w którym każda metoda zwraca obiekt domeny zamiast widoku. Metoda hello jest mapowana do punktu końcowego /hello przy użyciu adnotacji @GetMapping, co pozwala jej obsługiwać żądania HTTP GET. Metoda ta przyjmuje nazwę parametru żądania z domyślną wartością „World” i zwraca wiadomość powitalną.
 
-\subsection{Netflix Eureka}
+\section{Netflix Eureka}
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{images/netflixEureka/netflixEurekaLogo.png}
+    \includegraphics[width=0.2\textwidth]{images/netflixEureka/netflixEurekaLogo.png}
     \caption{Spring Cloud Netflix\cite{netflixEurekaMedium}}
     \label{fig:enter-label}
 \end{figure}
 
-Odnajdywanie usług jest jednym z kluczowych założeń zarchitektury opartej na mikrousługach. Próba ręcznego konfigurowania każdego klienta lub jakiejś formy usługodawcy może być trudna do wykonania i ulotna. Usługa odkrywania (\english{Service Discovery}) jest to proces automatycznego odnajdywania i wykrywania usług i urządzeń w sieci. Serwer Eureka to usługa oparta na \akronim{REST} (\english{Representational State Transfer}), która jest wykorzystywana głównie w chmurze Amazon \akronim{AWS} (\english{Amazon Web Services}) do lokalizowania usług w celu równoważenia obciążenia i przełączania awaryjnego serwerów. Eureka jest również dostarczana z komponentem klienckim opartym na Javie, Eureka Client, który znacznie ułatwia komunikacje z usługą\cite{netflixEurekaArticleWang}\cite{netflixEurekaGithub}\cite{springEureka}\cite{netflixEurekaManual}.
+Odnajdywanie usług jest jednym z kluczowych założeń architektury opartej na mikrousługach. Próba ręcznego konfigurowania każdego klienta lub jakiejś formy usługodawcy może być trudna do wykonania i ulotna ze względu na zmieniające się adresy w sieci komputerowej. Usługa odkrywania (\english{Service Discovery}) jest to proces automatycznego odnajdywania i wykrywania usług i urządzeń w sieci. Serwer Eureka to usługa oparta na \akronim{REST} (\english{Representational State Transfer}), która jest wykorzystywana głównie w chmurze Amazon \akronim{AWS} (\english{Amazon Web Services}) do lokalizowania usług w celu równoważenia obciążenia i przełączania awaryjnego serwerów. Eureka jest również dostarczana z komponentem klienckim opartym na Javie, Eureka Client, który znacznie ułatwia komunikacje z usługą\cite{netflixEurekaArticleWang}\cite{netflixEurekaGithub}\cite{springEureka}\cite{netflixEurekaManual}.
 
 \begin{figure}[!htbp]
     \centering
@@ -98,23 +99,23 @@ Odnajdywanie usług jest jednym z kluczowych założeń zarchitektury opartej na
     \label{fig:enter-label}
 \end{figure}
 
-Powyższa architektura przedstawia sposób, w jaki Eureka jest wdrażana w Netflixie i jest to typowy sposób jej uruchamiania. Na każdy region przypada jedna usługa (bądź też klaster usług) Eureka, w którym rejestrują się instancje z tego regionu, w którym jest uruchomiona. Usługi rejestrują się w serwerze Eureka, a następnie co 30 sekund wysyłają bicie serca (\english{heartbeats}), aby odnowić swoje dzierżawy. Jeżeli usługa nie może odnowić dzierżawy kilka razy, jest ona usuwana z rejestru serwera w ciągu około 90 sekund. Informacje o rejestracji i odnowieniach są replikowane do wszystkich węzłów Eureka w klastrze. Klienci z dowolnej strefy mogą wyszukiwać informacje w rejestrze, aby zlokalizować swoje usługi (które mogą znajdować się w innej strefie niż klient) następnie po otrzymaniu informacji o szukanej instancji, klient wykonuje połączenie do usługi\cite{netflixEurekaArticleWang}\cite{netflixEurekaGithub}\cite{springEureka}\cite{netflixEurekaManual}.
+Powyższa architektura przedstawia sposób, w jaki Eureka jest wdrażana w Netflixie i jest to typowy sposób jej uruchamiania. Na każdy region przypada jedna usługa (bądź też klaster usług) Eureka, w którym rejestrują się instancje z tego regionu, w którym jest uruchomiona. Usługi rejestrują się w serwerze Eureka, a następnie co 30 sekund wysyłają wiadomość hearbeat (\english{heartbeats}), aby odnowić swoje dzierżawy. Jeżeli usługa nie może odnowić dzierżawy kilka razy, jest ona usuwana z rejestru serwera w ciągu około 90 sekund. Informacje o rejestracji i odnowieniach są replikowane na wszystkich węzłów Eureka w klastrze. Klienci z dowolnej strefy mogą wyszukiwać informacje w rejestrze, aby zlokalizować swoje usługi (które mogą znajdować się w innej strefie niż klient) następnie po otrzymaniu informacji o szukanej instancji, klient wykonuje połączenie do usługi\cite{netflixEurekaArticleWang}\cite{netflixEurekaGithub}\cite{springEureka}\cite{netflixEurekaManual}.
 
-\subsection{Docker}
+\section{Docker}
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=0.5\textwidth]{images/Docker_logo.png}
+    \includegraphics[width=0.2\textwidth]{images/Docker_logo.png}
     \caption{Logo marki Docker \cite{DockerMedia}}
     \label{fig:enter-label}
 \end{figure}
 
 W przeszłości aplikacje były zazwyczaj wdrażane na serwerach fizycznych lub maszynach wirtualnych. Przed wdrożeniem aplikacji należy skonfigurować niezbędną infrastrukturę. Obejmowało to instancję systemu operacyjnego, wszelkich zależności wymaganych przez aplikację i skonfigurowanie wszystkiego by ze sobą współpracowało w prawidłowy sposób. Było to czasochłonne i skomplikowane, zwłaszcza gdy próbowało się odtworzyć dokładnie to środowisko, dla którego aplikacja została stworzona.
-Maszyny wirtualne stanowiły pod tym względem znaczącą przewagę nad serwerami fizycznymi. Umożliwiały one programistom oddzielenie tworzonego oprogramowania od bazowego systemu. Dodatkowo, oferowały one deweloperom łatwo dostępne środowisko, które mogli wykorzystywać do rozwoju i testowania, oddzielone od głównego systemu operacyjnego. Jednak maszyny wirtualne nadal posiadały swój własny zestaw wyzwań\cite{dockerContenerizationKeyAndUseCases}. 
+Maszyny wirtualne stanowią pod tym względem znaczącą przewagę nad serwerami fizycznymi. Umożliwiają one programistom oddzielenie tworzonego oprogramowania od bazowego systemu. Dodatkowo, oferują one deweloperom łatwo dostępne środowisko, które mogli wykorzystywać do rozwoju i testowania, oddzielone od głównego systemu operacyjnego. Jednak maszyny wirtualne także posiadają swój własny zestaw wyzwań\cite{dockerContenerizationKeyAndUseCases}. 
 
-Jednym z nich głównych problemów jest to, że wymagały one pełnej kopi systemu operacyjnego. Oznacza to, że były one stosunkowo duże i zajmowały dużo zasobów. Z tego powodu uruchamianie wielu maszyn wirtualnych na tym samym serwerze fizycznym było dość kosztowne. Kosztowne z dwóch perspektyw. Nie tylko uruchomienie setek maszyn wirtualnych kosztowało znaczną ilość pieniędzy, ale także wymagało dużej ilości zasobów, takich jak rdzenie procesora, pamięć \acronym{RAM} (\english{Random Access Memory}) i przestrzeń dyskową. Co więcej, trudno było skalować aplikacje w poziomie, oznacza to dodanie większej ilości replik aplikacji w celu obsłużenia zwiększonego ruchu, liczny użytkowników czy obciążenia pracy danej repliki\cite{dockerContenerizationKeyAndUseCases}.
+Jednym z głównych problemów jest to, że wymagają one pełnej kopii systemu operacyjnego. Oznacza to, że są one stosunkowo duże i zajmują dużo zasobów. Z tego powodu uruchamianie wielu maszyn wirtualnych na tym samym serwerze fizycznym jest stosunkowo kosztowne. Kosztowne z dwóch perspektyw. Nie tylko uruchomienie setek maszyn wirtualnych kosztuje znaczną ilość pieniędzy, ale także wymaga dużej ilości zasobów, takich jak rdzenie procesora, pamięć \acronym{RAM} (\english{Random Access Memory}) i przestrzeń dyskowa. Co więcej, trudno jest skalować aplikacje w poziomie, co oznacza konieczność  dodania większej liczby replik aplikacji w celu obsłużenia zwiększonego ruchu, liczby użytkowników, czy obciążenia pracy danej repliki \cite{dockerContenerizationKeyAndUseCases}.
 
-Konteneryzacja oferuje natomiast szereg korzyści, które pozwalają sprostać tym wyzwaniom. Dzięki konteneryzacji, deweloperzy mogą spakować swoje aplikacje i ich zależności w jednym kontenerze. Kontener ten może natomiast dostarczyć i wdrożyć na dowolnej platformie, która je obsługuje. Ułatwia to wdrożenie i uruchamianie aplikacji w rożnych środowiskach. Konteneryzacja oferuje spójne i niezawodne działanie aplikacji na różnych platformach, niezależnie od tego czy jest to serwer fizyczny maszyna wirtualna w chmurze, czy też system operacyjny Windows lub Linux\cite{dockerContenerizationKeyAndUseCases}\cite{dockerOverview}. 
+Konteneryzacja oferuje natomiast szereg korzyści, które pozwalają sprostać tym wyzwaniom. Dzięki konteneryzacji, deweloperzy mogą spakować swoje aplikacje i ich zależności w jednym kontenerze. Kontener ten może natomiast dostarczyć i wdrożyć na dowolnej platformie, która je obsługuje. Ułatwia to wdrożenie i uruchamianie aplikacji w rożnych środowiskach. Konteneryzacja oferuje spójne i niezawodne działanie aplikacji na różnych platformach, niezależnie od tego czy jest to serwer fizyczny, maszyna wirtualna w chmurze, czy też system operacyjny Windows lub Linux\cite{dockerContenerizationKeyAndUseCases}\cite{dockerOverview}. 
 
 Dodatkowymi atutami konteneryzacji są:
 
@@ -133,7 +134,7 @@ W 2013 roku pojawił się Docker, który sprawił że korzystanie z kontenerów 
 \subsubsection{Docker Compose}
 
 Docker Compose to narzędzie do definiowania i uruchamiania aplikacji wielokontenerowych. Jest to klucz do odblokowania usprawnionego i wydajnego środowiska programowania i wdrażania.
-Compose upraszcza kontrolę nad całym stosem aplikacji, ułatwiając zarządzanie usługami, sieciami i wolumenami w jednym, zrozumiałym pliku konfiguracyjnym \akronim{YAML} (\english{YAML Ain’t Markup Language}). Następnie za pomocą jednego polecenia można utworzyć i uruchomić wszystkie usugi z pliku konfiguracyjnego. Compose działa we wszystkich środowiskach: produkcyjnym, przejściowym, deweloperskim, testowym, a także w przepływach pracy \akronim{CI} (\english{Continuous Integration})\cite{dockerComposeAStudyMultiContainerSystem}\cite{dockerComposeOverview}\cite{dockerComposePaterns}.
+Compose upraszcza kontrolę nad całym stosem aplikacji, ułatwiając zarządzanie usługami, sieciami i wolumenami w jednym, zrozumiałym pliku konfiguracyjnym \akronim{YAML} (\english{YAML Ain’t Markup Language}). Następnie za pomocą jednego polecenia można utworzyć i uruchomić wszystkie usługi z pliku konfiguracyjnego. Compose działa we wszystkich środowiskach: produkcyjnym, przejściowym, deweloperskim, testowym, a także w przepływach pracy \akronim{CI} (\english{Continuous Integration})\cite{dockerComposeAStudyMultiContainerSystem}\cite{dockerComposeOverview}\cite{dockerComposePaterns}.
 
 Posiada również polecenia do zarządzania całym cyklem życia aplikacji: 
 \begin{itemize}
@@ -143,22 +144,22 @@ Posiada również polecenia do zarządzania całym cyklem życia aplikacji:
     \item Uruchamianie jednorazowego polecenia w określonym kontenerze
 \end{itemize}
 
-\subsection{Elasticsearch}
+\section{Elasticsearch}
 
 \begin{figure}[!htbp]
     \centering
-    \includesvg[width=0.15\textwidth]{images/ELK-Stack/logo-elasticsearch-32-color.svg}
+    \includesvg[width=0.1\textwidth]{images/ELK-Stack/logo-elasticsearch-32-color.svg}
     \caption{Logo Elasticsearch \cite{elasticSearchManualDataIn}}
     \label{fig:enter-label}
 \end{figure}
 
-Elasticsearch to rozproszony magazyn dokumentów. Zamiast przechowywać informacje w postaci encji, Elasticsearch przechowuje złożone struktury danych, które zostały serializowane jako dokumenty \akronim{JSON} (\english{JavaScript Object Notation}). W przypadku posiadania wieluwęzłów Elasticsearch w klastrze, przechowywane dokumenty są dystrybuowane w całym klastrze i można uzyskać do nich natychmiastowy dostęp z dowolnego węzła\cite{elasticSearchManualDataIn}. 
+Elasticsearch to rozproszony magazyn dokumentów. Zamiast przechowywać informacje w postaci encji, Elasticsearch przechowuje złożone struktury danych, które zostały serializowane jako dokumenty \akronim{JSON} (\english{JavaScript Object Notation}). W przypadku posiadania wielu węzłów Elasticsearch w klastrze, przechowywane dokumenty są dystrybuowane w całym klastrze i można uzyskać do nich natychmiastowy dostęp z dowolnego węzła\cite{elasticSearchManualDataIn}. 
 
-Elastichsearch jest zbudowany tak, aby był zawsze dostępny i skalował się zgodnie z wymaganiami systemu w którym pracuje. Osiąga to dzięki swojej rozproszonej naturze. Dodając węzły do klastra zwiększając jego pojemność następnie Elasticsearch automatycznie rozdzieli dane i obciążenie na wszystkie dostępne węzły. Nie ma potrzeby przebudowywania aplikacji, Elasticsearch sam zrównoważy klastry wielowęzłowe, aby zapewnić wysoką dostępność.
+Elasticsearch jest zbudowany tak, aby był zawsze dostępny i skalował się zgodnie z wymaganiami systemu w którym pracuje. Osiąga to dzięki swojej rozproszonej naturze. Dodając węzły do klastra zwiększając jego pojemność następnie Elasticsearch automatycznie rozdzieli dane i obciążenie na wszystkie dostępne węzły. Nie ma potrzeby przebudowywania aplikacji, Elasticsearch sam zrównoważy klastry wielowęzłowe, aby zapewnić wysoką dostępność.
 
 Gdy dokument jest przechowywany w systemie, jest indeksowany i w pełni przeszukiwalny. Elasticsearch wykorzystuje strukturę danych zwaną odwróconym indeksem, który obsługuje bardzo szybkie wyszukiwanie pełnotekstowe. Odwrócony indeks wyszczególnia każde unikalne słowo, które pojawia się w dowolnym dokumencie i identyfikuje wszystkie dokumenty, w których każde słowo występuje\cite{elasticSearchManualDataIn}.  
 
-Indeks można traktować jako zoptymalizowaną kolekcję dokumentów, a każdy dokument jest zbiorem pól, które są parami klucz-wartość zawierającymi dane. Domyślnie Elasticsearch indeksuje wszystkie dane w każdym polu, a każde indeksowane pole ma dedykowaną, zoptymalizowaną strukturę danych.
+Indeks można traktować jako zoptymalizowaną kolekcję dokumentów, a każdy dokument jest zbiorem pól, które są parami klucz--wartość zawierającymi dane. Domyślnie Elasticsearch indeksuje wszystkie dane w każdym polu, a każde indeksowane pole ma dedykowaną, zoptymalizowaną strukturę danych.
 Na przykład pola tekstowe są przechowywane w indeksach odwróconych, a pola numeryczne i geograficzne są przechowywane w drzewach \akronim{BKD}. Zdolność do korzystania ze struktur danych dla poszczególnych typów pól do gromadzenia i zwracania wyników wyszukiwania sprawia, że Elasticsearch jest tak szybki\cite{elasticSearchManualDataIn}.
 
 Elasticsearch ma również możliwość bycia bez schematu, co oznacza że dokumenty mogą być indeksowane bez wyraźnego określenia sposobu obsługi każdego z pól, które mogą wystąpić w dokumencie. Gdy dynamiczne mapowanie jest włączone, Elasticsearch automatycznie wykrywa i dodaje nowa pola do indeksu. To domyślne zachowanie ułatwia indeksowanie i eksplorację danych, w momencie indeksowania, Elasticsearch wykrywa i mapuje wartości logiczne, zmiennoprzecinkowe, całkowite, daty i ciągi znaków na odpowiednie typy danych\cite{elasticSearchManualDataIn}. 
@@ -177,24 +178,24 @@ Definiowanie własnych mapowań umożliwia:
 
 Często przydatne jest indeksowanie tego samego pola na różne sposoby w różnych celach. Na przykład, użytkownik może chcieć indeksować pole łańcuchowe zarówno jako pole tekstowe do wyszukiwania pełnotekstowego, oraz jako pole słów kluczowych do sortowania lub agregowania danych. Można też użyć więcej niż jednego analizatora języka do przetworzenia zawartości pola łańcuchowego zawierającego dane wejściowe użytkownika\cite{elasticSearchManualDataIn}.
 
-\subsection{Logstash}
+\section{Logstash}
 
 \begin{figure}[!htbp]
     \centering
-    \includesvg[width=50pt]{images/ELK-Stack/logo-logstash-32-color.svg}
+    \includesvg[width=0.1\textwidth]{images/ELK-Stack/logo-logstash-32-color.svg}
     \caption{Logstash logo\cite{logstashMain}}
     \label{fig:enter-label}
 \end{figure}
 
 Logstash to silnik gromadzenia danych typu otwarto źródłowego (\english{Open source}) z możliwością potokowania w czasie rzeczywistym. Logstash może dynamicznie ujednolicić dane z różnych śródeł i normalizować je do wybranych miejsc docelowych. Oczyszcza i demokratyzuje wszystkie dane dla różnorodnych zaawansowanych zastosować analiztycznych i wizualizacyjnych\cite{logstashManualIntroduction}.
 
-Logstash pierwotnie napędzał innowacje w zakresie gromadzenia logów, jego możliwości wykraczają dalego poza ten przypadek użycia. Każdy rodzaj zdarzenia można wzbogacić i przekształcić za pomoca szerokiej gamy wtyczek wejściowych, filtrujących i wyjściowych, a wiele natywnych kodeków dodatkowo upraszcza proces pozyskiwania danych. Logstash przyspiesza pozyskiwanie informacji poprzez wykorzystanie większej ilości i różnorodności danych\cite{logstashManualIntroduction}.
+Logstash pierwotnie napędzał innowacje w zakresie gromadzenia logów, jego możliwości wykraczają dlatego poza ten przypadek użycia. Każdy rodzaj zdarzenia można wzbogacić i przekształcić za pomocą szerokiej gamy wtyczek wejściowych, filtrujących i wyjściowych, a wiele natywnych kodeków dodatkowo upraszcza proces pozyskiwania danych. Logstash przyspiesza pozyskiwanie informacji poprzez wykorzystanie większej ilości i różnorodności danych\cite{logstashManualIntroduction}.
 
 Potok przetwarzania zdarzeń Logstash składa się z trzech etapów:
 
 \begin{figure}[!htbp]
     \centering
-    \includesvg[]{schemas/logstashPipeline.drawio.svg}
+    \includesvg[width=0.15\textwidth]{schemas/logstashPipeline.drawio.svg}
     \caption{Przetwarzanie zdarzeń w logstash}
     \label{fig:enter-label}
 \end{figure}
@@ -237,19 +238,19 @@ Niektóre często używane wyjścia obejmują:
 
 \subsubsection{Kodeki}
 
-Kodeki to filtry strumieniowe, które mogą działać jako część wejścia lub wyjścia. Kodeki umożliwiają łatwe odzielenie transportu wiadomości od procesu serializacji. Do najpopularniejszych kodeków należą:
+Kodeki to filtry strumieniowe, które mogą działać jako część wejścia lub wyjścia. Kodeki umożliwiają łatwe oddzielenie transportu wiadomości od procesu serializacji. Do najpopularniejszych kodeków należą:
 
 \begin{itemize}
     \item \textbf{json}: koduje lub dekoduje dane w formacie JSON\cite{logstashManualHowItWorks}.
     \item \textbf{multiline}: łączy wielowierszowe zdarzenia tekstowe, takie jak wyjątki w javia i komunikaty zrzutem stosu (\english{Stack trace}) w jedno zdarzenie\cite{logstashManualHowItWorks}.
 \end{itemize}
 
-\subsection{Metricbeat}
+\section{Metricbeat}
 
 
 \begin{figure}[!htbp]
     \centering
-    \includesvg[width=50pt]{images/ELK-Stack/icon-metricbeat-32-color.svg}
+    \includesvg[width=0.1\textwidth]{images/ELK-Stack/icon-metricbeat-32-color.svg}
     \caption{Logo Metricbeat\cite{metricbeatLogo}}
     \label{fig:enter-label}
 \end{figure}
@@ -257,11 +258,11 @@ Kodeki to filtry strumieniowe, które mogą działać jako część wejścia lub
 Metricbeat to program wykorzystywany do okresowego zbierania metryk z systemu operacyjnego i usług działających na serwerze. Metricbeat pobiera zebrane metryki i statystyki a następnie wysyła je do okreslonych przez użytkownika punktów docelowych, takich jak Elasticsearch, Logstash, Redis lub Kafka\cite{metricbeatOverview}.
 
 
-\subsection{Kibana}
+\section{Kibana}
 
 \begin{figure}[!htbp]
     \centering
-    \includesvg[width=50pt]{images/ELK-Stack/logo-kibana-32-color.svg}
+    \includesvg[width=0.1\textwidth]{images/ELK-Stack/logo-kibana-32-color.svg}
     \caption{Logo Kibana\cite{kibanaLogo}}
     \label{fig:enter-label}
 \end{figure}
@@ -276,7 +277,7 @@ Kibana między innymi zapewnia następujące funkcjonalności:
     \item \textbf{Monitoring}: Kibana zapewnia możliwość monitorowania całego klastra oprogramowania Elastic oraz kontrolowania dostępu użytkowników do poszczególnych funkcjonalności\cite{kibanaOverview}.
 \end{itemize}
 
-\subsection{Logstash Logback Encoder}
+\section{Logstash Logback Encoder}
 
 Logstash Logback Encoder to biblioteka zaprojektowana w celu ułatwienia rejestrowania dzienników aplikacji w formacie JSON przy użyciu biblioteki Logback. Koder ten umożliwia ustrukturyzowanie przechowywanie zdarzeń w formacie JSON, ułatwiając analizowanie dzienników przy wykorzystaniu takich narzędzi jak Logstash i Elasticsearch\cite{logstashLogbackEncoderOverview}. 
 
@@ -290,6 +291,6 @@ Kluczowe cechy:
     \item \textbf{Maskowanie i zmiana}: Wrażliwe informacje w dziennikach mogą być maskowane lub zmieniane w celu zapewnienia zgodności z przepisami dotyczącymi prywatności danych\cite{logstashLogbackEncoderOverview}.
 \end{itemize}
 
-Biblioteka jest szczególnie wykrozystywana w systemach rozproszonych do centralizacji dzienników aplikacyjnych z wielu źródeł i usprawniania ich analizy za pomocą narzędzi takich jak stos \akronim{ELK} (Elasticsearch, Logstash, Kibana)\cite{logstashLogbackEncoderOverview}.
+Biblioteka jest szczególnie wykorzystywana w systemach rozproszonych do centralizacji dzienników aplikacyjnych z wielu źródeł i usprawniania ich analizy za pomocą narzędzi takich jak stos \akronim{ELK} (Elasticsearch, Logstash, Kibana)\cite{logstashLogbackEncoderOverview}.
 
-Aby zintegrować Logstash Logback Encoder z projektem Java, należy uwzględnić go jako zależność w konfiguracji kompilacji w pliku konifugracyjnym, dodatkowo nalezy skonfigurować plik \textit{logback-spring.xml}, tak aby biblioteka korzystała z prawidłowych appenderów\cite{logstashLogbackEncoderOverview}.
+Aby zintegrować Logstash Logback Encoder z projektem Java, należy uwzględnić go jako zależność w konfiguracji kompilacji w pliku konfiugracyjnym, dodatkowo należy skonfigurować plik \textit{logback-spring.xml}, tak aby biblioteka korzystała z prawidłowych appenderów\cite{logstashLogbackEncoderOverview}.
