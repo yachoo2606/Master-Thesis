@@ -1083,11 +1083,39 @@ Klasa \verb|ProposalService| posiada następujące metody:
 
     W trakcie tej procedury metoda rejestruje w konsoli ostateczną propozycję do celów debugowania. Rejestrowanie zapewnia wgląd w proces generowania propozycji, umożliwiając łatwiejsze rozwiązywanie problemów i weryfikację podjętych decyzji.
 \end{itemize}
+
+\section{Podsystem monitoringu}
+
+\subsection{Zbieranie dzienników zdarzeń}
+
+Blok "Zbieranie dzienników zdarzeń" jest zaimplementowany przez trzy instancje Logstash.Instancje te współpracują ze sobą w celu zbierania, analizowania i przekazywania logów do klastra Elasticsearch.Każda instancja działa niezależnie, zapewniając ciągły przepływ i przetwarzanie danych. Konfiguracje obejmują wtyczki wejściowe do gromadzenia danych, wtyczki filtrujące do analizowania i przekształcania danych oraz wtyczki wyjściowe do wysyłania danych do Elasticsearch. Taka konfiguracja zapewnia wydajną i niezawodną agregację, transformację i przekazywanie danych dzienników zdarzeń do silnika przetwarzającego.
+
+\subsection{Silnik przetwarzający}
+
+Blok "Silnik przetwarzania" na rys.\ref{designedSystem} odnosi się do klastra węzłów Elasticsearch. Elasticsearch to potężny, rozproszony silnik wyszukiwania i analizy wykorzystywany do analizy danych na dużą skalę. Klaster składa się z trzech podstawowych węzłów: \verb|elasticsearch01|, \verb|elasticsearch02| i \verb|elasticsearch03|, z których każdy ma określoną konfigurację zapewniającą wysoką dostępność, odporność na awarie i skalowalność.
+
+Każdy węzeł ma unikalną nazwę (es01, es02, es03) i jest częścią klastra identyfikowanego przez zmienną środowiskową \verb|CLUSTER_NAME|. Są one skonfigurowane tak, aby rozpoznawać się nawzajem jako początkowe węzły główne, zapewniając płynne wykrywanie i synchronizację. Bezpieczeństwo jest zapewnione poprzez włączenie zabezpieczeń X-Pack, w tym uruchomioną konfiguracją SSL zarówno dla HTTP, jak i warstw transportowych przy użyciu wygenerowanych certyfikatów. Ta solidna konfiguracja pozwala klastrowi Elasticsearch wydajnie obsługiwać duże ilości danych, zapewniając niezbędny wgląd w czasie rzeczywistym i możliwości analityczne dla aplikacji o wysokiej wydajności.
+
+\subsection{Interfejs użytkownika}
+
+Blok "Interfejs użytkownika" jest zaimplementowany dzięki usłudze Kibana, która oferuje internetowy interfejs do wizualizacji i eksploracji danych. Instancja Kibana jest zależna od zdrowych stanów węzłów Elasticsearch (es01, es02, es03) i jest dostępna przez port 5601. Konfiguracja środowiska obejmuje połączenia ze wszystkimi trzema węzłami Elasticsearch, poświadczenia bezpieczeństwa, urzędy certyfikatów SSL i klucze szyfrowania dla funkcji bezpieczeństwa X-Pack. Rys.\ref{kibanaDiscoveryDataView} przedstawia przechwycone dzienniki zdarzeń z dwóch producentów, dwóch węzłów protokołu oraz klastra serwera Eureka.
+
+\begin{figure}[htbp!]
+    \centering
+    \includegraphics[width=\textwidth]{images/implementation/kibanaDiscoveryDataView.png}
+    \caption{Kibana --- przechwycone dzienniki zdarzeń}
+    \label{kibanaDiscoveryDataView}
+\end{figure}
+
+\subsection{Monitorowanie podsystemu}
+
+Blok "Monitorowanie podsystemu" odbywa się za pośrednictwem usługi Metricbeat, która zbiera i wysyła metryki z różnych systemów i usług. Metricbeat gromadzi metryki na poziomie systemu, takie jak użycie procesora, użycie pamięci, dysku i ruchu sieciowego, następnie wysyła te dane do Elasticsearch. Dane te są następnie analizowane i wizualizowane w usłudze Kibana, zapewniając kompleksowe monitorowanie wydajności infrastruktury, kondycji i wykorzystania zasobów.
+
 \section{Uruchomienie środowiska}
 
-\subsection{Podstawowe środowisko}
+\subsection{Bazowe środowisko}
 
-W celu uruchomienia systemu, na komputerze wymagane są zainstalowane narzędzia \verb|Docker| i \verb|Docker Compose|. Głównym plikiem niezbędnym to uruchomienia systemu jest plik \verb|docker-compose.yml| (listing \ref{dockerComposeFile}) w którym zdefiniowane są usługi monitoringu oraz rozproszony rejestr usług.
+W celu uruchomienia systemu, na komputerze wymagane są zainstalowane narzędzia \verb|Docker| i \verb|Docker Compose|. Głównym plikiem niezbędnym to uruchomienia systemu jest plik \verb|docker-compose.yml| zaprezentowany na listing \ref{dockerComposeFile}, w którym zdefiniowane są usługi monitoringu systemu oraz rozproszony rejestr usług.
 
 \begin{lstlisting}[caption=Plik docker-comose.yml, label=dockerComposeFile]
     version: '3.8'
@@ -1668,7 +1696,6 @@ W celu uruchomienia systemu, na komputerze wymagane są zainstalowane narzędzia
               memory: 1g
 \end{lstlisting}
 
-
 Bloki x--common--elastisearch--image, x-common--logstash--image i x--common--my--eureka--image definiują informacje o konfiguracji wielokrotnego użytku odpowiednio dla Elasticsearch, Logstash i obrazu rejestru usług. Są one wykorzystywane w celu uniknięcia powtórzeń definicji obrazu w poszczególnych usługach.
 
 Sekcja woluminów definiuje trwałe obszary przechowywania dla poszczególnych kontenerów.
@@ -1807,7 +1834,3 @@ Skrypt przedstawiony na listingu\ref{workersBashScript} jest przeznaczony do uru
 Skrypt oczekuje dwóch argumentów: identyfikatora pierwszego węzła i liczby instancji węzłów do uruchomienia. Jeżeli te argumenty nie zostaną dostarczone, skrypt wyświetli informacje o braku argumentów i zakończy działanie. Funkcja ensure\_docker\_image sprawdza, czy obraz Docker o nazwie \verb|worker:latest| istnieje. Jeżeli obraz nie istnieje, buduje obraz z katalogu Master--Protocol--Worker. Jeśli kompilacja nie powiedzie się, skrypt kończy działanie z komunikatem o błędzie. Następnie skrypt wykonuje pętlę od pierwszego identyfikatora węzła do określonej liczby węzłów. Dla każdej iteracji uruchamia kontener Docker z niezbędnymi zmiennymi środowiskowymi i konfiguracjami sieciowymi. Każdy kontener ma unikalną nazwę i jest połączony z siecią \verb|masterNetwork|.
 
 Skrypt automatyzuje wdrażanie wielu instancji roboczych w sieci Docker. Zapewnia on dostępność wymaganego obrazu Docker, buduje go w razie potrzeby, a następnie uruchamia określoną liczbę pracowników z odpowiednimi konfiguracjami. Ta konfiguracja jest przydatna do testowania i skalowania usług roboczych w kontrolowanym środowisku.
-
-
-\section{Podsystem monitoringu}
-
