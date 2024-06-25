@@ -71,12 +71,27 @@ Spring boot jest jednym z najpopularniejszych frameworków języka Java zapropon
     \item Korzystając ze Spring Boot, programiści mogą usprawnić tworzenie aplikacji opartych na Spring, wykorzystując potężne funkcje frameworka w celu zmniejszenia ilości standardowego kodu i wysiłku związanego z konfiguracją\cite{springbootFeatures}.
 \end{enumerate}
 
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=0.2\textwidth]{images/springboot/exampleJavaSpringBootProgram.png}
-    \caption{Przykładowy program java napisany z wykorzystaniem frameworku Springboot\cite{springJavaExampleProgram}}
-    \label{fig:enter-label}
-\end{figure}
+\begin{lstlisting}[caption=Przykładowy podstawowy program , label=basicSpringBootClass]
+    package com.example.demo;
+    
+    import org.springframework.boot.SpringApplication;
+    import org.springframework.boot.autoconfigure.SpringBootApplication;
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.RequestParam;
+    import org.springframework.web.bind.annotation.RestController;
+    
+    @SpringBootApplication
+    @RestController
+    public class DemoApplication {
+        public static void main(String[] args) {
+          SpringApplication.run(DemoApplication.class, args);
+        }
+        @GetMapping("/hello")
+        public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
+          return String.format("Hello %s!", name);
+        }
+    }
+\end{lstlisting}
 
 Powyższy program składa się z głównej klasy aplikacji z adnotacją @SpringBootApplication, która wskazuje klasę konfiguracyjną, która deklaruje jedną lub więcej metod @Bean, a także uruchamia automatyczną konfigurację i skanowanie komponentów. Klasa DemoApplication zawiera główną metodę, która jest punktem wejścia aplikacji. Metoda SpringApplication.run uruchamia cały framework Spring.
 Dodatkowo klasa jest opatrzona adnotacją @RestController, wskazującą, że jest to kontroler sieciowy, w którym każda metoda zwraca obiekt domeny zamiast widoku. Metoda hello jest mapowana do punktu końcowego /hello przy użyciu adnotacji @GetMapping, co pozwala jej obsługiwać żądania HTTP GET. Metoda ta przyjmuje nazwę parametru żądania z domyślną wartością „World” i zwraca wiadomość powitalną.
