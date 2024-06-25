@@ -212,7 +212,7 @@ Klasa ta zawiera metodę \verb|toString()| która przeciąża domyślną metodę
 
 \subsubsection{Serwis Produktów - ProductService}
 
-Klasa \verb|ProductsService| zaprezentowana na listingu\ref{productsServiceCode} jest usługą Spring odpowiedzialną za zarządzanie produktami w aplikacji producenta. Wykorzystuje ona klasę \verb|Product| w celu zainicjowania produktów, przechowywania produktów, oraz pobierania informacji o produktach. Klasa jest opatrzona adnotacją \verb|@Service|, wskazującej że jest to komponent usługi Spring, oraz \verb|@Slf4j|, aby umożliwić tworzenie dziennika zdarzeń w aplikacji.
+Klasa \verb|ProductsService| zaprezentowana na listingu.\ref{productsServiceCode} jest usługą Spring odpowiedzialną za zarządzanie produktami w aplikacji producenta. Wykorzystuje ona klasę \verb|Product| w celu zainicjowania produktów, przechowywania produktów, oraz pobierania informacji o produktach. Klasa jest opatrzona adnotacją \verb|@Service|, wskazującej że jest to komponent usługi Spring, oraz \verb|@Slf4j|, aby umożliwić tworzenie dziennika zdarzeń w aplikacji.
 
 \begin{lstlisting}[caption=Kod klasy ProductsService, label=productsServiceCode]
     package com.example.producer.service;
@@ -288,7 +288,7 @@ Klasa \verb|ProductsService| zawiera następujące metody:
 
 \subsubsection{Kontroler prędkości transmisji - SpeedTestController}
 
-Klasa \verb|speedTestController| przedstawiona na listingu\ref{speedTestControllerCode} zapewnia punkt końcowy do testowania szybkości połączenia pomiędzy producentem a klientem poprzez odbieranie tablicy bajtów i zwracanie bieżącego czasu systemowego w nanosekundach. Punkt końcowy jest mapowany na \verb|/connectionSpeed| i obsługuję żądania \akronim{POST} protokołu \akronim{HTTP} (\english{Hypertext Transfer Protocol}).
+Klasa \verb|speedTestController| przedstawiona na listingu.\ref{speedTestControllerCode} zapewnia punkt końcowy do testowania szybkości połączenia pomiędzy producentem a klientem poprzez odbieranie tablicy bajtów i zwracanie bieżącego czasu systemowego w nanosekundach. Punkt końcowy jest mapowany na \verb|/connectionSpeed| i obsługuję żądania \akronim{POST} protokołu \akronim{HTTP} (\english{Hypertext Transfer Protocol}).
 
 \begin{lstlisting}[caption=Kod klasy SpeedTestController, label=speedTestControllerCode]
     package com.example.producer.controllers;
@@ -315,7 +315,7 @@ Klasa \verb|speedTestController| przedstawiona na listingu\ref{speedTestControll
 
 \subsubsection{Konfiguracja usługi producenta}
 
-Plik konfiguracyjny przedstawiony na listingu\ref{producerconfigFIle} służy do konfiguracji usługi producenta. Konfiguruje on właściwości aplikacji, ustawienia serwera, konfigurację klienta Eureka, konfigurację dziennika zdarzeń, szczegóły pliku produktów i punkty końcowe zarządzania.
+Plik konfiguracyjny przedstawiony na listingu.\ref{producerconfigFIle} służy do konfiguracji usługi producenta. Konfiguruje on właściwości aplikacji, ustawienia serwera, konfigurację klienta Eureka, konfigurację dziennika zdarzeń, szczegóły pliku produktów i punkty końcowe zarządzania.
 
 \begin{lstlisting}[caption=Plik konfiguracyjny usługi producenta, label=producerconfigFIle]
     spring:
@@ -405,7 +405,7 @@ Usługa węzła protokołu powinna spełniać następujące wymagania funkcjonal
 
 \subsubsection{Główna klasa usługi producenta}
 
-Na listingu\ref{protocolWorkerMainClass} jest przedstawiona główna klasa usługi węzła protokołu, która jest aplikacją Spring Boot.
+Na listingu.\ref{protocolWorkerMainClass} jest przedstawiona główna klasa usługi węzła protokołu, która jest aplikacją Spring Boot.
 
 \begin{lstlisting}[language=Java, caption=Główna klasa węzła protokołu, label=protocolWorkerMainClass]
     package org.example.masterprotocolworker;
@@ -438,7 +438,7 @@ Klasa \verb|MasterProtocolWorkerApplication| jest oznaczona następującymi adno
 
 \subsubsection{Model bufora cyklicznego}
 
-Klasa \verb|MeasurementBuffer| przedstawiona na listingu\ref{measurementBufferCode} jest klasą pomocniczą wykorzystywaną do przechowywania i zarządzania buforem pomiarów o stałym rozmiarze, umożliwiającą obliczanie średniej pomiarów.
+Klasa \verb|MeasurementBuffer| przedstawiona na listingu.\ref{measurementBufferCode} jest klasą pomocniczą wykorzystywaną do przechowywania i zarządzania buforem pomiarów o stałym rozmiarze, umożliwiającą obliczanie średniej pomiarów.
 
 \begin{lstlisting}[language=Java, caption=Kod bufora cyklicznego, label=measurementBufferCode]
     package org.example.masterprotocolworker.model.helpers;
@@ -512,7 +512,7 @@ Klasa \verb|ProducerInformation| została zaprojektowana w celu przechowywania m
 
 \subsubsection{Serwis Informacji o producentach}
 
-Klasa \verb|ProducerInfoService| zaprezentowana na listingu\ref{ProducerInfoServiceCode} to usługa Spring odpowiedzialna za wykrywanie, monitorowanie i zarządzanie metrykami wydajności instancji producentów w systemie rozproszonym. Klasa ta integruje się z serwerem Eureka w celu wykrywania usług i komunikuje się z instancjami producentów. Poniżej znajduje się szczegółowy opis jej komponentów i funkcjonalności:
+Klasa \verb|ProducerInfoService| zaprezentowana na listingu.\ref{ProducerInfoServiceCode} to usługa Spring odpowiedzialna za wykrywanie, monitorowanie i zarządzanie metrykami wydajności instancji producentów w systemie rozproszonym. Klasa ta integruje się z serwerem Eureka w celu wykrywania usług i komunikuje się z instancjami producentów. Poniżej znajduje się szczegółowy opis jej komponentów i funkcjonalności:
 
 \begin{lstlisting}[language=Java, caption=Kod usługi ProducerInfoService,label=ProducerInfoServiceCode]
     package org.example.masterprotocolworker.service;
@@ -697,7 +697,7 @@ Klasa \verb|ProducerInfoService| ma kluczowe znaczenie dla utrzymania aktualnego
 
 \subsubsection{Model produktu}
 
-Klasa \verb|Product| przedstawiona na listingu\ref{produktWorkermodelCode} reprezentuje centralną jednostkę w ramach usługi producenta oraz usłudze węzła protokołu.
+Klasa \verb|Product| przedstawiona na listingu.\ref{produktWorkermodelCode} reprezentuje centralną jednostkę w ramach usługi producenta oraz usłudze węzła protokołu.
 
 \begin{lstlisting}[caption=Klasa reprezentująca produkt, label=produktWorkermodelCode]
     package org.example.masterprotocolworker.model;
@@ -754,7 +754,7 @@ Klasa ta zawiera metodę \verb|toString()| która przeciąża domyślną metodę
 
 \subsubsection{Klasa propozycji produktów producenta}
 
-Klasa \verb|ProducerProposal| przedstawiona na listingu\ref{ProducerProposalCode} to model danych wykorzystywany do reprezentowania propozycji dla producenta w oparciu o określone kryteria.
+Klasa \verb|ProducerProposal| przedstawiona na listingu.\ref{ProducerProposalCode} to model danych wykorzystywany do reprezentowania propozycji dla producenta w oparciu o określone kryteria.
 
 \begin{lstlisting}[language=Java, caption=Kod klasy ProducerProposal,label=ProducerProposalCode]
     package org.example.masterprotocolworker.model;
@@ -784,7 +784,7 @@ Klasa \verb|ProducerProposal| służy do przechowywania i przekazywania informac
 
 \subsubsection{Klasa ostatecznej propozycji}
 
-Klasa \verb|Proposal| zaprezentowana na listingu\ref{ProposalCode} to model danych do zarządzania kolekcją propozycji producentów. Klasa ta wykorzystuje adnotacje \verb|Lombok| w celu zmniejszenia ilości standardowego kodu i usprawnienia implementacji.
+Klasa \verb|Proposal| zaprezentowana na listingu.\ref{ProposalCode} to model danych do zarządzania kolekcją propozycji producentów. Klasa ta wykorzystuje adnotacje \verb|Lombok| w celu zmniejszenia ilości standardowego kodu i usprawnienia implementacji.
 
 \begin{lstlisting}[language=Java, caption=Kod klasy Proposal,label=ProposalCode]
     package org.example.masterprotocolworker.model;
@@ -810,7 +810,7 @@ Klasa ta posiada pole \verb|proposalProducts| które jest mapą przechowującą 
 
 \subsubsection{Serwis produktów --- ProductsService}
 
-Klasa \verb|ProductsService| przedstawiona na listingu\ref{productsServiceCode} jest odpowiedzialna za interakcję z usługami producentów w celu sprawdzenia dostępności produktów i mapowania produktów do odpowiednich producentów. Klasa ta wykorzystuje usługę \verb|ProducerInfoService| do wykrywania producentów oraz szablon \verb|RestTemplate| do komunikacji z nimi. 
+Klasa \verb|ProductsService| przedstawiona na listingu.\ref{productsServiceCode} jest odpowiedzialna za interakcję z usługami producentów w celu sprawdzenia dostępności produktów i mapowania produktów do odpowiednich producentów. Klasa ta wykorzystuje usługę \verb|ProducerInfoService| do wykrywania producentów oraz szablon \verb|RestTemplate| do komunikacji z nimi. 
 
 \begin{lstlisting}[language=Java,caption= Kod klasy ProductsService, label=productsServiceCode]
     package org.example.masterprotocolworker.service;
@@ -921,7 +921,7 @@ Klasa \verb|ProductsService| zawiera następujące metody:
 
 \subsubsection{Serwis propozycji --- ProposalService}
 
-Klasa \verb|ProposalService| zaprezentowana na listingu\ref{ProposalServiceCode} jest odpowiedzialna za generowanie propozycji przypisania produktów do producentów w oparciu o wskaźniki wydajności. Klasa ta wykorzystuje pozostałe usługi, takie jak \verb|ProductsService| i \verb|ProducerInfoService|, do gromadzenia niezbędnych danych i podejmowania decyzji.
+Klasa \verb|ProposalService| zaprezentowana na listingu.\ref{ProposalServiceCode} jest odpowiedzialna za generowanie propozycji przypisania produktów do producentów w oparciu o wskaźniki wydajności. Klasa ta wykorzystuje pozostałe usługi, takie jak \verb|ProductsService| i \verb|ProducerInfoService|, do gromadzenia niezbędnych danych i podejmowania decyzji.
 
 \begin{lstlisting}[caption=Kod klasy ProposalService, label=ProposalServiceCode]
     package org.example.masterprotocolworker.service;
@@ -1732,7 +1732,7 @@ Opisany powyżej plik \verb|docker-compose.yml| konfiguruje środowisko rozrucho
 
 \subsection{Producent}
 
-Skrypt Bash przedstawiony na listingu\ref{producerBashScript} jest przeznaczony do uruchamiania wielu instancji usługi kontenerowej Docker, z których każda reprezentuje producenta. Skrypt zapewnia dostępność obrazu Docker dla producentów, buduje go w razie potrzeby, a następnie uruchamia określoną liczbę instancji producentów z odpowiednimi zmiennymi środowiskowymi i konfiguracjami sieciowymi.
+Skrypt Bash przedstawiony na listingu.\ref{producerBashScript} jest przeznaczony do uruchamiania wielu instancji usługi kontenerowej Docker, z których każda reprezentuje producenta. Skrypt zapewnia dostępność obrazu Docker dla producentów, buduje go w razie potrzeby, a następnie uruchamia określoną liczbę instancji producentów z odpowiednimi zmiennymi środowiskowymi i konfiguracjami sieciowymi.
 
 \begin{lstlisting}[language=bash,caption=Kod skryptu producers.sh,label=producerBashScript]
     #!/bin/bash
@@ -1785,7 +1785,7 @@ Skrypt \verb|producers.sh| automatyzuje wdrażanie wielu instancji producentów.
 
 \subsection{Węzeł protokołu}
 
-Skrypt przedstawiony na listingu\ref{workersBashScript} jest przeznaczony do uruchamiania wielu instancji aplikacji kontenerowej Docker, z których każda reprezentuje węzeł protokołu. Skrypt zapewnia dostępność obrazu Docker dla węzła protokołu, buduje go w razie potrzeby, a następnie uruchamia określoną liczbę instancji węzłów z odpowiednimi zmiennymi środowiskowymi i konfiguracjami sieciowymi.
+Skrypt przedstawiony na listingu.\ref{workersBashScript} jest przeznaczony do uruchamiania wielu instancji aplikacji kontenerowej Docker, z których każda reprezentuje węzeł protokołu. Skrypt zapewnia dostępność obrazu Docker dla węzła protokołu, buduje go w razie potrzeby, a następnie uruchamia określoną liczbę instancji węzłów z odpowiednimi zmiennymi środowiskowymi i konfiguracjami sieciowymi.
 
 \begin{lstlisting}[language=bash,caption=Kod skryptu workers.sh,label=workersBashScript]
     #!/bin/bash
