@@ -1,6 +1,6 @@
 \chapter{Implementacja}
 
-Niniejszy rozdział zawiera szczegółową analizę implementacji systemu. Obejmuje on konfigurację komponentów, integrację mechanizmów wykrywania usług i zarządzania zasobami oraz konfigurację narzędzi do monitorowania. Analizując te aspekty implementacji, rozdział ujawnia, w jaki sposób realizowana jest architektura systemu, umożliwiając dynamiczną interakcję między producentami i użytkownikami, efektywną alokację zasobów i solidne monitorowanie wydajności.
+Niniejszy rozdział zawiera szczegółowe omówienie sposobu implementacji zaproponowanego systemu. Poniższy opis obejmuje konfigurację komponentów, integrację mechanizmów wykrywania usług i zarządzania zasobami oraz konfigurację narzędzi do monitorowania. Analizując te aspekty implementacji, rozdział ujawnia, w jaki sposób realizowana jest architektura systemu, umożliwiając dynamiczną interakcję między producentami i użytkownikami, efektywną alokację zasobów i monitorowanie wydajności systemu.
 
 \section{Podsystem użytkowy}
 \subsection{Rejestr usług}
@@ -14,7 +14,7 @@ Głównym elementem w podsystemie użytkowym jest rejestr usług, rejestr ten je
     \label{eurekaServerItems}
 \end{figure}
 
-Każda uruchomiona usługa typu producenta oraz węzła protokołu w podsystemie użytkowym jest rejestrowana w usłudze Eureka, gdzie aplikacja przechowywana jest pod unikatową nazwą, która jest wykorzystywana do odpytywania rejestru w usłudze klienckiej w celu otrzymania informacji o działających usługach w systemie. Rejestr przechowuje adresu pod którym usługa jest uruchomiona oraz jej stan. Na rys.\ref{eurekaServerItems} jest przedstawiony przykładowy stan usług zarejestrowanych w rejestrze Eureka.
+Każda uruchomiona usługa typu producenta oraz węzła protokołu w podsystemie użytkowym jest rejestrowana w usłudze Eureka, gdzie aplikacja przechowywana jest pod unikalną nazwą, która jest wykorzystywana do odpytywania rejestru w usłudze klienckiej w celu otrzymania informacji o działających usługach w systemie. Rejestr przechowuje adres pod którym usługa jest uruchomiona oraz jej stan. Na rys.\ref{eurekaServerItems} jest przedstawiony przykładowy stan usług zarejestrowanych w rejestrze Eureka.
 
 \begin{lstlisting}[language=Java, caption=Implementacja rejestru usług serwera Eureka]
     
@@ -35,9 +35,9 @@ Każda uruchomiona usługa typu producenta oraz węzła protokołu w podsystemie
     }
 \end{lstlisting}
 
-Kod usługi rejestru składa się z jednej klasy \verb|ServiceRegistryApplication| oraz metody \verb|main| uruchamiającej aplikacje. Jedyną linijką odróżniającą tę klasę od czystej aplikacji napisanej w frameworku Spring Boot jest adnotacja \verb|@EnableEurekaServer| odpowiada ona za uruchomienie usługi Eureka.
+Kod usługi rejestru składa się z jednej klasy \verb|ServiceRegistryApplication| oraz metody \verb|main| uruchamiającej aplikacje. Jedyną linijką odróżniającą tę klasę od czystej aplikacji napisanej w frameworku Spring Boot jest adnotacja \verb|@EnableEurekaServer|(linia 10), odpowiada ona za uruchomienie usługi Eureka.
 
-Głównym elementem określającym działanie usługi jest profil Spring Boot oraz wartości przypisane temu profiowi w pliku \verb|application.yml|. 
+Głównym elementem określającym działanie usługi jest profil Spring Boot oraz wartości przypisane temu profilowi w pliku \verb|application.yml|. 
 
 \subsubsection{Konfiguracja węzła rejestru}
 
@@ -74,37 +74,37 @@ Plik konfiguracyjny \verb|application.yml| jest plikiem YAML podzielony na trzy 
 
 \subsubsection{Konfiguracja aplikacji}
 
-Pole \verb|spring.config.activate.on-profile| określa, który profil aplikacyjny będzie aktywny podczas inicjalizacji usługi.
+Pole \verb|spring.config.activate.on-profile|(linia 4) określa, który profil aplikacyjny będzie aktywny podczas inicjalizacji usługi.
 
-Pole \verb|spring.application.name| ustawia nazwę aplikacji na eureka-server-clustered. Nazwa ta jest wykorzystywana do identyfikacji oraz rejestracji aplikacji w klastrze Eureka.
+Pole \verb|spring.application.name| (linia 6) ustawia nazwę aplikacji na eureka-server-clustered. Nazwa ta jest wykorzystywana do identyfikacji oraz rejestracji aplikacji w klastrze Eureka.
 
-Pole \verb|server.port| określa port urządzenia na którym aplikacja ma być uruchomiona.
+Pole \verb|server.port| (linia 8) określa port urządzenia na którym aplikacja ma być uruchomiona.
 
 \subsubsection{Konfiguracja instancji Eureka}
 
-Pole \verb|eureka.instance.preferIpAddress| wartość tego pola ustawiona na \verb|true| określa preferowanie przez Eureka adresu \akronim{IP} (\english{Internet Protocol}) zamiast nazwy urządzenia do rejestrowania usług.
+Pole \verb|eureka.instance.preferIpAddress| (linia 11) wartość tego pola ustawiona na \verb|true| określa preferowanie przez Eureka adresu \akronim{IP} (\english{Internet Protocol}) zamiast nazwy urządzenia do rejestrowania usług.
 
-Pole \verb|eureka.instance.leaseRenewalIntervalInSeconds| ustawia interwał(w sekundach), co który instancja będzie wysyłać informacje o chęci odnowienia dzierżawy.
+Pole \verb|eureka.instance.leaseRenewalIntervalInSeconds| (linia 12) ustawia interwał(w sekundach), co który instancja będzie wysyłać informacje o chęci odnowienia dzierżawy.
 
-Pole \verb|eureka.instance.leaseExpirationDurationInSeconds| określa czas trwania(w sekundach), po którym instancja usługi zostanie uznana za wyłączoną, jeżeli aplikacja nie odnowi dzierżawy.
+Pole \verb|eureka.instance.leaseExpirationDurationInSeconds| (linia 13) określa czas trwania(w sekundach), po którym instancja usługi zostanie uznana za wyłączoną, jeżeli aplikacja nie odnowi dzierżawy.
 
 \subsubsection{Konfiguracja klienta Eureka}
 
-Pole \verb|eureka.client.registerWithEureka| wskazuje, że instancja powinna zarejestrować się w serwerze Eureka.
+Pole \verb|eureka.client.registerWithEureka| (linia 15) wskazuje, że instancja powinna zarejestrować się w serwerze Eureka.
 
-Pole \verb|eureka.client.fetchRegistry| określa, czy ta instancja powinna pobrać informację z rejestru Eureka.
+Pole \verb|eureka.client.fetchRegistry| (linia 16) określa, czy ta instancja powinna pobrać informację z rejestru Eureka.
 
-Pole \verb|eureka.client.serviceUrl.defaultZone| określa adresy \akronim{URL} (\english{Uniform Resource Locator}) usług równorzędnych serwerów Eureka w klastrze.
+Pole \verb|eureka.client.serviceUrl.defaultZone| (linia 18) określa adresy \akronim{URL} (\english{Uniform Resource Locator}) usług równorzędnych serwerów Eureka w klastrze.
 
 \subsubsection{Konfiguracja serwera Eureka}
 
-Pole \verb|eureka.server.enableSelfPreservation| określa tryb samozachowawczy, który pomaga w utrzymaniu dostępności serwera Eureka nawet w przypadku partycji sieciowej lub dużych opóźnień.
+Pole \verb|eureka.server.enableSelfPreservation| (linia 20) określa tryb samozachowawczy, który pomaga w utrzymaniu dostępności serwera Eureka nawet w przypadku partycji sieciowej lub dużych opóźnień.
 
-Pole \verb|eureka.server.evictionIntervalTimerInMs| ustawia interwał (w milisekundach), dla którego ma być uruchamiane zadanie usuwania aplikacji których czas dzierżawy wygasł.
+Pole \verb|eureka.server.evictionIntervalTimerInMs| (linia 21) ustawia interwał (w milisekundach), dla którego ma być uruchamiane zadanie usuwania aplikacji których czas dzierżawy wygasł.
 
 \subsubsection{Konfiguracja logowania zdarzeń}
 
-Pola \verb|logging.logstash.destination*| ustawiają adres do usług zbierających dokumenty, do których będą wysyłane informacje o zdarzeniach w aplikacji producenta. Wykorzystuje zmienną środowiskową LOGSTASH\_DESTINATION\_*, która domyślnie jest ustawiona na localhost:5000, jeśli nie zostanie podana przy uruchomieniu aplikacji.\\[0.5cm]
+Pola \verb|logging.logstash.destination*| (linie 24-26) ustawiają adres do usług zbierających dokumenty, do których będą wysyłane informacje o zdarzeniach w aplikacji producenta. Wykorzystuje zmienną środowiskową LOGSTASH\_DESTINATION\_*, która domyślnie jest ustawiona na localhost:5000, jeśli nie zostanie podana przy uruchomieniu aplikacji.\\[0.5cm]
 
 plik \verb|application.yml| definiuje ustawienia konfiguracyjne dla aplikacji Spring Boot z różnymi profilami: peer-1, peer-2 i peer-3. Każdy profil konfiguruje aplikację jako część klastrowej konfiguracji serwera Eureka oraz wykorzystuje pozostałe uruchomione serwery Eureka jako repliki swojego rejestru w celu zapewnienia wysokiej dostępności w przypadku awarii jednego z węzłów w klastrze.
 
@@ -132,7 +132,7 @@ Usługa producenta powinna spełniać następujące wymagania funkcjonalne:
 
 \subsubsection{Główna klasa usługi producenta}
 
-Główna klasa usługi producenta przedstawiona na rys\ref{producerMainClass}, jest podstawową klasą uruchamiającą aplikację z wykorzystaniem frameworku Spring Boot. Jest ona oznaczona adnotacją \verb|@EnableDiscoveryClient|, która zapewnia uruchomienie klienta Eureka w celu rejestracji w serwerze Eureka. Adres serwera na, którym aplikacja ma się zarejestrować  ładowany jest z konfiguracji aplikacji.
+Główna klasa usługi producenta przedstawiona na rys\ref{producerMainClass}, jest podstawową klasą uruchamiającą aplikację z wykorzystaniem frameworku Spring Boot. Jest ona oznaczona adnotacją \verb|@EnableDiscoveryClient| (linia 8), która zapewnia uruchomienie klienta Eureka w celu rejestracji w serwerze Eureka. Adres serwera na, którym aplikacja ma się zarejestrować ładowany jest z konfiguracji aplikacji.
 
 \begin{lstlisting}[caption=Główna klasa usługi producenta, label=producerMainClass]
     package com.example.producer;
@@ -196,23 +196,23 @@ Klasa \verb|Product| przedstawiona na rys\ref{produktmodel} reprezentuje central
     }
 \end{lstlisting}
 
-Klasa ta jest opatrzona adnotacjami Lombok, \verb|@Getter|, \verb|@Setter|, które pozwalają automatycznie wygenerować funkcję dostępowe do zmiennych znajdujących się w klasie.
+Klasa ta jest opatrzona adnotacjami Lombok (linie 8-11), \verb|@Getter|, \verb|@Setter|, które pozwalają automatycznie wygenerować funkcję dostępowe do zmiennych znajdujących się w klasie.
 
 Klasa ta zawiera następujące zmienne:
 \begin{itemize}
-    \item \verb|String id| - Unikatowe dla danego typu produktu Id
-    \item \verb|String name| - Nazwa produktu
-    \item \verb|String model| - Model produktu
-    \item \verb|String producer| - Nazwa producenta produktu
-    \item \verb|Integer amount| - ilość produktu oferowana przez producenta
-    \item \verb|Integer price| - cena produktu
+    \item \verb|String id| --- Unikatowe dla danego typu produktu Id (linia 13)
+    \item \verb|String name| --- Nazwa produktu (linia 14)
+    \item \verb|String model| --- Model produktu (linia 15)
+    \item \verb|String producer| --- Nazwa producenta produktu (linia 16)
+    \item \verb|Integer amount| --- ilość produktu oferowana przez producenta (linia 17)
+    \item \verb|Integer price| --- cena produktu (linia 18)
 \end{itemize}
 
-Klasa ta zawiera metodę \verb|toString()| która przeciąża domyślną metodę klasową języka java \verb|toString()| aby zapewnić reprezentację obiektu produktu, która zawiera wszystkie atrybuty obiektu.
+Klasa ta zawiera metodę \verb|toString()| (linie 20-35) która przeciąża domyślną metodę klasową języka java \verb|toString()| aby zapewnić reprezentację obiektu produktu, która zawiera wszystkie atrybuty obiektu.
 
-\subsubsection{Serwis Produktów - ProductService}
+\subsubsection{Serwis Produktów --- ProductService}
 
-Klasa \verb|ProductsService| zaprezentowana na listingu.\ref{productsServiceCode} jest usługą Spring odpowiedzialną za zarządzanie produktami w aplikacji producenta. Wykorzystuje ona klasę \verb|Product| w celu zainicjowania produktów, przechowywania produktów, oraz pobierania informacji o produktach. Klasa jest opatrzona adnotacją \verb|@Service|, wskazującej że jest to komponent usługi Spring, oraz \verb|@Slf4j|, aby umożliwić tworzenie dziennika zdarzeń w aplikacji.
+Klasa \verb|ProductsService| zaprezentowana na listingu.\ref{productsServiceCode} jest usługą Spring odpowiedzialną za zarządzanie produktami w aplikacji producenta. Wykorzystuje ona klasę \verb|Product| w celu zainicjowania produktów, przechowywania produktów, oraz pobierania informacji o produktach. Klasa jest opatrzona adnotacją \verb|@Service| (linia 20), wskazującej że jest to komponent usługi Spring, oraz \verb|@Slf4j| (linia 21), aby umożliwić tworzenie dziennika zdarzeń w aplikacji.
 
 \begin{lstlisting}[caption=Kod klasy ProductsService, label=productsServiceCode]
     package com.example.producer.service;
@@ -274,21 +274,21 @@ Klasa \verb|ProductsService| zaprezentowana na listingu.\ref{productsServiceCode
 
 Klasa \verb|ProductsService| zawiera następujące zmienne:
 \begin{itemize}
-    \item \verb|productFileName| - Nazwa pliku przechowującego produktu, z którego są ładowane dane przy starcie aplikacji. Wartość ta jest wstrzykiwana z konfiguracji aplikacji przy użyciu adnotacji \verb|@Value|.
-    \item \verb|count| -  Liczba całkowita określająca liczbę produktów do załadowania. Ta wartość jest również wstrzykiwana z konfiguracji aplikacji.
-    \item \verb|products| - Lista obiektów \verb|Product| zawierająca załadowane produkty.
+    \item \verb|productFileName| --- Nazwa pliku przechowującego produktu, z którego są ładowane dane przy starcie aplikacji (linia 25). Wartość ta jest wstrzykiwana z konfiguracji aplikacji przy użyciu adnotacji \verb|@Value| (linia 24).
+    \item \verb|count| ---  Liczba całkowita określająca liczbę produktów do załadowania (linia 28). Ta wartość jest również wstrzykiwana z konfiguracji aplikacji.
+    \item \verb|products| --- Lista obiektów \verb|Product| zawierająca załadowane produkty (linia 29).
 \end{itemize}
 
 Klasa \verb|ProductsService| zawiera następujące metody:
 \begin{itemize}
-    \item \verb|loadProducts| - Metoda opatrzona adnotacją \verb|@PostConstruct| zostaje wywołana automatycznie po inicjalizacji komponentu \verb|ProductsService|. Ładuje ona dane produktów z pliku znajdującego się w głównym folderze aplikacji. Następnie tablica jest mieszana w celu zapewnienia różnych produktów przy każdorazowym uruchomieniu aplikacji. Następnie tablica jest ograniczana do ilości produktów określonej w zmiennej \verb|count|.
-    \item \verb|getAllProducts| - metoda zwracająca wszystkie produkty przechowywane w tablicy \verb|products|.
-    \item \verb|getProductByName| - Metoda przyjmuje obiekt klasy \verb|Product| jako parametr i zwraca obiekt tej samej klasy opatrzony dodatkową klasą\verb|Optional<>|, który może służyć jako tymczasowy pojemnik z pustą wartość w momencie gdy szukany produkt nie zostanie znaleziony u producenta. W momencie wywołania funkcji tablica jest filtrowana w celu znalezienia czy produkt znajduje się w ofercie producenta oraz czy jego ilość spełnia szukane kryterium przesłane w obiekcie wejściowym.
+    \item \verb|loadProducts| --- Metoda (linie 33-46) opatrzona adnotacją \verb|@PostConstruct| (linia 32) zostaje wywołana automatycznie po inicjalizacji komponentu \verb|ProductsService|. Ładuje ona dane produktów z pliku znajdującego się w głównym folderze aplikacji. Następnie tablica jest mieszana w celu zapewnienia różnych produktów przy każdorazowym uruchomieniu aplikacji. Następnie tablica jest ograniczana do ilości produktów określonej w zmiennej \verb|count|.
+    \item \verb|getAllProducts| --- Metoda (linie 48-50) zwracająca wszystkie produkty przechowywane w tablicy \verb|products|.
+    \item \verb|getProductByName| --- Metoda (linie 52-54)  przyjmuje obiekt klasy \verb|Product| jako parametr i zwraca obiekt tej samej klasy opatrzony dodatkową klasą\verb|Optional<>|, który może służyć jako tymczasowy pojemnik z pustą wartość w momencie gdy szukany produkt nie zostanie znaleziony u producenta. W momencie wywołania funkcji tablica jest filtrowana w celu znalezienia czy produkt znajduje się w ofercie producenta oraz czy jego ilość spełnia szukane kryterium przesłane w obiekcie wejściowym.
 \end{itemize}
 
-\subsubsection{Kontroler prędkości transmisji - SpeedTestController}
+\subsubsection{Kontroler prędkości transmisji --- SpeedTestController}
 
-Klasa \verb|speedTestController| przedstawiona na listingu.\ref{speedTestControllerCode} zapewnia punkt końcowy do testowania szybkości połączenia pomiędzy producentem a klientem poprzez odbieranie tablicy bajtów i zwracanie bieżącego czasu systemowego w nanosekundach. Punkt końcowy jest mapowany na \verb|/connectionSpeed| i obsługuję żądania \akronim{POST} protokołu \akronim{HTTP} (\english{Hypertext Transfer Protocol}).
+Klasa \verb|speedTestController| przedstawiona na listingu.\ref{speedTestControllerCode} zapewnia punkt końcowy (linia 12) do testowania szybkości połączenia pomiędzy producentem a klientem poprzez odbieranie tablicy bajtów (linia 16) i zwracanie bieżącego czasu systemowego w nanosekundach (linia 18). Punkt końcowy jest mapowany na \verb|/connectionSpeed| i obsługuję żądania \akronim{POST} protokołu \akronim{HTTP} (\english{Hypertext Transfer Protocol}).
 
 \begin{lstlisting}[caption=Kod klasy SpeedTestController, label=speedTestControllerCode]
     package com.example.producer.controllers;
@@ -359,29 +359,29 @@ Plik konfiguracyjny przedstawiony na listingu.\ref{producerconfigFIle} służy d
 
 \subsubsection{Konfiguracja aplikacji}
 
-Pole \verb|spring.application.name| ustawia nazwę aplikacji. Wykorzystuje zmienną środowiskową PRODUCER\_ID, który domyślnie ma wartość "producer-ERROR", jeżeli zmienna środowiskowa nie zostanie podana przy uruchomieniu.
+Pole \verb|spring.application.name| (linia 3) ustawia nazwę aplikacji. Wykorzystuje zmienną środowiskową PRODUCER\_ID, który domyślnie ma wartość "producer-ERROR", jeżeli zmienna środowiskowa nie zostanie podana przy uruchomieniu.
 
-Pole \verb|spring.servlet.multipart.max-file-size| - konfiguruje maksymalny rozmiar pliku dla przesyłania plików wieloczęściowych do 200 MB.
+Pole \verb|spring.servlet.multipart.max-file-size| (linia 6) konfiguruje maksymalny rozmiar pliku dla przesyłania plików wieloczęściowych do 200 MB.
 
-Pole \verb|spring.servlet.multipart.max-request-size| - konfiguruje maksymalny rozmiar żądania dla przesyłania plików wieloczęściowych do 200 MB.
+Pole \verb|spring.servlet.multipart.max-request-size| (linia 7) konfiguruje maksymalny rozmiar żądania dla przesyłania plików wieloczęściowych do 200 MB.
 
 \subsubsection{Konfiguracja serwera aplikacji}
 
-Pole \verb|server.port| ustawia port serwera. Wykorzystuje zmienną środowiskową PORT, która domyślnie wynosi 10000, jeśli nie zostanie podana przy uruchomieniu.
+Pole \verb|server.port| (linia 10) ustawia port serwera. Wykorzystuje zmienną środowiskową PORT, która domyślnie wynosi 10000, jeśli nie zostanie podana przy uruchomieniu.
 
-Pole \verb|server.tomcat.max-swallow-size| konfiguruje maksymalny rozmiar odbioru plików dla Tomcat do 200 MB.
+Pole \verb|server.tomcat.max-swallow-size| (linia 12) konfiguruje maksymalny rozmiar odbioru plików dla Tomcat do 200 MB.
 
-Pole \verb|server.tomcat.max-http-form-post-size| konfiguruje maksymalny rozmiar żądania \akronim{POST} formularza \akronim{HTTP} dla serwera Tomcat do 200 MB.
+Pole \verb|server.tomcat.max-http-form-post-size| (linia 13) konfiguruje maksymalny rozmiar żądania \akronim{POST} formularza \akronim{HTTP} dla serwera Tomcat do 200 MB.
 
 \subsubsection{Konfiguracja logowania zdarzeń}
 
-Pola \verb|logging.logstash.destination*| ustawiają adres do usług zbierających dokumenty, do których będą wysyłane informacje o zdarzeniach w aplikacji producenta. Wykorzystuje zmienną środowiskową LOGSTASH\_DESTINATION\_*, która domyślnie jest ustawiona na localhost:5000, jeśli nie zostanie podana przy uruchomieniu aplikacji.
+Pola \verb|logging.logstash.destination*| (linie 23-25) ustawiają adres do usług zbierających dokumenty, do których będą wysyłane informacje o zdarzeniach w aplikacji producenta. Wykorzystuje zmienną środowiskową LOGSTASH\_DESTINATION\_*, która domyślnie jest ustawiona na localhost:5000, jeśli nie zostanie podana przy uruchomieniu aplikacji.
 
 \subsubsection{Konfiguracja pliku produktów}
 
-Pole \verb|products.file.name| określa nazwę pliku przechowującego produkty.
+Pole \verb|products.file.name| (linia 30) określa nazwę pliku przechowującego produkty.
 
-Pole \verb|products.count| ustawia liczbę produktów którą producent ma świadczyć. Wykorzystuje zmienną środowiskową NUMBER\_OF\_PRODUCTS, która domyślnie wynosi 1000, jeśli nie zostanie podana.
+Pole \verb|products.count| (linia 31) ustawia liczbę produktów którą producent ma świadczyć. Wykorzystuje zmienną środowiskową NUMBER\_OF\_PRODUCTS, która domyślnie wynosi 1000, jeśli nie zostanie podana.
 
 \subsection{Węzeł protokołu}
 
@@ -429,9 +429,9 @@ Na listingu.\ref{protocolWorkerMainClass} jest przedstawiona główna klasa usł
 
 Klasa \verb|MasterProtocolWorkerApplication| jest oznaczona następującymi adnotacjami:
 \begin{itemize}
-    \item Adnotacja \verb|@SpringBootApplication| oznacza klasę aplikacji Spring Boot, umożliwiając automatyczną konfigurację, skanowanie komponentów zadeklarowanych w programie oraz obsługę właściwości konfiguracji usługi.
-    \item Adnotacja \verb|@EnableDiscoveryClient| oznacza umożliwienie aplikacji rejestrację w serwerze Eureka w celu wykrywania usług, umożliwiając jej wykrywanie i komunikację z innymi usługami uruchomionymi w systemie.
-    \item Adnotacja \verb|@EnableScheduling| oznacza aktywację obsługi harmonogramu w aplikacji, umożliwiając jej wykonywanie zaplanowanych zadań w określonych odstępach czasu.
+    \item Adnotacja \verb|@SpringBootApplication| (linia 8) oznacza klasę aplikacji Spring Boot, umożliwiając automatyczną konfigurację, skanowanie komponentów zadeklarowanych w programie oraz obsługę właściwości konfiguracji usługi.
+    \item Adnotacja \verb|@EnableDiscoveryClient| (linia 9) oznacza umożliwienie aplikacji rejestrację w serwerze Eureka w celu wykrywania usług, umożliwiając jej wykrywanie i komunikację z innymi usługami uruchomionymi w systemie.
+    \item Adnotacja \verb|@EnableScheduling| (linia 10) oznacza aktywację obsługi harmonogramu w aplikacji, umożliwiając jej wykonywanie zaplanowanych zadań w określonych odstępach czasu.
 \end{itemize}
 
 \subsubsection{Podsystem monitoringu producentów}
@@ -486,26 +486,61 @@ Klasa \verb|MeasurementBuffer| przedstawiona na listingu.\ref{measurementBufferC
 
 Klasa \verb|MeasurementBuffer| posiada następujące pola:
 \begin{itemize}
-    \item \verb|BUFFER_SIZE| - stała definiująca stały rozmiar bufora, ustawiona na 10.
-    \item \verb|buffer| - lista wartości Double o stałym rozmiarze (BUFFER\_SIZE), początkowo wypełniona wartościami null. Lista ta przechowuje pomiary.
-    \item \verb|index| - liczba całkowita śledząca bieżącą pozycję w buforze, gdzie zostanie dodany następny pomiar.
-    \item \verb|count| - liczba całkowita śledząca liczbę pomiarów aktualnie znajdujących się w buforze, aż do maksymalnego rozmiaru bufora.
+    \item \verb|BUFFER_SIZE| - stała definiująca stały rozmiar bufora, ustawiona na 10 (linia 18).
+    \item \verb|buffer| - lista wartości Double o stałym rozmiarze (BUFFER\_SIZE), początkowo wypełniona wartościami null. Lista ta przechowuje pomiary (linia 19).
+    \item \verb|index| - liczba całkowita śledząca bieżącą pozycję w buforze, gdzie zostanie dodany następny pomiar (linia 20).
+    \item \verb|count| - liczba całkowita śledząca liczbę pomiarów aktualnie znajdujących się w buforze, aż do maksymalnego rozmiaru bufora (linia 21).
 \end{itemize}
 
 Klasa \verb|MeasurementBuffer| posiada następujące metody:
 \begin{itemize}
-    \item \verb|addMeasurement| metoda dodająca nowy pomiar do bufora w bieżącej pozycji indeksu. Po dodaniu pomiaru aktualizuje indeks do następnej pozycji, zawijając do 0, gdy zostanie osiągnięty rozmiar bufora. Jeżeli bufor nie jest jeszcze pełny, zwiększa liczbę pomiarów.
-    \item \verb|calculateMean| metoda obliczająca i zwracająca średnią pomiarów aktualnie znajdujących się w buforze. Iteruje po buforze, sumując pomiary i dzieląc przez ich ilość, aby uzyskać średnią. Jeśli nie dodano żadnych pomiarów (count wynosi 0), funkcja zwraca 0.
+    \item \verb|addMeasurement| metoda dodająca nowy pomiar do bufora w bieżącej pozycji indeksu. Po dodaniu pomiaru aktualizuje indeks do następnej pozycji, zawijając do 0, gdy zostanie osiągnięty rozmiar bufora. Jeżeli bufor nie jest jeszcze pełny, zwiększa liczbę pomiarów (linie 25-31).
+    \item \verb|calculateMean| metoda obliczająca i zwracająca średnią pomiarów aktualnie znajdujących się w buforze. Iteruje po buforze, sumując pomiary i dzieląc przez ich ilość, aby uzyskać średnią. Jeśli nie dodano żadnych pomiarów (count wynosi 0), funkcja zwraca 0 (linie 33-39).
 \end{itemize}
 
 \subsubsection{Model informacji producenta}
 
-Klasa \verb|ProducerInformation| przechowuje informacje o producencie, koncentrując się w szczególności na metrykach wydajności. Wykorzystuje on obiekty \verb|MeasurementBuffer| do zarządzania i obliczania średnich wartości dla różnych parametrów wydajności. Klasa posiada następujące pola:
+Klasa \verb|ProducerInformation| przedstawiona na listingu.\ref{ProducerInformationCode} przechowuje informacje o producencie, koncentrując się w szczególności na metrykach wydajności. Wykorzystuje on obiekty \verb|MeasurementBuffer| do zarządzania i obliczania średnich wartości dla różnych parametrów wydajności. 
+
+
+\begin{lstlisting}[language=Java, caption=Kod klasy ProducerInformation,label=ProducerInformationCode]
+    package org.example.masterprotocolworker.model;
+
+    import lombok.AllArgsConstructor;
+    import lombok.Getter;
+    import lombok.NoArgsConstructor;
+    import lombok.Setter;
+    import org.example.masterprotocolworker.model.helpers.MeasurementBuffer;
+    
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public class ProducerInformation {
+        private MeasurementBuffer measurementBufferConnectionSpeed = new MeasurementBuffer();
+        private MeasurementBuffer measurementBufferConnectionTime = new MeasurementBuffer();
+        private MeasurementBuffer measurementBufferSystemLoadAverage1m = new MeasurementBuffer();
+    
+        public double getConnectionSpeed() {
+            return measurementBufferConnectionSpeed.calculateMean();
+        }
+    
+        public double getConnectionTime() {
+            return measurementBufferConnectionTime.calculateMean();
+        }
+    
+        public double getSystemLoadAverage1m() {
+            return measurementBufferSystemLoadAverage1m.calculateMean();
+        }
+    }
+\end{lstlisting}
+
+Klasa \verb|ProducerInformation| posiada następujące pola:
 
 \begin{itemize}
-    \item Pole \verb|measurementBufferConnectionSpeed| przechowuje informacje o prędkości transmisji pomiędzy usługą węzła a producentem.
-    \item Pole \verb|measurementBufferConnectionTime| przechowuje informacje o czasie połączenia pomiędzy usługą węzła a producentem.
-    \item Pole \verb|measurementBufferSystemLoadAverage1m| przechowuje informacje o średnim obciążeniu producenta na przestrzeni ostatnich pomiarów.
+    \item Pole \verb|measurementBufferConnectionSpeed| przechowuje informacje o prędkości transmisji pomiędzy usługą węzła a producentem (linia 14).
+    \item Pole \verb|measurementBufferConnectionTime| przechowuje informacje o czasie połączenia pomiędzy usługą węzła a producentem (linia 15).
+    \item Pole \verb|measurementBufferSystemLoadAverage1m| przechowuje informacje o średnim obciążeniu producenta na przestrzeni ostatnich pomiarów (linia 16).
 \end{itemize}
 
 Klasa \verb|ProducerInformation| została zaprojektowana w celu przechowywania metryk wydajności producenta. Używając instancji \verb|MeasurementBuffer| dla różnych metryk, pozwala na efektywne śledzenie i uśrednianie tych metryk. Metody dostępowe zapewniają dostęp do średnich wartości tych metryk, które mogą być wykorzystywane do monitorowania i podejmowania decyzji w systemie. Klasa ta odgrywa kluczową rolę w ocenie wydajności i niezawodności producentów w systemie rozproszonym, pomagając zidentyfikować najlepszych producentów na podstawie ich wskaźników wydajności.
@@ -514,30 +549,7 @@ Klasa \verb|ProducerInformation| została zaprojektowana w celu przechowywania m
 
 Klasa \verb|ProducerInfoService| zaprezentowana na listingu.\ref{ProducerInfoServiceCode} to usługa Spring odpowiedzialna za wykrywanie, monitorowanie i zarządzanie metrykami wydajności instancji producentów w systemie rozproszonym. Klasa ta integruje się z serwerem Eureka w celu wykrywania usług i komunikuje się z instancjami producentów. Poniżej znajduje się szczegółowy opis jej komponentów i funkcjonalności:
 
-\begin{lstlisting}[language=Java, caption=Kod usługi ProducerInfoService,label=ProducerInfoServiceCode]
-    package org.example.masterprotocolworker.service;
-
-    import com.netflix.appinfo.InstanceInfo;
-    import com.netflix.discovery.EurekaClient;
-    import com.netflix.discovery.shared.Application;
-    import lombok.Getter;
-    import lombok.extern.slf4j.Slf4j;
-    import org.example.masterprotocolworker.model.MetricResponse;
-    import org.example.masterprotocolworker.model.ProducerInformation;
-    import org.springframework.beans.factory.annotation.Autowired;
-    import org.springframework.context.annotation.Lazy;
-    import org.springframework.http.*;
-    import org.springframework.scheduling.annotation.Scheduled;
-    import org.springframework.stereotype.Service;
-    import org.springframework.web.client.RestTemplate;
-    
-    import java.io.IOException;
-    import java.net.Socket;
-    import java.util.Arrays;
-    import java.util.HashMap;
-    import java.util.List;
-    import java.util.Map;
-    
+\begin{lstlisting}[language=Java, caption=Kod usługi ProducerInfoService,label=ProducerInfoServiceCode]   
     @Slf4j
     @Service
     public class ProducerInfoService {
@@ -674,21 +686,21 @@ Klasa \verb|ProducerInfoService| zaprezentowana na listingu.\ref{ProducerInfoSer
 
 Klasa \verb|ProducerInfoService| posiada następujące pola:
 \begin{itemize}
-    \item Pole \verb|eurekaClient| odpowiada za deklarację klienta Eureka w celu wykrywania usług w systemie rozproszonym.
-    \item Pole \verb|restTemplate| odpowiada za deklarację klienta \akronim{HTTP} wykorzystywanego do interakcji z instancjami producentów.
-    \item Pole \verb|producerInfoMap| odpowiada za deklarację mapy do przechowywania obiektów klasy \verb|ProducerInformation|, identyfikowanych przez nazwy producentów, które przechowują metryki wydajności.
+    \item Pole \verb|eurekaClient| (linia 30) odpowiada za deklarację klienta Eureka w celu wykrywania usług w systemie rozproszonym.
+    \item Pole \verb|restTemplate| (linia 33) odpowiada za deklarację klienta \akronim{HTTP} wykorzystywanego do interakcji z instancjami producentów.
+    \item Pole \verb|producerInfoMap| (linia 36) odpowiada za deklarację mapy do przechowywania obiektów klasy \verb|ProducerInformation|, identyfikowanych przez nazwy producentów, które przechowują metryki wydajności.
 \end{itemize}
 
 Klasa \verb|ProducerInfoService| posiada następujące metody:
 \begin{itemize}
-    \item Metoda \verb|getProducers| pobiera listę aplikacji producentów zarejestrowanych w serwerze Eureka, których nazwy zaczynają się od prefixu "PRODUCER-".
-    \item Metoda \verb|printProducersInfo| pobiera i rejestruje dane metryczne z punktu końcowego \verb|/actuator/metrics| każdego producenta.
-    \item Metoda \verb|testNetworkSpeed| jest uruchamiana co 30 sekund w celu pomiaru czasu połączenia, szybkości połączenia i średniego obciążenia systemu dla wszystkich producentów.
-    \item Metoda \verb|measureConnectionTime| mierzy czas połączenia z każdą instancją producenta podanego jako argument metody. Rejestruje czas połączenia w odpowiednim \verb|MeasurementBuffer| dla czasu połączenia w obiekcie \verb|ProducerInformation|.
-    \item Metoda \verb|measureConnectionSpeed| mierzy prędkość połączenia z każdą instancją producenta, wysyłając ładunek o rozmiarze 50 MB. Rejestruje przepustowość (MB/s) w odpowiednim \verb|MeasurementBuffer| dla prędkości połączenia w obiekcie \verb|ProducerInformation|.
-    \item Metoda \verb|systemLoadAverage1m| Pobiera średnią obciążenia systemu w ciągu ostatniej minuty z punktu końcowego \verb|/actuator/metrics/system.load.average.1m| każdej instancji producenta. Zapisuje średnią obciążenia w odpowiednim \verb|MeasurementBuffer| dla średniej obciążenia systemu w obiekcie \verb|ProducerInformation|.
-    \item Metoda \verb|getProducerInformation| pobiera obiekt \verb|ProducerInformation| dla danej nazwy producenta z mapy \verb|producerInfoMap|. Jeśli obiekt o wskazanym kluczu nie istnieje, tworzy nowy obiekt i zapisuje go w mapie pod wskazanym kluczem.
-    \item Metoda \verb|getUrl| konstruuje i zwraca bazowy adres URL dla danej instancji aplikacji.
+    \item Metoda \verb|getProducers| (linie 38-43) pobiera listę aplikacji producentów zarejestrowanych w serwerze Eureka, których nazwy zaczynają się od prefixu "PRODUCER-".
+    \item Metoda \verb|printProducersInfo| (linie 46-56) pobiera i rejestruje dane metryczne z punktu końcowego \verb|/actuator/metrics| każdego producenta.
+    \item Metoda \verb|testNetworkSpeed| dzięki adnotacji \verb|@Scheduled(fixedRate = 30*1000)| (linia 58) jest uruchamiana co 30 sekund w celu pomiaru czasu połączenia, szybkości połączenia i średniego obciążenia systemu dla wszystkich producentów (linie 59-67).
+    \item Metoda \verb|measureConnectionTime| (linie 69-82) jako parametr przyjmuje obiekt aplikacji. Wykorzystuje ona \verb|eurekaClient| do pobrania instancji aplikacji według jej nazwy. Adres IP i port instancji są używane do próby nawiązania połączenia z gniazdem. Metoda rejestruje czas rozpoczęcia przed próbą nawiązania połączenia. Jeśli połączenie gniazda zostanie pomyślnie nawiązane, wysyła bajt zerowy w celu zainicjowania interakcji, a następnie rejestruje czas zakończenia. Czas trwania próby połączenia jest obliczany przez odjęcie czasu rozpoczęcia od czasu zakończenia, a następnie dodawana jest dodatkowa milisekunda, zanim wynik zostanie zapisany w buforze pomiarowym dla odpowiedniej instancji aplikacji. Jeśli podczas próby połączenia wystąpi wyjątek, metoda rejestruje błąd i dodaje wartość zastępczą (Double.MAX\_VALUE), aby wskazać nieudaną próbę pomiaru.
+    \item Metoda \verb|measureConnectionSpeed| (linie 84-121) przyjmuje obiekt aplikacji jako parametr. Wykorzystuje ona \verb|eurekaClient| do pobierania instancji określonej aplikacji według jej nazwy. Dla każdej instancji metoda tworzy ładunek, tablicę bajtów o rozmiarze 50 MB, która jest wypełniona jedynkami. Nagłówki HTTP są ustawione tak, aby wskazywały typ zawartości jako APPLICATION\_OCTET\_STREAM. Żądanie HTTP POST jest przygotowywane z ładunkiem i nagłówkami. Następnie metoda rejestruje bieżący czas w milisekundach. Korzystając z \verb|restTemplate.exchange|, wysyła żądanie POST do określonego punktu końcowego na serwerze instancji przeznaczonym do pomiaru szybkości połączenia. Po otrzymaniu odpowiedzi metoda oblicza czas, który upłynął i konwertuje ten czas na sekundy. Jeśli kod stanu HTTP w odpowiedzi to OK, metoda oblicza przepustowość, dzieląc rozmiar danych przez czas potrzebny na transmisję, zapewniając pomiar w megabajtach na sekundę. Ta wartość przepustowości jest następnie dodawana do bufora pomiarowego specyficznego dla instancji producenta. Jeżeli odpowiedź wskazuje na niepowodzenie lub wystąpi wyjątek podczas żądania, zamiast tego do bufora dodawana jest wartość zastępcza (Double.MAX\_VALUE), aby wskazać błąd pomiaru.
+    \item Metoda \verb|systemLoadAverage1m| (linie 123-141) jako parametr przyjmuje obiekt \verb|Application|. Używa ona \verb|eurekaClient| do pobierania instancji określonej aplikacji według jej nazwy. Dla każdej instancji metoda konstruuje adres URL w celu uzyskania dostępu do metryki średniego obciążenia systemu. Żądanie HTTP GET jest wysyłane do tego adresu URL za pośrednictwem metody \verb|restTemplate.exchange|. Jeżeli żądanie się powiedzie, metoda wyodrębnia średnią obciążenia systemu z odpowiedzi i dodaje ten pomiar do bufora specyficznego dla instancji producenta. W przypadku błędu podczas żądania HTTP, metoda rejestruje ten błąd i dodaje wartość zastępczą (Double.MAX\_VALUE), aby wskazać nieudane pobranie metryki.
+    \item Metoda \verb|getProducerInformation| (linie 143-145) pobiera obiekt \verb|ProducerInformation| dla danej nazwy producenta z mapy \verb|producerInfoMap|. Jeśli obiekt o wskazanym kluczu nie istnieje, tworzy nowy obiekt i zapisuje go w mapie pod wskazanym kluczem.
+    \item Metoda \verb|getUrl| (linie 147-153) konstruuje i zwraca bazowy adres URL dla danej instancji aplikacji.
 \end{itemize}
 
 Klasa \verb|ProducerInfoService| ma kluczowe znaczenie dla utrzymania aktualnego przeglądu wskaźników wydajności producentów w systemie rozproszonym. Okresowo mierząc czasy połączeń, prędkości połączeń i średnie obciążenie systemu, pomaga w ocenie kondycji i wydajności każdego producenta. Informacje te można wykorzystać do podejmowania świadomych decyzji o tym, który producent najlepiej nadaje się do obsługi żądań, zapewniając optymalną wydajność i niezawodność systemu. Wykorzystanie Eureka do wykrywania usług i \verb|RestTemplate| do komunikacji \akronim{HTTP} umożliwia płynną integrację i interakcję z instancjami producentów.
@@ -697,7 +709,7 @@ Klasa \verb|ProducerInfoService| ma kluczowe znaczenie dla utrzymania aktualnego
 
 \subsubsection{Model produktu}
 
-Klasa \verb|Product| przedstawiona na listingu.\ref{produktWorkermodelCode} reprezentuje centralną jednostkę w ramach usługi producenta oraz usłudze węzła protokołu.
+Klasa \verb|Product| przedstawiona na listingu.\ref{produktWorkermodelCode} reprezentuje centralną jednostkę produktu w ramach usługi producenta oraz usłudze węzła protokołu.
 
 \begin{lstlisting}[caption=Klasa reprezentująca produkt, label=produktWorkermodelCode]
     package org.example.masterprotocolworker.model;
@@ -741,15 +753,15 @@ Klasa \verb|Product| przedstawiona na listingu.\ref{produktWorkermodelCode} repr
 
 Klasa ta zawiera następujące zmienne:
 \begin{itemize}
-    \item \verb|String id| --- Unikatowe dla danego typu produktu Id
-    \item \verb|String name| --- Nazwa produktu
-    \item \verb|String model| --- Model produktu
-    \item \verb|String producer| --- Nazwa producenta produktu
-    \item \verb|Integer amount| --- ilość produktu oferowana przez producenta
-    \item \verb|Integer price| --- cena produktu
+    \item \verb|String id| --- Unikatowe dla danego typu produktu Id (linia 13)
+    \item \verb|String name| --- Nazwa produktu (linia 14)
+    \item \verb|String model| --- Model produktu (linia 15)
+    \item \verb|String producer| --- Nazwa producenta produktu (linia 16)
+    \item \verb|Integer amount| --- ilość produktu oferowana przez producenta (linia 17)
+    \item \verb|Integer price| --- cena produktu (linia 18)
 \end{itemize}
 
-Klasa ta zawiera metodę \verb|toString()| która przeciąża domyślną metodę klasową języka java \verb|toString()| aby zapewnić reprezentację obiektu produktu, która zawiera wszystkie atrybuty obiektu.
+Klasa ta zawiera metodę \verb|toString()| (linie 21-35) która przeciąża domyślną metodę klasową języka Java \verb|toString()| aby zapewnić reprezentację obiektu produktu, która zawiera wszystkie atrybuty obiektu.
 
 
 \subsubsection{Klasa propozycji produktów producenta}
@@ -776,15 +788,15 @@ Klasa \verb|ProducerProposal| przedstawiona na listingu.\ref{ProducerProposalCod
 
 Klasa \verb|ProducerProposal| posiada następujące pola:
 \begin{itemize}
-    \item Pole \verb|producerCalculatedRating| zawiera wartość reprezentującą obliczoną ocenę producenta. Ocena ta jest pochodną wskaźników wydajnościowych i jest wykorzystywana przy decydowaniu który producent jest najlepszy dla żądania użytkownika.
-    \item Pole \verb|products| zawiera listę obiektów \verb|Product| reprezentujących produkty powiązane z daną propozycją producenta. Każdy obiekt \verb|Product| zawiera szczegółowe informacje o konkretnym produkcie.
+    \item Pole \verb|producerCalculatedRating| (linia 12) zawiera wartość reprezentującą obliczoną ocenę producenta. Ocena ta jest pochodną wskaźników wydajnościowych i jest wykorzystywana przy decydowaniu który producent jest najlepszy dla żądania użytkownika.
+    \item Pole \verb|products| (linia 13 ) zawiera listę obiektów klasy \verb|Product| reprezentujących produkty powiązane z daną propozycją producenta. Każdy obiekt \verb|Product| zawiera szczegółowe informacje o konkretnym produkcie.
 \end{itemize}
 
 Klasa \verb|ProducerProposal| służy do przechowywania i przekazywania informacji o proponowanym producencie i powiązanych z nim produktach. \verb|ProducerCalculatedRating| przechowuje miarę przydatności producenta, podczas gdy lista produktów zawiera szczegółowe informacje na temat konkretnych produktów, które producent oferuje.
 
 \subsubsection{Klasa ostatecznej propozycji}
 
-Klasa \verb|Proposal| zaprezentowana na listingu.\ref{ProposalCode} to model danych do zarządzania kolekcją propozycji producentów. Klasa ta wykorzystuje adnotacje \verb|Lombok| w celu zmniejszenia ilości standardowego kodu i usprawnienia implementacji.
+Klasa \verb|Proposal| zaprezentowana na listingu.\ref{ProposalCode} to model danych do zarządzania kolekcją propozycji producentów. Klasa ta wykorzystuje adnotacje \verb|Lombok| (linie 11-14) w celu zmniejszenia ilości standardowego kodu i usprawnienia implementacji.
 
 \begin{lstlisting}[language=Java, caption=Kod klasy Proposal,label=ProposalCode]
     package org.example.masterprotocolworker.model;
@@ -806,31 +818,13 @@ Klasa \verb|Proposal| zaprezentowana na listingu.\ref{ProposalCode} to model dan
     }
 \end{lstlisting}
 
-Klasa ta posiada pole \verb|proposalProducts| które jest mapą przechowującą pod kluczem będącym identyfikatorem producenta obiekt klasy \verb|ProducerProposal| z propozycją produktów od danego producenta.
+Klasa ta posiada pole \verb|proposalProducts| (linia 16) które jest mapą przechowującą pod kluczem będącym identyfikatorem producenta obiekt klasy \verb|ProducerProposal| z propozycją produktów od danego producenta.
 
 \subsubsection{Serwis produktów --- ProductsService}
 
 Klasa \verb|ProductsService| przedstawiona na listingu.\ref{productsServiceCode} jest odpowiedzialna za interakcję z usługami producentów w celu sprawdzenia dostępności produktów i mapowania produktów do odpowiednich producentów. Klasa ta wykorzystuje usługę \verb|ProducerInfoService| do wykrywania producentów oraz szablon \verb|RestTemplate| do komunikacji z nimi. 
 
-\begin{lstlisting}[language=Java,caption= Kod klasy ProductsService, label=productsServiceCode]
-    package org.example.masterprotocolworker.service;
-
-    import com.netflix.discovery.shared.Application;
-    import lombok.RequiredArgsConstructor;
-    import lombok.extern.slf4j.Slf4j;
-    import org.example.masterprotocolworker.model.Product;
-    import org.springframework.http.HttpEntity;
-    import org.springframework.http.HttpMethod;
-    import org.springframework.http.ResponseEntity;
-    import org.springframework.stereotype.Service;
-    import org.springframework.web.client.RestTemplate;
-    
-    import java.util.ArrayList;
-    import java.util.Collections;
-    import java.util.HashMap;
-    import java.util.List;
-    import java.util.Map;
-    
+\begin{lstlisting}[language=Java,caption= Kod klasy ProductsService, label=productsServiceCode]    
     @Slf4j
     @Service
     @RequiredArgsConstructor
@@ -898,14 +892,14 @@ Klasa \verb|ProductsService| przedstawiona na listingu.\ref{productsServiceCode}
 
 Klasa \verb|ProductsService| zawiera następujące pola:
 \begin{itemize}
-    \item Pole \verb|producerInfoService| jest odniesieniem do usługi \verb|ProducerInfoService|, która udostępnia metody pobierania informacji o producencie i metryk wydajności.
-    \item Pole \verb|restTemplate| jest odniesieniem do \verb|RestTemplate|, który jest wykorzystywany do wykonywania żądań \akronim{HTTP} do instancji producenta.
+    \item Pole \verb|producerInfoService| (linia 6) jest odniesieniem do usługi \verb|ProducerInfoService|, która udostępnia metody pobierania informacji o producencie i metryk wydajności.
+    \item Pole \verb|restTemplate| (linia 7) jest odniesieniem do \verb|RestTemplate|, który jest wykorzystywany do wykonywania żądań \akronim{HTTP} do instancji producenta.
 \end{itemize}
 
 Klasa \verb|ProductsService| zawiera następujące metody:
 \begin{itemize}
-    \item Metoda \verb|hasProducerProduct| sprawdza, czy dany producent może dostarczyć określony produkt. Wysyła żądanie \akronim{POST} do punktu końcowego \verb|/products/check| producenta ze szczegółami produktu i zwraca produkt, jeśli jest dostępny, lub wartość \verb|null|, jeśli producent nie oferuje danego produktu.
-    \item Metoda \verb|getProducersWithProduct| mapuje każdy produkt do producentów, którzy mogą go dostarczyć.
+    \item Metoda \verb|hasProducerProduct| (linie 9-18) sprawdza, czy dany producent może dostarczyć określony produkt. Wysyła żądanie \akronim{POST} do punktu końcowego \verb|/products/check| producenta ze szczegółami produktu i zwraca produkt, jeśli jest dostępny, lub wartość \verb|null|, jeśli producent nie oferuje danego produktu.
+    \item Metoda \verb|getProducersWithProduct| (linie 21-53) mapuje każdy produkt do producentów, którzy mogą go dostarczyć.
     Najpierw metoda pobiera listę producentów za pomocą usługi \verb|producerInfoService|. Usługa ta jest odpowiedzialna za interakcję z serwerem Eureka w celu uzyskania niezbędnych informacji o wszystkich zarejestrowanych usługach producentów.
 
     Następnie metoda inicjalizuje mapę do przechowywania listy produktów dostępnych u każdego producenta. Mapa ta jest skonstruowana w taki sposób, że każdy klucz reprezentuje nazwę producenta, a powiązana wartość jest listą produktów, które producent może dostarczyć. Dodatkowo tworzona jest osobna lista, aby śledzić produkty, które nie zostały znalezione u żadnego producenta.
@@ -923,21 +917,7 @@ Klasa \verb|ProductsService| zawiera następujące metody:
 
 Klasa \verb|ProposalService| zaprezentowana na listingu.\ref{ProposalServiceCode} jest odpowiedzialna za generowanie propozycji przypisania produktów do producentów w oparciu o wskaźniki wydajności. Klasa ta wykorzystuje pozostałe usługi, takie jak \verb|ProductsService| i \verb|ProducerInfoService|, do gromadzenia niezbędnych danych i podejmowania decyzji.
 
-\begin{lstlisting}[caption=Kod klasy ProposalService, label=ProposalServiceCode]
-    package org.example.masterprotocolworker.service;
-
-    import lombok.AllArgsConstructor;
-    import lombok.extern.slf4j.Slf4j;
-    import org.example.masterprotocolworker.exceptions.WrongValueException;
-    import org.example.masterprotocolworker.model.ProducerInformation;
-    import org.example.masterprotocolworker.model.ProducerProposal;
-    import org.example.masterprotocolworker.model.Product;
-    import org.example.masterprotocolworker.model.Proposal;
-    import org.springframework.stereotype.Service;
-    
-    import java.util.*;
-    import java.util.stream.Collectors;
-    
+\begin{lstlisting}[caption=Kod klasy ProposalService, label=ProposalServiceCode] 
     @Slf4j
     @Service
     @AllArgsConstructor
@@ -1056,14 +1036,14 @@ Klasa \verb|ProposalService| zaprezentowana na listingu.\ref{ProposalServiceCode
 
 Klasa \verb|ProposalService| posiada następujące pola:
 \begin{itemize}
-    \item Pole \verb|productsService| jest odniesieniem do usługi \verb|ProductsService|, która udostępnia metody pozwalające przyporządkować produkty do producentów.
-    \item Pole \verb|producerInfoService| jest odniesieniem do usługi \verb|ProducerInfoService|, która udostępnia metody pobierania informacji o metrykach wydajności producentów.
+    \item Pole \verb|productsService| (linia 6) jest odniesieniem do usługi \verb|ProductsService|, która udostępnia metody pozwalające przyporządkować produkty do producentów.
+    \item Pole \verb|producerInfoService| (linia 7) jest odniesieniem do usługi \verb|ProducerInfoService|, która udostępnia metody pobierania informacji o metrykach wydajności producentów.
 \end{itemize}
 
 Klasa \verb|ProposalService| posiada następujące metody:
 \begin{itemize}
-    \item Metoda \verb|calculateProposal| oblicza proponowaną ocenę dla danego producenta na podstawie jego wskaźników wydajności. Obliczana wartość jest iloczynem średnich wartości metryk otrzymanych z usługi \verb|ProducerInfoService| dla danego producenta.
-    \item Metoda \verb|getProposal| otrzymuje jako argument listę produktów które mają zostać przydzielone użytkownikowi od producentów. W metodzie \verb|getProposal| klasy \verb|ProposalService| proces generowania propozycji przypisania produktów do producentów odbywa się w kilku ściśle określonych krokach. 
+    \item Metoda \verb|calculateProposal| (linie 87-111) oblicza proponowaną ocenę dla danego producenta na podstawie jego wskaźników wydajności. Obliczana wartość jest iloczynem średnich wartości metryk otrzymanych z usługi \verb|ProducerInfoService| dla danego producenta.
+    \item Metoda \verb|getProposal| (linie 10-85) otrzymuje jako argument listę produktów które mają zostać przydzielone użytkownikowi od producentów. W metodzie \verb|getProposal| klasy \verb|ProposalService| proces generowania propozycji przypisania produktów do producentów odbywa się w kilku ściśle określonych krokach. 
 
     Po pierwsze, metoda pobiera listę producentów i powiązanych z nimi produktów za pomocą usługi \verb|productsService|. To wywołanie usługi pobiera mapę producentów i produktów, które są przez nich oferowane, zapewniając podstawowe dane potrzebne do procesu składania propozycji.
 
@@ -1073,7 +1053,7 @@ Klasa \verb|ProposalService| posiada następujące metody:
 
     Następnie metoda inicjuje mapę do przechowywania ostatecznych szczegółów propozycji dla każdego producenta. Mapa ta będzie zawierać proponowane przypisania produktów do producentów, zorganizowane w sposób umożliwiający łatwy dostęp i manipulację.
 
-    Następnie metoda przypisuje produkty w pierwszej kolejności do najlepszego producenta. Taka priorytetyzacja zapewnia, że najlepiej oceniony producent obsługuje jak najwięcej produktów, wykorzystując jego doskonałe wskaźniki wydajności w celu zapewnieniu użytkownikowikowi jak najlepszej wydajności.
+    Następnie metoda przypisuje produkty w pierwszej kolejności do najlepszego producenta. Taka priorytetyzacja zapewnia, że najlepiej oceniony producent obsługuje jak najwięcej produktów, wykorzystując jego doskonałe wskaźniki wydajności w celu zapewnieniu użytkownikowi jak najlepszej wydajności.
 
     Po przypisaniu produktów do najlepszego producenta, metoda usuwa te produkty z list innych producentów. Krok ten polega na odfiltrowaniu produktów na podstawie ich identyfikatorów, zapewniając, że żaden produkt nie jest przypisany do więcej niż jednego producenta.
 
@@ -1088,13 +1068,13 @@ Klasa \verb|ProposalService| posiada następujące metody:
 
 \subsection{Zbieranie dzienników zdarzeń}
 
-Blok "Zbieranie dzienników zdarzeń" jest zaimplementowany przez trzy instancje Logstash.Instancje te współpracują ze sobą w celu zbierania, analizowania i przekazywania logów do klastra Elasticsearch.Każda instancja działa niezależnie, zapewniając ciągły przepływ i przetwarzanie danych. Konfiguracje obejmują wtyczki wejściowe do gromadzenia danych, wtyczki filtrujące do analizowania i przekształcania danych oraz wtyczki wyjściowe do wysyłania danych do Elasticsearch. Taka konfiguracja zapewnia wydajną i niezawodną agregację, transformację i przekazywanie danych dzienników zdarzeń do silnika przetwarzającego.
+Blok "Zbieranie dzienników zdarzeń" jest zaimplementowany przez trzy instancje Logstash. Instancje te współpracują ze sobą w celu zbierania, analizowania i przekazywania logów do klastra Elasticsearch.Każda instancja działa niezależnie, zapewniając ciągły przepływ i przetwarzanie danych. Konfiguracje obejmują wtyczki wejściowe do gromadzenia danych, wtyczki filtrujące do analizowania i przekształcania danych oraz wtyczki wyjściowe do wysyłania danych do Elasticsearch. Taka konfiguracja zapewnia wydajną i niezawodną agregację, transformację i przekazywanie danych dzienników zdarzeń do silnika przetwarzającego.
 
 \subsection{Silnik przetwarzający}
 
 Blok "Silnik przetwarzania" na rys.\ref{designedSystem} odnosi się do klastra węzłów Elasticsearch. Elasticsearch to potężny, rozproszony silnik wyszukiwania i analizy wykorzystywany do analizy danych na dużą skalę. Klaster składa się z trzech podstawowych węzłów: \verb|elasticsearch01|, \verb|elasticsearch02| i \verb|elasticsearch03|, z których każdy ma określoną konfigurację zapewniającą wysoką dostępność, odporność na awarie i skalowalność.
 
-Każdy węzeł ma unikalną nazwę (es01, es02, es03) i jest częścią klastra identyfikowanego przez zmienną środowiskową \verb|CLUSTER_NAME|. Są one skonfigurowane tak, aby rozpoznawać się nawzajem jako początkowe węzły główne, zapewniając płynne wykrywanie i synchronizację. Bezpieczeństwo jest zapewnione poprzez włączenie zabezpieczeń X-Pack, w tym uruchomioną konfiguracją SSL zarówno dla HTTP, jak i warstw transportowych przy użyciu wygenerowanych certyfikatów. Ta solidna konfiguracja pozwala klastrowi Elasticsearch wydajnie obsługiwać duże ilości danych, zapewniając niezbędny wgląd w czasie rzeczywistym i możliwości analityczne dla aplikacji o wysokiej wydajności.
+Każdy węzeł ma unikalną nazwę (es01, es02, es03) i jest częścią klastra identyfikowanego przez zmienną środowiskową \verb|CLUSTER_NAME|. Są one skonfigurowane tak, aby rozpoznawać się nawzajem jako początkowe węzły główne, zapewniając współpracę wykrywanie i synchronizację. Bezpieczeństwo jest zapewnione poprzez włączenie zabezpieczeń X-Pack, w tym uruchomioną konfiguracją SSL zarówno dla HTTP, jak i warstw transportowych przy użyciu wygenerowanych certyfikatów. Ta solidna konfiguracja pozwala klastrowi Elasticsearch wydajnie obsługiwać duże ilości danych, zapewniając niezbędny wgląd w czasie rzeczywistym i możliwości analityczne dla aplikacji o wysokiej wydajności.
 
 \subsection{Interfejs użytkownika}
 
@@ -1115,604 +1095,25 @@ Blok "Monitorowanie podsystemu" odbywa się za pośrednictwem usługi Metricbeat
 
 \subsection{Bazowe środowisko}
 
-W celu uruchomienia systemu, na komputerze wymagane są zainstalowane narzędzia \verb|Docker| i \verb|Docker Compose|. Głównym plikiem niezbędnym to uruchomienia systemu jest plik \verb|docker-compose.yml| zaprezentowany na listing \ref{dockerComposeFile}, w którym zdefiniowane są usługi monitoringu systemu oraz rozproszony rejestr usług.
+W celu uruchomienia systemu, na komputerze wymagane są zainstalowane narzędzia \verb|Docker| i \verb|Docker Compose|. Głównym plikiem niezbędnym to uruchomienia systemu jest plik docker-compose.yml zaprezentowany w dodatku \ref{dockerComposeRef}, w którym zdefiniowane są usługi monitoringu systemu oraz rozproszony rejestr usług.
 
-\begin{lstlisting}[caption=Plik docker-comose.yml, label=dockerComposeFile]
-    version: '3.8'
-    
-    x-common-elastisearch-image: &elasticsearchImage
-      image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
-    x-common-logstash-image: &logstashImage
-      image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
-    x-common-my-eureka-image: &myEureka
-      build: Service-registry
-      image: my-eureka-builder-image
-    
-    volumes:
-      certs:
-        driver: local
-      esdata01:
-        driver: local
-      esdata02:
-        driver: local
-      esdata03:
-        driver: local
-      kibanadata:
-        driver: local
-      metricbeatdata01:
-        driver: local
-      logstashdata01:
-        driver: local
-      logstashdata02:
-        driver: local
-      logstashdata03:
-        driver: local
-    
-    networks:
-      masterNetwork:
-        driver: bridge
-        name: masterNetwork
-        ipam:
-          config:
-            - subnet: 172.20.0.0/16
-    
-    services:  
-      setup:
-        container_name: setup
-        <<: *elasticsearchImage
-        volumes:
-          - certs:/usr/share/elasticsearch/config/certs
-        user: "0"
-        networks:
-          masterNetwork:
-            ipv4_address: 172.20.0.5
-        command: >
-          bash -c '
-            if [ x${ELASTIC_PASSWORD} == x ]; then
-              echo "Set the ELASTIC_PASSWORD environment variable in the .env file";
-              exit 1;
-            elif [ x${KIBANA_PASSWORD} == x ]; then
-              echo "Set the KIBANA_PASSWORD environment variable in the .env file";
-              exit 1;
-            fi;
-            if [ ! -f config/certs/ca.zip ]; then
-              echo "Creating CA";
-              bin/elasticsearch-certutil ca --silent --pem -out config/certs/ca.zip;
-              unzip config/certs/ca.zip -d config/certs;
-            fi;
-            if [ ! -f config/certs/certs.zip ]; then
-              echo "Creating certs";
-              echo -ne \
-              "instances:\n"\
-              "  - name: es01\n"\
-              "    dns:\n"\
-              "      - es01\n"\
-              "      - localhost\n"\
-              "    ip:\n"\
-              "      - 127.0.0.1\n"\
-              "  - name: es02\n"\
-              "    dns:\n"\
-              "      - es02\n"\
-              "      - localhost\n"\
-              "    ip:\n"\
-              "      - 127.0.0.1\n"\
-              "  - name: es03\n"\
-              "    dns:\n"\
-              "      - es03\n"\
-              "      - localhost\n"\
-              "    ip:\n"\
-              "      - 127.0.0.1\n"\
-              "  - name: kibana\n"\
-              "    dns:\n"\
-              "      - kibana\n"\
-              "      - localhost\n"\
-              "    ip:\n"\
-              "      - 127.0.0.1\n"\
-              > config/certs/instances.yml;
-              bin/elasticsearch-certutil cert --silent --pem -out config/certs/certs.zip --in config/certs/instances.yml --ca-cert config/certs/ca/ca.crt --ca-key config/certs/ca/ca.key;
-              unzip config/certs/certs.zip -d config/certs;
-            fi;
-            echo "Setting file permissions"
-            chown -R root:root config/certs;
-            find . -type d -exec chmod 750 \{\} \;;
-            find . -type f -exec chmod 640 \{\} \;;
-            echo "Waiting for Elasticsearch availability";
-            until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
-            echo "Setting kibana_system password";
-            until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
-            echo "All done!";
-          '
-        healthcheck:
-          test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
-          interval: 1s
-          timeout: 5s
-          retries: 120
-    
-      es01:
-        container_name: elasticsearch01
-        depends_on:
-          setup:
-            condition: service_healthy
-        <<: *elasticsearchImage
-        volumes:
-          - certs:/usr/share/elasticsearch/config/certs
-          - esdata01:/usr/share/elasticsearch/data
-        ports:
-          - ${ES_PORT}:9200
-        networks:
-          masterNetwork:
-            ipv4_address: 172.20.0.6
-        environment:
-          - node.name=es01
-          - cluster.name=${CLUSTER_NAME}
-          - cluster.initial_master_nodes=es01,es02,es03
-          - discovery.seed_hosts=es02,es03
-          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-          - bootstrap.memory_lock=true
-          - xpack.security.enabled=true
-          - xpack.security.http.ssl.enabled=true
-          - xpack.security.http.ssl.key=certs/es01/es01.key
-          - xpack.security.http.ssl.certificate=certs/es01/es01.crt
-          - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
-          - xpack.security.transport.ssl.enabled=true
-          - xpack.security.transport.ssl.key=certs/es01/es01.key
-          - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
-          - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
-          - xpack.security.transport.ssl.verification_mode=certificate
-          - xpack.license.self_generated.type=${LICENSE}
-          - xpack.monitoring.collection.enabled=true
-        mem_limit: 1g
-        deploy:
-          resources:
-            limits:
-              cpus: '0.5'
-              memory: 1g
-        ulimits:
-          memlock:
-            soft: -1
-            hard: -1
-        healthcheck:
-          test:
-            [
-              "CMD-SHELL",
-              "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
-            ]
-          interval: 10s
-          timeout: 10s
-          retries: 120
-    
-      es02:
-        container_name: elasticsearch02
-        depends_on:
-          - es01
-        <<: *elasticsearchImage
-        networks:
-          masterNetwork:
-            ipv4_address: 172.20.0.7
-        volumes:
-          - certs:/usr/share/elasticsearch/config/certs
-          - esdata02:/usr/share/elasticsearch/data
-        environment:
-          - node.name=es02
-          - cluster.name=${CLUSTER_NAME}
-          - cluster.initial_master_nodes=es01,es02,es03
-          - discovery.seed_hosts=es01,es03
-          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-          - bootstrap.memory_lock=true
-          - xpack.security.enabled=true
-          - xpack.security.http.ssl.enabled=true
-          - xpack.security.http.ssl.key=certs/es02/es02.key
-          - xpack.security.http.ssl.certificate=certs/es02/es02.crt
-          - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
-          - xpack.security.transport.ssl.enabled=true
-          - xpack.security.transport.ssl.key=certs/es02/es02.key
-          - xpack.security.transport.ssl.certificate=certs/es02/es02.crt
-          - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
-          - xpack.security.transport.ssl.verification_mode=certificate
-          - xpack.license.self_generated.type=${LICENSE}
-          - xpack.monitoring.collection.enabled=true
-        mem_limit: 1g
-        deploy:
-          resources:
-            limits:
-              cpus: '0.5'
-              memory: 1g
-        ulimits:
-          memlock:
-            soft: -1
-            hard: -1
-        healthcheck:
-          test:
-            [
-              "CMD-SHELL",
-              "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
-            ]
-          interval: 10s
-          timeout: 10s
-          retries: 120
-    
-      es03:
-        container_name: elasticsearch03
-        depends_on:
-          - es02
-        <<: *elasticsearchImage
-        networks:
-          masterNetwork:
-            ipv4_address: 172.20.0.8
-        volumes:
-          - certs:/usr/share/elasticsearch/config/certs
-          - esdata03:/usr/share/elasticsearch/data
-        environment:
-          - node.name=es03
-          - cluster.name=${CLUSTER_NAME}
-          - cluster.initial_master_nodes=es01,es02,es03
-          - discovery.seed_hosts=es01,es02
-          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-          - bootstrap.memory_lock=true
-          - xpack.security.enabled=true
-          - xpack.security.http.ssl.enabled=true
-          - xpack.security.http.ssl.key=certs/es03/es03.key
-          - xpack.security.http.ssl.certificate=certs/es03/es03.crt
-          - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
-          - xpack.security.transport.ssl.enabled=true
-          - xpack.security.transport.ssl.key=certs/es03/es03.key
-          - xpack.security.transport.ssl.certificate=certs/es03/es03.crt
-          - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
-          - xpack.security.transport.ssl.verification_mode=certificate
-          - xpack.license.self_generated.type=${LICENSE}
-          - xpack.monitoring.collection.enabled=true
-        mem_limit: 1g
-        deploy:
-          resources:
-            limits:
-              cpus: '0.5'
-              memory: 1g
-        ulimits:
-          memlock:
-            soft: -1
-            hard: -1
-        healthcheck:
-          test:
-            [
-              "CMD-SHELL",
-              "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
-            ]
-          interval: 10s
-          timeout: 10s
-          retries: 120
-    
-      kibana:
-        container_name: kibana
-        depends_on:
-          es01:
-            condition: service_healthy
-          es02:
-            condition: service_healthy
-          es03:
-            condition: service_healthy
-        image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
-        volumes:
-          - certs:/usr/share/kibana/config/certs
-          - kibanadata:/usr/share/kibana/data
-        ports:
-          - ${KIBANA_PORT}:5601
-        networks:
-          masterNetwork:
-            ipv4_address: 172.20.0.9
-        environment:
-          - SERVERNAME=kibana
-          - ELASTICSEARCH_HOSTS=["https://es01:9200","https://es02:9200","https://es03:9200"]
-          - ELASTICSEARCH_USERNAME=kibana_system
-          - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
-          - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
-          - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
-          - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
-          - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
-        mem_limit: 1g
-        deploy:
-          resources:
-            limits:
-              cpus: '0.5'
-              memory: 1g
-        healthcheck:
-          test:
-            [
-              "CMD-SHELL",
-              "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
-            ]
-          interval: 10s
-          timeout: 10s
-          retries: 120
-    
-      logstash01:
-        <<: *logstashImage
-        container_name: logstash01
-        ports:
-          - 5000:5000
-        depends_on:
-          es01:
-            condition: service_healthy
-          es02:
-            condition: service_healthy
-          es03:
-            condition: service_healthy
-          kibana:
-            condition: service_healthy
-        labels:
-          co.elastic.logs/module: logstash
-        user: root
-        networks:
-          masterNetwork:
-            ipv4_address: 172.20.0.12
-        volumes:
-          - certs:/usr/share/logstash/certs
-          - logstashdata01:/usr/share/logstash/data
-          - "./ELK-monitoring/logstash_ingest_data/:/usr/share/logstash/ingest_data/"
-          - "./ELK-monitoring/logstashConfig/pipeline:/usr/share/logstash/pipeline:ro"
-        environment:
-          - xpack.monitoring.enabled=true
-          - xpack.monitoring.collection.enabled=true
-          - xpack.monitoring.elasticsearch.hosts=["https://es01:9200","https://es02:9200","https://es03:9200"]
-          - xpack.monitoring.elasticsearch.username="elastic"
-          - xpack.monitoring.elasticsearch.password=${ELASTIC_PASSWORD}
-          - xpack.monitoring.elasticsearch.ssl.certificate_authority=certs/ca/ca.crt
-          - ELASTIC_USER=elastic
-          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-        mem_limit: 512m
-        deploy:
-          resources:
-            limits:
-              cpus: '0.25'
-              memory: 512m
-        healthcheck:
-          test: [
-            "CMD-SHELL",
-            "curl -XGET 'localhost:9600/_node/stats'"
-          ]
-          interval: 30s
-          timeout: 10s
-          retries: 120
-    
-      logstash02:
-        <<: *logstashImage
-        container_name: logstash02
-        ports:
-          - 5001:5000
-        depends_on:
-          es01:
-            condition: service_healthy
-          es02:
-            condition: service_healthy
-          es03:
-            condition: service_healthy
-          kibana:
-            condition: service_healthy
-        labels:
-          co.elastic.logs/module: logstash
-        user: root
-        networks:
-          masterNetwork:
-            ipv4_address: 172.20.0.13
-        volumes:
-          - certs:/usr/share/logstash/certs
-          - logstashdata02:/usr/share/logstash/data
-          - "./ELK-monitoring/logstash_ingest_data/:/usr/share/logstash/ingest_data/"
-          - "./ELK-monitoring/logstashConfig/pipeline:/usr/share/logstash/pipeline:ro"
-        environment:
-          - xpack.monitoring.enabled=true
-          - xpack.monitoring.collection.enabled=true
-          - xpack.monitoring.elasticsearch.hosts=["https://es01:9200","https://es02:9200","https://es03:9200"]
-          - xpack.monitoring.elasticsearch.username="elastic"
-          - xpack.monitoring.elasticsearch.password=${ELASTIC_PASSWORD}
-          - xpack.monitoring.elasticsearch.ssl.certificate_authority=certs/ca/ca.crt
-          - ELASTIC_USER=elastic
-          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-        mem_limit: 512m
-        deploy:
-          resources:
-            limits:
-              cpus: '0.25'
-              memory: 512m
-        healthcheck:
-          test: [
-            "CMD-SHELL",
-            "curl -XGET 'localhost:9600/_node/stats'"
-          ]
-          interval: 30s
-          timeout: 10s
-          retries: 120
-    
-      logstash03:
-        <<: *logstashImage
-        container_name: logstash03
-        ports:
-          - 5002:5000
-        depends_on:
-          es01:
-            condition: service_healthy
-          es02:
-            condition: service_healthy
-          es03:
-            condition: service_healthy
-          kibana:
-            condition: service_healthy
-        labels:
-          co.elastic.logs/module: logstash
-        user: root
-        networks:
-          masterNetwork:
-            ipv4_address: 172.20.0.14
-        volumes:
-          - certs:/usr/share/logstash/certs
-          - logstashdata03:/usr/share/logstash/data
-          - "./ELK-monitoring/logstash_ingest_data/:/usr/share/logstash/ingest_data/"
-          - "./ELK-monitoring/logstashConfig/pipeline:/usr/share/logstash/pipeline:ro"
-        environment:
-          - xpack.monitoring.enabled=true
-          - xpack.monitoring.collection.enabled=true
-          - xpack.monitoring.elasticsearch.hosts=["https://es01:9200","https://es02:9200","https://es03:9200"]
-          - xpack.monitoring.elasticsearch.username="elastic"
-          - xpack.monitoring.elasticsearch.password=${ELASTIC_PASSWORD}
-          - xpack.monitoring.elasticsearch.ssl.certificate_authority=certs/ca/ca.crt
-          - ELASTIC_USER=elastic
-          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-        mem_limit: 512m
-        deploy:
-          resources:
-            limits:
-              cpus: '0.25'
-              memory: 512m
-        healthcheck:
-          test: [
-            "CMD-SHELL",
-            "curl -XGET 'localhost:9600/_node/stats'"
-          ]
-          interval: 30s
-          timeout: 10s
-          retries: 120
-    
-      metricbeat01:
-        container_name: metricbeat01
-        depends_on:
-          es01:
-            condition: service_healthy
-          es02:
-            condition: service_healthy
-          es03:
-            condition: service_healthy
-          kibana:
-            condition: service_healthy
-        image: docker.elastic.co/beats/metricbeat:${STACK_VERSION}
-        user: root
-        networks:
-          masterNetwork:
-            ipv4_address: 172.20.0.10
-        volumes:
-          - certs:/usr/share/metricbeat/certs
-          - metricbeatdata01:/usr/share/metricbeat/data
-          - "./ELK-monitoring/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro"
-          - "/var/run/docker.sock:/var/run/docker.sock:ro"
-          - "/sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro"
-          - "/proc:/hostfs/proc:ro"
-          - "/:/hostfs:ro"
-        environment:
-          - ELASTIC_USER=elastic
-          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-          - ELASTIC_HOSTS=["https://es01:9200","https://es02:9200","https://es03:9200"]
-          - KIBANA_HOSTS=http://kibana:5601
-          - LOGSTASH_HOSTS=["http://logstash01:9600","http://logstash02:9600","http://logstash03:9600"]
-        mem_limit: 512m
-        deploy:
-          resources:
-            limits:
-              cpus: '0.25'
-              memory: 512m
-    
-      eureka-server-peer-1:
-        <<: *myEureka
-        depends_on:
-          logstash01:
-            condition: service_healthy
-          logstash02:
-            condition: service_healthy
-          logstash03:
-            condition: service_healthy
-        container_name: eureka-server-peer-1
-        ports:
-          - "9001:9001"
-        environment:
-          - SPRING_PROFILES_ACTIVE=peer-1
-          - PEER_2_URL=http://172.20.0.3:9002/eureka/
-          - PEER_3_URL=http://172.20.0.4:9003/eureka/
-          - LOGSTASH_DESTINATION_ONE=172.20.0.12:5000
-          - LOGSTASH_DESTINATION_TWO=172.20.0.13:5000
-          - LOGSTASH_DESTINATION_THREE=172.20.0.14:5000
-        networks:
-          masterNetwork:
-            ipv4_address: 172.20.0.2
-        mem_limit: 1g
-        deploy:
-          resources:
-            limits:
-              cpus: '0.5'
-              memory: 1g
-    
-      eureka-server-peer-2:
-        <<: *myEureka
-        depends_on:
-          logstash01:
-            condition: service_healthy
-          logstash02:
-            condition: service_healthy
-          logstash03:
-            condition: service_healthy
-        container_name: eureka-server-peer-2
-        ports:
-          - "9002:9002"
-        environment:
-          - SPRING_PROFILES_ACTIVE=peer-2
-          - PEER_1_URL=http://172.20.0.2:9001/eureka/
-          - PEER_3_URL=http://172.20.0.4:9003/eureka/
-          - LOGSTASH_DESTINATION_ONE=172.20.0.12:5000
-          - LOGSTASH_DESTINATION_TWO=172.20.0.13:5000
-          - LOGSTASH_DESTINATION_THREE=172.20.0.14:5000
-        networks:
-          masterNetwork:
-            ipv4_address: 172.20.0.3
-        mem_limit: 1g
-        deploy:
-          resources:
-            limits:
-              cpus: '0.5'
-              memory: 1g
-    
-      eureka-server-peer-3:
-        <<: *myEureka
-        depends_on:
-          logstash01:
-            condition: service_healthy
-          logstash02:
-            condition: service_healthy
-          logstash03:
-            condition: service_healthy
-        container_name: eureka-server-peer-3
-        ports:
-          - "9003:9003"
-        environment:
-          - SPRING_PROFILES_ACTIVE=peer-3
-          - PEER_1_URL=http://172.20.0.2:9001/eureka/
-          - PEER_2_URL=http://172.20.0.3:9002/eureka/
-          - LOGSTASH_DESTINATION_ONE=172.20.0.12:5000
-          - LOGSTASH_DESTINATION_TWO=172.20.0.13:5000
-          - LOGSTASH_DESTINATION_THREE=172.20.0.14:5000
-        networks:
-          masterNetwork:
-            ipv4_address: 172.20.0.4
-        mem_limit: 1g
-        deploy:
-          resources:
-            limits:
-              cpus: '0.5'
-              memory: 1g
-\end{lstlisting}
+Bloki x--common--elastisearch--image (linie 3-4), x-common--logstash--image (linie 5-6) i x--common--my--eureka--image (linie 7-9) definiują informacje o konfiguracji wielokrotnego użytku odpowiednio dla Elasticsearch, Logstash i obrazu rejestru usług. Są one wykorzystywane w celu uniknięcia powtórzeń definicji obrazu w poszczególnych usługach.
 
-Bloki x--common--elastisearch--image, x-common--logstash--image i x--common--my--eureka--image definiują informacje o konfiguracji wielokrotnego użytku odpowiednio dla Elasticsearch, Logstash i obrazu rejestru usług. Są one wykorzystywane w celu uniknięcia powtórzeń definicji obrazu w poszczególnych usługach.
+Sekcja woluminów (linie 11-29) definiuje trwałe obszary przechowywania dla poszczególnych kontenerów.
 
-Sekcja woluminów definiuje trwałe obszary przechowywania dla poszczególnych kontenerów.
-
-Sekcja sieci, definiuje sieć razem z podsiecią łączącą usługi w ramach uruchamianego środowiska.
+Sekcja sieci (linie 31-37), definiuje sieć razem z podsiecią łączącą usługi w ramach uruchamianego środowiska.
 
 Podstawowe środowisko składa się z następujących usług:
 \begin{itemize}
-    \item Usługa \verb|setu| inicjuje certyfikaty Elasticsearch. 
-    \item Zdefiniowane są trzy węzły Elasticsearch (es01, es02, es03). Są one zależne od usługi \verb|setup|. Każda z tych usług przyjmuje w polu \verb|discovery.seed_hosts| adresy pozostałych uruchomionych usług Elasticsearch w celu utworzenia klastra usług zapewniającego wysoką dostępność.
-    \item Usługa \verb|Kibana| łączy się z klastrem Elasticsearch w celu dostępu do zbieranych dokumentów i wizualizacji danych w interfejsie sieciowym uruchomionym na porcie 5601.
-    \item Trzy instancje Logstash (logstash01, logstash02, logstash03) są zdefiniowane do obsługi pozyskiwania i przetwarzania danych. Każda instancja Logstash przyjmuje jako argument każdy węzeł z uruchomionego klastra Elasticsearch w celu zapewnienia wysokiej dostępności w razie awarii węzłów w klastrze.
-    \item Usługa metricbeat01 służy do zbierania metryk z innych usług ze stosu ELK i wysyłania tych metryk do Elasticsearch.
-    \item Trzy instancje serwera Eureka (eureka--server--peer--1, eureka--server--peer--2, eureka--server--peer--3) są zdefiniowane do wykrywania usług. Do każdej usługi są podane zmienne środowiskowo uruchamiające usługę jako wcześniej zdefiniowany profil aplikacyjny w celu uruchomienia klastra rejestrów Eureka.
+    \item Usługa \verb|setup| (linie 40-109) generuje certyfikaty Elasticsearch. 
+    \item Zdefiniowane są trzy węzły Elasticsearch o nazwach \verb|elasticsearch01|, \verb|elasticsearch02| i \verb|elasticsearch01| (linie 111-262). Są one zależne od usługi \verb|setup|. Każda z tych usług przyjmuje w polu \verb|discovery.seed_hosts| adresy pozostałych uruchomionych usług Elasticsearch w celu utworzenia klastra usług zapewniającego wysoką dostępność.
+    \item Usługa \verb|Kibana| (linie 264-305) łączy się z klastrem Elasticsearch w celu dostępu do zbieranych dokumentów i wizualizacji danych w interfejsie sieciowym uruchomionym na porcie 5601.
+    \item Trzy instancje Logstash o nazwach logstash01, logstash02 i logstash03 (linie 307-452) są zdefiniowane do obsługi pozyskiwania i przetwarzania danych. Każda instancja Logstash przyjmuje łączy się z każdym węzłem z uruchomionego klastra Elasticsearch w celu zapewnienia wysokiej dostępności w razie awarii węzłów w klastrze.
+    \item Usługa \verb|metricbeat01| (linie 454-489) służy do zbierania metryk z innych usług ze stosu \akronim{ELK} i wysyłania tych metryk do klastra Elasticsearch.
+    \item Trzy instancje serwera Eureka o nazwach eureka--server--peer--1, eureka--server--peer--2 i eureka--server--peer--3 (linie 491-576) są zdefiniowane do wykrywania usług w systemie. Do każdej usługi są podane zmienne środowiskowo uruchamiające usługę jako wcześniej zdefiniowany profil aplikacyjny w celu uruchomienia klastra rejestrów Eureka.
 \end{itemize}
 
-Aby uruchomić powyższą konfigurację Docker Compose, należy użyć następującego polecenia:
+Aby uruchomić powyższą konfigurację Docker Compose, w głównym folderze projektu należy użyć następującego polecenia:
 
 \begin{verbatim}
 sudo docker compose --env-file ELK-monitoring/.env down -v && \
@@ -1728,7 +1129,7 @@ Powyższe polecenie wykonuje następujące czynności:
     \item Uruchamia usługi, wymuszając odtworzenie kontenerów i uruchomienie ich w trybie odłączonym.
 \end{itemize}
 
-Opisany powyżej plik \verb|docker-compose.yml| konfiguruje środowisko rozruchowe klastra Elasticsearch, wraz z instancjami Logstash do przetwarzania danych, Kibana do wizualizacji, Metricbeat do zbierania metryk i konfiguracją serwera Eureka do wykrywania usług w systemie. Usługi są połączone za pomocą sieci Docker, a trwałe przechowywanie w przypadku wyłączenia systemu jest zarządzane za pomocą woluminów Docker. Wykorzystanie zmiennych środowiskowych i kontroli kondycji zapewnia, że usługi są poprawnie skonfigurowane i uruchamiane w ściśle określonej kolejności.
+Opisany plik \verb|docker-compose.yml| konfiguruje środowisko rozruchowe klastra Elasticsearch, wraz z instancjami Logstash do przetwarzania danych, Kibana do wizualizacji, Metricbeat do zbierania metryk i konfiguracją serwera Eureka do wykrywania usług w systemie. Usługi są połączone za pomocą sieci Docker, a trwałe przechowywanie w przypadku wyłączenia systemu jest zarządzane za pomocą woluminów Docker. Wykorzystanie zmiennych środowiskowych i kontroli stanu kontenerów zapewnia, że usługi są poprawnie skonfigurowane i uruchamiane w ściśle określonej kolejności.
 
 \subsection{Producent}
 
@@ -1779,7 +1180,7 @@ Skrypt Bash przedstawiony na listingu.\ref{producerBashScript} jest przeznaczony
 
 \end{lstlisting}
 
-Skrypt oczekuje dwóch argumentów: identyfikatora pierwszego producenta i liczby instancji producenta do uruchomienia. Jeżeli te argumenty nie zostaną dostarczone, skrypt wyświetli informacje o braku argumentów i zakończy działanie. Następnie funkcja ensure\_docker\_image sprawdza, czy obraz Docker o nazwie \verb|producer:latest| istnieje. Jeśli obraz nie istnieje, buduje obraz z katalogu Producer. Jeśli kompilacja nie powiedzie się, skrypt kończy działanie z komunikatem o błędzie. Następnie skrypt wykonuje pętlę od pierwszego identyfikatora producenta do określonej liczby producentów. Dla każdej iteracji uruchamia kontener Docker z niezbędnymi zmiennymi środowiskowymi i konfiguracjami sieciowymi. Każdy kontener ma unikalną nazwę i jest połączony z siecią \verb|masterNetwork|.
+Skrypt oczekuje dwóch argumentów: identyfikatora pierwszego producenta (linia 10) i liczby instancji producenta do uruchomienia (linia 11). Jeżeli te argumenty nie zostaną dostarczone, skrypt wyświetli informacje o braku argumentów i zakończy działanie. Następnie funkcja ensure\_docker\_image (linie 14-22) sprawdza, czy obraz Docker o nazwie \verb|producer:latest| istnieje. Jeśli obraz nie istnieje, buduje obraz z katalogu Producer. Jeśli kompilacja nie powiedzie się, skrypt kończy działanie z komunikatem o błędzie. Następnie skrypt wykonuje pętlę (linie 28-39) od pierwszego identyfikatora producenta do określonej liczby producentów. Dla każdej iteracji uruchamia kontener Docker z niezbędnymi zmiennymi środowiskowymi i konfiguracjami sieciowymi. Każdy kontener ma unikalną nazwę i jest połączony z siecią \verb|masterNetwork|.
 
 Skrypt \verb|producers.sh| automatyzuje wdrażanie wielu instancji producentów. Zapewnia on dostępność wymaganego obrazu Docker, buduje go w razie potrzeby, a następnie uruchamia określoną liczbę producentów z odpowiednimi konfiguracjami. Ta konfiguracja jest przydatna do testowania i skalowania usług producentów w kontrolowanym środowisku.
 
@@ -1831,6 +1232,6 @@ Skrypt przedstawiony na listingu.\ref{workersBashScript} jest przeznaczony do ur
     done
 \end{lstlisting}
 
-Skrypt oczekuje dwóch argumentów: identyfikatora pierwszego węzła i liczby instancji węzłów do uruchomienia. Jeżeli te argumenty nie zostaną dostarczone, skrypt wyświetli informacje o braku argumentów i zakończy działanie. Funkcja ensure\_docker\_image sprawdza, czy obraz Docker o nazwie \verb|worker:latest| istnieje. Jeżeli obraz nie istnieje, buduje obraz z katalogu Master--Protocol--Worker. Jeśli kompilacja nie powiedzie się, skrypt kończy działanie z komunikatem o błędzie. Następnie skrypt wykonuje pętlę od pierwszego identyfikatora węzła do określonej liczby węzłów. Dla każdej iteracji uruchamia kontener Docker z niezbędnymi zmiennymi środowiskowymi i konfiguracjami sieciowymi. Każdy kontener ma unikalną nazwę i jest połączony z siecią \verb|masterNetwork|.
+Skrypt oczekuje dwóch argumentów: identyfikatora pierwszego węzła (linia 10) i liczby instancji węzłów do uruchomienia (linia 11). Jeżeli te argumenty nie zostaną dostarczone, skrypt wyświetli informacje o braku argumentów i zakończy działanie. Funkcja ensure\_docker\_image (linie 14-22) sprawdza, czy obraz Docker o nazwie \verb|worker:latest| istnieje. Jeżeli obraz nie istnieje, buduje obraz z katalogu Master--Protocol--Worker. Jeśli kompilacja nie powiedzie się, skrypt kończy działanie z komunikatem o błędzie. Następnie skrypt wykonuje pętlę (linie 28-39) od pierwszego identyfikatora węzła do określonej liczby węzłów. Dla każdej iteracji uruchamia kontener Docker z niezbędnymi zmiennymi środowiskowymi i konfiguracjami sieciowymi. Każdy kontener ma unikalną nazwę i jest połączony z siecią \verb|masterNetwork|.
 
 Skrypt automatyzuje wdrażanie wielu instancji roboczych w sieci Docker. Zapewnia on dostępność wymaganego obrazu Docker, buduje go w razie potrzeby, a następnie uruchamia określoną liczbę pracowników z odpowiednimi konfiguracjami. Ta konfiguracja jest przydatna do testowania i skalowania usług roboczych w kontrolowanym środowisku.

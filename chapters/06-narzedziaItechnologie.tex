@@ -1,7 +1,7 @@
 \chapter{Wybrane narzędzia i technologie}
 
 
-W pracy magisterskiej podczas opracowywania i wdrażania systemu wykorzystano rozmaite narzędzia i technologie. Każde narzędzie odgrywa kluczową rolę w zapewnieniu wydajności, skalowalności i łatwości utrzymania systemu.
+Podczas opracowywania i wdrażania systemu tworzonego w ramach realizowanej pracy magisterskiej,  wykorzystano rozmaite narzędzia i technologie. Każde narzędzie odgrywa kluczową rolę w zapewnieniu wydajności, skalowalności i łatwości utrzymania systemu.
 
 \section{Java}
 
@@ -12,7 +12,7 @@ W pracy magisterskiej podczas opracowywania i wdrażania systemu wykorzystano ro
     \label{fig:enter-label}
 \end{figure}
 
-Java jest to szeroko stosowany obiektowy język programowania i platforma oprogramowania, która działa na miliardach urządzeń. Zasady oraz składnia języka zostały oparte na językach \acronym{C} i \acronym{C++}\cite{javaIBM}\cite{cstandard}\cite{cppstandard}. Java powstała aby udoskonalić i naprawić wiele błędnych konceptów wprowadzonych przez te języki. Jedną z głównych zalet tworzenia oprogramowania w Javie jest jej przenoszalność. Po napisaniu kodu programu na jednym urządzeniu można go łatwo przenieść na inne urządzenie o innej architekturze. Język ten został wynaleziony w 1995 roku przez Jamesa Goslinga z Sun Microsystems (później przejętego przez Oracle), główną ideą jego wynalezienia była możliwość, \definicja{"napisania raz, uruchomienia w dowolnym miejscu"}  (\english{write once, run anywhere}). Nowe i ulepszone narzędzia do tworzenia oprogramowania pojawiają się na rynku w niezwykłym tempie, wypierając dotychczasowe produkty, które kiedyś uważano za niezbędne. W świetle tej ciągłej rotacji, trwałość i ciągła popularność języka Java jest imponująca, prawie trzy dekady po jej stworzeniu, Java jest nadal jednym z najbardziej popularnych języków do tworzenia oprogramowania użytkowego\cite{javaIBM}\cite{javaDEV}.
+Java jest to szeroko stosowany obiektowy język programowania i platforma oprogramowania, która działa na miliardach urządzeń. Zasady oraz składnia języka zostały oparte na językach \acronym{C} i \acronym{C++}\cite{javaIBM}\cite{cstandard}\cite{cppstandard}. Java powstała aby udoskonalić i naprawić wiele błędnych konceptów wprowadzonych przez te języki. Jedną z głównych zalet tworzenia oprogramowania w Javie jest jej przenośność. Po napisaniu kodu programu na jednym urządzeniu można go łatwo przenieść na inne urządzenie o innej architekturze. Język ten został wynaleziony w 1995 roku przez Jamesa Goslinga z Sun Microsystems (później przejętego przez Oracle), główną ideą jego wynalezienia była możliwość, \definicja{"napisania raz, uruchomienia w dowolnym miejscu"}  (\english{write once, run anywhere}). Nowe i ulepszone narzędzia do tworzenia oprogramowania pojawiają się na rynku w niezwykłym tempie, wypierając dotychczasowe produkty, które kiedyś uważano za niezbędne. W świetle tej ciągłej rotacji, ciągła popularność języka Java jest imponująca, prawie trzy dekady po jej stworzeniu, Java jest nadal jednym z najbardziej popularnych języków do tworzenia oprogramowania użytkowego\cite{javaIBM}\cite{javaDEV}.
 
 Wszystkie języki programowania służą do komunikacji z maszynami. Sprzęt maszynowy reaguje tylko na komunikację elektroniczną. Języki programowania wysokiego poziomu, takie jak Java, działają jako pomost między językiem ludzkim a językiem sprzętu. Aby korzystać z języka Java, programista powinien mieć świadomość istnienia dwóch poziomów abstrakcji pisanych programów: 
 
@@ -93,8 +93,8 @@ Spring boot jest jednym z najpopularniejszych frameworków języka Java zapropon
     }
 \end{lstlisting}
 
-Powyższy program składa się z głównej klasy aplikacji z adnotacją @SpringBootApplication, która wskazuje klasę konfiguracyjną, która deklaruje jedną lub więcej metod @Bean, a także uruchamia automatyczną konfigurację i skanowanie komponentów. Klasa DemoApplication zawiera główną metodę, która jest punktem wejścia aplikacji. Metoda SpringApplication.run uruchamia cały framework Spring.
-Dodatkowo klasa jest opatrzona adnotacją @RestController, wskazującą, że jest to kontroler sieciowy, w którym każda metoda zwraca obiekt domeny zamiast widoku. Metoda hello jest mapowana do punktu końcowego /hello przy użyciu adnotacji @GetMapping, co pozwala jej obsługiwać żądania HTTP GET. Metoda ta przyjmuje nazwę parametru żądania z domyślną wartością „World” i zwraca wiadomość powitalną.
+Powyższy program składa się z głównej klasy aplikacji z adnotacją \verb|@SpringBootApplication| (linia 9), która wskazuje klasę konfiguracyjną, która deklaruje jedną lub więcej metod \verb|@Bean|, a także uruchamia automatyczną konfigurację i skanowanie komponentów. Klasa DemoApplication zawiera główną metodę \verb|main| (linia 12), która jest punktem wejścia aplikacji. Metoda \verb|SpringApplication.run| (linia 13) uruchamia cały framework Spring.
+Dodatkowo klasa jest opatrzona adnotacją \verb|@RestController| (linia 10), wskazującą, że jest to kontroler sieciowy, w którym każda metoda zwraca obiekt domeny zamiast widoku. Metoda hello jest mapowana do punktu końcowego /hello przy użyciu adnotacji @GetMapping (linia 15), co pozwala jej obsługiwać żądania HTTP GET. Metoda ta przyjmuje nazwę parametru żądania z domyślną wartością „World” i zwraca wiadomość powitalną.
 
 \section{Netflix Eureka}
 
@@ -130,7 +130,7 @@ Maszyny wirtualne stanowią pod tym względem znaczącą przewagę nad serwerami
 
 Jednym z głównych problemów jest to, że wymagają one pełnej kopii systemu operacyjnego. Oznacza to, że są one stosunkowo duże i zajmują dużo zasobów. Z tego powodu uruchamianie wielu maszyn wirtualnych na tym samym serwerze fizycznym jest stosunkowo kosztowne. Nie tylko uruchomienie setek maszyn wirtualnych jest kosztowne, ale także wymaga dużej ilości zasobów, takich jak rdzenie procesora, pamięć \acronym{RAM} (\english{Random Access Memory}) i przestrzeń dyskowa. Co więcej, trudno jest skalować aplikacje w poziomie, co oznacza konieczność dodania większej liczby replik aplikacji w celu obsłużenia zwiększonego ruchu, liczby użytkowników, czy obciążenia pracy danej repliki \cite{dockerContenerizationKeyAndUseCases}.
 
-Konteneryzacja oferuje natomiast szereg korzyści, które pozwalają sprostać tym wyzwaniom. Dzięki konteneryzacji, deweloperzy mogą spakować swoje aplikacje i ich zależności w jednym kontenerze. Obraz Kontenera można natomiast dostarczyć i wdrożyć na dowolnej platformie, która go obsługuje. Ułatwia to wdrożenie i uruchamianie aplikacji w rożnych środowiskach. Konteneryzacja oferuje spójne i niezawodne działanie aplikacji na różnych platformach, niezależnie od tego czy jest to serwer fizyczny, maszyna wirtualna w chmurze, czy też system operacyjny Windows lub Linux\cite{dockerContenerizationKeyAndUseCases}\cite{dockerOverview}. 
+Konteneryzacja oferuje natomiast szereg korzyści, które pozwalają sprostać tym wyzwaniom. Dzięki konteneryzacji, deweloperzy mogą zawrzeć swoje aplikacje i ich zależności w jednym kontenerze. Obraz Kontenera można natomiast dostarczyć i wdrożyć na dowolnej platformie, która go obsługuje. Ułatwia to wdrożenie i uruchamianie aplikacji w rożnych środowiskach. Konteneryzacja oferuje spójne i niezawodne działanie aplikacji na różnych platformach, niezależnie od tego czy jest to serwer fizyczny, maszyna wirtualna w chmurze, czy też system operacyjny Windows lub Linux\cite{dockerContenerizationKeyAndUseCases}\cite{dockerOverview}. 
 
 Dodatkowymi atutami konteneryzacji są:
 
@@ -215,7 +215,7 @@ Potok przetwarzania zdarzeń Logstash składa się z trzech etapów:
     \label{fig:enter-label}
 \end{figure}
 
-Wejścia generują zdarzenia, następnie są one filtrowane aby ostatecznie wyjścia wysłały je do miejsca docelowego. Wejścia i wyjścia obsługują kodeki, które umożliwiają kodowanie lub dekodowanie danych wchodzących lub wychodzących z potoku bez konieczności  stosowania oddzielnego filtra\cite{logstashManualHowItWorks}. 
+Wejścia generują zdarzenia, następnie są one filtrowane aby ostatecznie wyjścia wysłały je do miejsca docelowego. Wejścia i wyjścia obsługują kodery i dekodery, które umożliwiają kodowanie lub dekodowanie danych wchodzących lub wychodzących z potoku bez konieczności stosowania oddzielnego filtra\cite{logstashManualHowItWorks}. 
 
 \subsubsection{Wejścia}
 

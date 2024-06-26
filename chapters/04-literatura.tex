@@ -1,14 +1,14 @@
 \chapter{Metaverse --- przegląd literatury}
 
-Koncepcja Metaverse szybko ewoluowała od jej początków w powieści science fiction Neala Stephensona \definicja{Snow Crash} z 1992 roku do rozwijającej się dziedziny technologicznej, która integruje różne zaawansowane technologie w celu tworzenia połączonych ze sobą wirtualnych światów. Niniejszy rozdział zagłębia się w obecne implementacje Metaverse, podkreślając technologiczne podstawy i wyzwania stojące przed realizacją tego rozwijającego się cyfrowego świata.
+Niniejszy rozdział przedstawia obecne implementacje Metaverse, podkreślając technologiczne podstawy i wyzwania stojące przed realizacją tego rozwijającego się środowiska wirtualnego. Zaprezentowane informacje oparte są na analizie wybranych artykułów naukowych.
 
 \section{A Survey of Mobile Edge Computing for the
 Metaverse: Architectures, Applications, and
 Challenges}
 
-Artykuł "A Survey of Mobile Edge Computing for the Metaverse: Architectures, Applications, and Challenges" autorstwa Yitong Wang i Jun Zhao z Nanyang Technological University Singapore bada przede wszystkim skrzyżowanie Mobile Edge Computing \akronim{MEC} i Metaverse, podkreślając aspekty techniczne i infrastrukturę wymaganą do obsługi tak złożonego systemu.
+Artykuł "A Survey of Mobile Edge Computing for the Metaverse: Architectures, Applications, and Challenges" autorstwa Yitong Wang i Jun Zhao z Nanyang Technological University Singapore bada przede wszystkim możliwość wykorzystania Mobile Edge Computing \akronim{MEC} w środowisku Metaverse, podkreślając aspekty techniczne i infrastrukturę wymaganą do obsługi tak złożonego systemu.
 
-\akronim{MEC} jest definiowany jako rozproszony paradygmat obliczeniowy, który przybliża zasoby obliczeniowe i pamięć masową do urządzeń końcowych. Zmniejsza to opóźnienia i poprawia wydajność aplikacji poprzez przeniesienie intensywnych zadań na pobliskie serwery brzegowe.
+\akronim{MEC} jest definiowany jako rozproszony paradygmat obliczeniowy, który umieszcza zasoby obliczeniowe i pamięć masową na urządzeniach końcowych, w celu realizacji przetwarzania na tych urządzeniach. Zmniejsza to opóźnienia i poprawia wydajność aplikacji poprzez przeniesienie intensywnych zadań na pobliskie serwery brzegowe.
 
 \subsection{Infrastruktura sieciowa}
 
@@ -18,31 +18,31 @@ Serwery zlokalizowane na brzegu sieci, wykonują zadania obliczeniowe odciążaj
 
 \subsection{Paradygmaty obliczeniowe}
 
-Podczas gdy tradycyjne przetwarzanie w chmurze aktualnie odgrywa kluczową rolę w systemach rozproszonych, poleganie wyłącznie na serwerach w chmurze może powodować duże opóźnienia i przeciążenia sieci. Dlatego konieczne jest podejście hybrydowe obejmujące przetwarzanie brzegowe i przetwarzanie we mgle.
+Podczas gdy tradycyjne przetwarzanie w chmurze aktualnie odgrywa kluczową rolę w systemach rozproszonych, poleganie wyłącznie na serwerach w chmurze może powodować duże opóźnienia i przeciążenia sieci. Dlatego konieczne jest podejście hybrydowe obejmujące przetwarzanie brzegowe i przetwarzanie we mgle (\english{fog computing}).
 
 Przetwarzanie we mgle działa jako warstwa pośrednia między chmurą a urządzeniami brzegowymi, obsługując zadania, które wymagają mniejszych opóźnień niż może zaoferować chmura, ale są zbyt intensywne dla samych urządzeń brzegowych.
 
 \subsection{Transmisja i przetwarzanie danych}
 
-Przetwarzając dane bliżej źródła (np. na serwerach brzegowych), MEC znacznie zmniejsza opóźnienia w porównaniu z tradycyjnymi rozwiązaniami opartymi na chmurze. Ma to kluczowe znaczenie dla wciągających doświadczeń w czasie rzeczywistym wymaganych w Metaverse.
+Przetwarzając dane bliżej źródła ich generowania (np. na serwerach brzegowych), MEC znacznie zmniejsza opóźnienia w porównaniu z tradycyjnymi rozwiązaniami opartymi na chmurze. Ma to kluczowe znaczenie dla immersyjnych doświadczeń w czasie rzeczywistym wymaganych w Metaverse.
 
 \akronim{MEC} pomaga w zarządzaniu wykładniczym wzrostem ruchu danych poprzez przetwarzanie i filtrowanie danych na krawędzi przed przesłaniem ich do chmury, optymalizując w ten sposób wykorzystanie przepustowości
 
 \subsection{Modele architektury}
 
-Architektura Metaverse oparta na \akronim{MEC} zaprezentowana na rys.\ref{mecBaseArch} obejmuje dynamiczne węzły brzegowe do obsługi interakcji użytkownika i przetwarzania danych, minimalizując w ten sposób opóźnienia i poprawiając doświadczenia świadczonych usług przez użytkownika.
+Architektura Metaverse oparta na \akronim{MEC}, zaprezentowana na rys.\ref{mecBaseArch} obejmuje dynamiczne węzły brzegowe do obsługi interakcji użytkownika i przetwarzania danych, minimalizując w ten sposób opóźnienia i poprawiając doświadczenia świadczonych usług przez użytkownika.
 
 \begin{figure}[htbp!]
     \centering
     \includegraphics[width=0.85\textwidth]{images/existingArchitectres/mecBaseArch.png}
-    \caption{Architektura Metaverse opartego na Mobile Edge Computing}
+    \caption{Architektura Metaverse wykorzystująca Mobile Edge Computing}
     \label{mecBaseArch}
 \end{figure}
 
 \newpage
 Architektura oparta na przetwarzaniu we mgle proponuje wielopoziomowe podejście, w którym różne zadania obliczeniowe są dystrybuowane w warstwach mgły, krawędzi i chmury w celu optymalizacji wydajności i zmniejszenia wąskich gardeł obliczeniowych.
 
-Artykuł podkreśla znaczenie \akronim{MEC} w infrastrukturze Metaverse poprzez rozwiązywanie krytycznych kwestii, takich jak opóźnienia, wydajność przepustowości i zarządzanie zasobami obliczeniowymi. Przybliżając moc obliczeniową do użytkowników końcowych i wykorzystując zaawansowaną infrastrukturę sieciową, taką jak \akronim{5G}, paradygmat \akronim{MEC} jest niezbędny do implementacji płynnego i wciągającego świata Metaverse.
+Artykuł podkreśla znaczenie \akronim{MEC} w infrastrukturze Metaverse poprzez rozwiązywanie krytycznych kwestii, takich jak opóźnienia, wydajność przepustowości i zarządzanie zasobami obliczeniowymi. Przybliżając moc obliczeniową do użytkowników końcowych i wykorzystując zaawansowaną infrastrukturę sieciową, taką jak \akronim{5G}, paradygmat \akronim{MEC} jest niezbędny do implementacji świata Metaverse.
 
 \section{Dynamic Resource Allocation for Metaverse Applications with Deep Reinforcement Learning}
 
@@ -79,17 +79,6 @@ Warstwowa dystrybucja zasobów zaprezentowana na rys.\ref{metaslicingMultiTierAr
 
 Dekompozycja aplikacji powoduje że aplikacje są dzielone na mniejsze funkcje, z których każda jest wykonywana na różnych poziomach w oparciu o ich wymagania dotyczące zasobów i dostępne możliwości.
 
-\subsection{Dynamiczna alokacja zasobów}
-
-Semi-Markov Decision Process \akronim{sMDP} --- Proces ten oddaje dynamiczne i niepewne cechy żądań zasobów i odejść aplikacji w czasie rzeczywistym.
-Deep Reinforcement Learning \akronim{DRL} --- Opracowano inteligentny algorytm, który uczy się optymalnej polityki alokacji zasobów, maksymalizując wykorzystanie zasobów i przychody dostawcy przy jednoczesnym zachowaniu jakości usług.
-
-\subsection{Inteligentny algorytm}
-
-Deep Q-learning Techniques --- Algorytm wykorzystuje takie techniki, jak mechanizm odtwarzania bufora, architektura pojedynkowej sieci neuronowej i podwójne uczenie Q, aby ustabilizować proces uczenia się i uniknąć kwestii przeszacowania.
-
-Optymalne uczenie się polityki --- System uczy się podejmować optymalne decyzje w zakresie kontroli dostępu w czasie rzeczywistym, dostosowując się do zmieniających się warunków i wymagań.\\
-
 Artykuł przedstawia zaawansowany framework do dynamicznego zarządzania i alokacji zasobów w Metaverse przy użyciu kombinacji wielowarstwowego przetwarzania w chmurze i zaawansowanych technik głębokiego uczenia ze wzmocnieniem. Dzięki dekompozycji aplikacji na MetaSlices i MetaInstances oraz zastosowaniu procesu decyzyjnego semi-Markova, framework skutecznie radzi sobie z ogromnym i dynamicznym zapotrzebowaniem na zasoby aplikacji Metaverse.
 
 \section{Unlocking Metaverse-as-a-Service}
@@ -102,7 +91,7 @@ Mehdi Letafati, Babak Hossein Khalaj, omawia niezbędną infrastrukturę technic
 Autorzy wskazują trzy główne filary:
 \begin{itemize}
     \item Prywatność i bezpieczeństwo --- Zapewnienie bezpiecznych i prywatnych interakcji w Metaverse jest najważniejsze. Artykuł kładzie nacisk na mechanizmy prywatyzacji wrażliwych atrybutów danych i zabezpieczania rozproszonych algorytmów uczenia maszynowego.
-    \item Przetwarzanie brzegowe --- wzmacnia Metaverse poprzez zmniejszenie opóźnień i przeciążenia sieci. Obejmuje przetwarzanie i przechowywanie danych blisko użytkowników końcowych, zwiększając wydajność i skalowalność aplikacji Metavers
+    \item Przetwarzanie brzegowe --- wzmacnia Metaverse poprzez zmniejszenie opóźnień i przeciążenia sieci. Obejmuje przetwarzanie i przechowywanie danych blisko użytkowników końcowych, zwiększając wydajność i skalowalność aplikacji Metaverse
     \item Technologia Blockchain --- Blockchain zapewnia przejrzystość, integralność danych i bezpieczne transakcje w ramach Metaverse. Obsługuje zdecentralizowane aplikacje i inteligentne kontrakty, niezbędne dla ekonomicznej i operacyjnej integralności Metaverse.
 \end{itemize}
 
@@ -131,7 +120,7 @@ Artykuł przedstawia infrastrukturę techniczną wymaganą do obsługi platform 
 
 \section{Porównanie i podsumowanie}
 
-Wszystkie trzy artykuły podkreślają kluczową rolę zaawansowanych technologii i infrastruktury we wdrażaniu Metaverse. Mają one wspólne tematy w swoich dyskusjach na temat niezbędnych komponentów i związanych z nimi wyzwań. Podobieństwa te obejmują w szczególności:
+Wszystkie trzy artykuły podkreślają kluczową rolę zaawansowanych technologii i infrastruktury we wdrażaniu środowiska Metaverse. W szczególności omówione prace analizują komponenty niezbędne dla działania tego środowiska i wyzwania stawiane przed jego twórcami. Poddane analizie prace skupiają się w szczególności na następujących aspektach: 
 \begin{itemize}
     \item Koncentracja na zaawansowanych technologiach:
     \begin{itemize}
